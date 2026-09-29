@@ -5,8 +5,8 @@ meta:
   lang: en
   title: Ricardo Andrés Arango Ruiz — Senior Fullstack Engineer (Python, React, AI)
   description: >-
-    Resume of Ricardo Arango, Fullstack developer with Python (FastAPI, Django), React and AI
-    integration (LLMs, Claude, OpenAI). Remote from Medellín, Colombia.
+    Ricardo Arango, Senior Fullstack developer with Python (Django, FastAPI) and React:
+    software tailored to each need. Remote from Medellín, Colombia.
   lastModified: 2026-09
   labels:
     summary: Summary
@@ -33,10 +33,10 @@ basics:
   url: https://inehosa1.github.io/cv/en/
   summary: >-
     Software developer with **8+ years of experience** building end-to-end Fullstack products with
-    **Python (Django, FastAPI)**, **React and TypeScript**: production e-commerce, payments and
-    invoicing platforms, **webhooks**, integrations and cloud migrations, with **AI-native**
-    development. I deliver at the highest quality: **OWASP Top 10**, test coverage close to
-    **100%**, and hands-on support for clients and end users.
+    **Python (Django, FastAPI)**, **React and TypeScript**, tailored to each need: e-commerce and
+    payments, invoicing, school management, analytics and process automation, with **webhooks**,
+    integrations, cloud migrations and **AI-native** development. I deliver at the highest quality:
+    **OWASP Top 10**, test coverage close to **100%**, and hands-on support for clients and end users.
   availability: Remote · UTC−5
   location:
     city: Medellín
@@ -52,10 +52,11 @@ basics:
       url: https://github.com/inehosa1
 
 home:
-  headline: I build e-commerce, payments and integration platforms that hold up in production.
+  headline: I turn business needs into solid, secure, production-ready software.
   intro: >-
-    Senior Fullstack developer working with Python and React. I design complete systems, from the API
-    to the interface and the infrastructure, with security, tests and detail as the starting point.
+    From e-commerce and payments to school management, analytics or process automation: I adapt to
+    each challenge and design the whole system, from the API to the interface and the infrastructure,
+    with security, tests and detail as the starting point.
   stats:
     - value: "8+"
       label: years building software

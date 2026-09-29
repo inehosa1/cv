@@ -6,8 +6,8 @@ meta:
   lang: es
   title: Ricardo Andrés Arango Ruiz — Desarrollador Fullstack Senior (Python, React, IA)
   description: >-
-    CV de Ricardo Arango, desarrollador Fullstack con Python (FastAPI, Django), React e
-    integración de IA (LLMs, Claude, OpenAI). Remoto desde Medellín, Colombia.
+    Ricardo Arango, desarrollador Fullstack Senior con Python (Django, FastAPI) y React:
+    software a la medida de cada necesidad. Remoto desde Medellín, Colombia.
   lastModified: 2026-09
   labels:
     summary: Perfil profesional
@@ -33,11 +33,12 @@ basics:
   phone: +57 319 449 5717
   url: https://inehosa1.github.io/cv/
   summary: >-
-    Desarrollador de software con **más de 8 años de experiencia** construyendo productos Fullstack de punta
-    a punta con **Python (Django, FastAPI)**, **React y TypeScript**: plataformas de e-commerce, pagos
-    y facturación en producción, **webhooks**, integraciones y migraciones cloud, con desarrollo
-    **AI-native**. Entrego con la mayor calidad: **OWASP Top 10**, cobertura de tests cercana al
-    **100 %** y acompañamiento a clientes y usuarios finales.
+    Desarrollador de software con **más de 8 años de experiencia** construyendo productos Fullstack
+    de punta a punta con **Python (Django, FastAPI)**, **React y TypeScript**, a la medida de cada
+    necesidad: e-commerce y pagos, facturación, gestión escolar, analítica y automatización de
+    procesos, con **webhooks**, integraciones, migraciones cloud y desarrollo **AI-native**. Entrego
+    con la mayor calidad: **OWASP Top 10**, cobertura de tests cercana al **100 %** y acompañamiento
+    a clientes y usuarios finales.
   availability: Remoto · UTC−5
   location:
     city: Medellín
@@ -53,10 +54,11 @@ basics:
       url: https://github.com/inehosa1
 
 home:
-  headline: Construyo plataformas de e-commerce, pagos e integraciones que funcionan en producción.
+  headline: Convierto necesidades de negocio en software sólido, seguro y listo para producción.
   intro: >-
-    Desarrollador Fullstack Senior con Python y React. Diseño sistemas completos, desde la API hasta la
-    interfaz y la infraestructura, con la seguridad, los tests y el detalle como punto de partida.
+    Desde e-commerce y pagos hasta gestión escolar, analítica o automatización de procesos: me adapto
+    a cada reto y diseño el sistema completo, de la API a la interfaz y la infraestructura, con la
+    seguridad, los tests y el detalle como punto de partida.
   stats:
     - value: "8+"
       label: años construyendo software
