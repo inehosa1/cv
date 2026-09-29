@@ -75,7 +75,7 @@ work:
       - Lancé Portugal con resolución **multi-mercado** por petición, migración de catálogo idempotente vía **Shopify GraphQL** y medición server-side (**GA4 Measurement Protocol**, **Meta CAPI**).
       - "**SEB One** (back-office de pagos y facturación, 7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits): multi-tenancy, RBAC, notas de crédito, comisiones, reembolsos y disputas; ~1.500 tests, 88 % de cobertura."
       - Construí un ETL Excel → **Parquet** → PostgreSQL (~590k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago (Adyen, PayPal, Klarna, Alma…); migré servicios y almacenamiento de **GCP a Huawei Cloud**.
-      - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): endurecí la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura) y añadí reintentos con backoff y colas de reintento."
+      - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): asignado a pruebas e integración; reforcé la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura) y añadí reintentos con backoff y colas de reintento."
       - "Adopté desarrollo **AI-native** en todos los repositorios: subagentes, skills y hooks de **Claude Code**, y agentes Codex para ampliar cobertura de tests."
     technologies: [Python, Django REST Framework, FastAPI, Flask, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, Redis, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Sentry, Claude Code]
 

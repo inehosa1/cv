@@ -1,9 +1,9 @@
 ---
 title: SEB Markets — integración multi-marketplace
-tagline: Plataforma B2B que conecta el catálogo, el stock, los precios y los pedidos de retailers con Amazon, eBay, Miravia, Mirakl y Fnac. Blindé la API pública, añadí resiliencia y la migré a Huawei Cloud.
+tagline: "Plataforma B2B que conecta el catálogo, el stock, los precios y los pedidos de retailers con Amazon, eBay, Miravia, Mirakl y Fnac. Me asignaron para apoyar las pruebas y la integración: reforcé la seguridad y los tests de la API pública, añadí resiliencia y apoyé la migración a Huawei Cloud."
 client: SEB Business
 company: Rawson BPO · cliente Thinkia
-role: Backend & plataforma · Tech lead del workspace (2026)
+role: Desarrollador backend · Pruebas e integración
 start: 2024-04
 order: 3
 metrics:
@@ -36,7 +36,7 @@ tags: [FastAPI, Seguridad, Marketplaces, Resiliencia, Migración cloud, Claude C
 Participé en dos etapas:
 
 - **2024**: documentación OpenAPI y esquemas de la API, la librería de validación de producto (`market-lib`) y *fixtures* de integración con eBay.
-- **2026**: una pasada transversal de **seguridad, testing, resiliencia y modernización** por todo el workspace, y la migración de la plataforma a Huawei Cloud.
+- **2026**: me asignaron para **ayudar a probar e integrar** todo el workspace. Ese trabajo incluyó mejoras de seguridad, testing y resiliencia, y apoyo en la migración de la plataforma a Huawei Cloud.
 
 ## Arquitectura
 
@@ -63,7 +63,7 @@ flowchart TB
 
 ## Blindaje de la API pública (OWASP Top 10)
 
-La API pública es la superficie más expuesta del sistema. La revisé contra el **OWASP Top 10** y la endurecí por capas:
+La API pública es la superficie más expuesta del sistema. Como parte de las pruebas la revisé contra el **OWASP Top 10** y reforcé cada capa:
 
 - **Autenticación y autorización**: token obligatorio en todas las rutas de negocio, autorización por marketplace y **rate limiting** del login por usuario y por IP (respuesta 429).
 - **Entrada y salida**: los identificadores se sanean antes de enviarlos a los conectores, las subidas de ficheros tienen protección contra *path traversal*, las cabeceras de seguridad (CSP, HSTS…) están activas y la documentación interactiva se oculta en producción.
@@ -111,6 +111,8 @@ En el servicio de stock, precios y productos añadí validación real de las car
 
 ## Migración a Huawei Cloud
 
+Como parte del trabajo de integración apoyé el paso a Huawei Cloud: pipelines, scripts de despliegue y validación de punta a punta.
+
 ```mermaid
 flowchart TB
   subgraph CI["Jenkins · por repositorio"]
@@ -137,7 +139,7 @@ flowchart TB
 
 ## Desarrollo AI-native del workspace
 
-Configuré el workspace de 10 repositorios para trabajar con **Claude Code** de forma segura y repetible:
+Para probar e integrar 10 repositorios de forma segura y repetible, preparé el entorno de trabajo con **Claude Code**:
 
 - **8 subagentes especializados**: mapeo de repos, auditoría de contratos, auditoría de seguridad, ejecución y escritura de tests, changelog, lectura de conectores y trabajo por repositorio.
 - **Skills** para las tareas repetitivas (`new-endpoint`, `new-page`, `sync-product-schema`) y **hooks** que formatean Python y validan JSON después de cada edición.

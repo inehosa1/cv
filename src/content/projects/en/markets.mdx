@@ -1,9 +1,9 @@
 ---
 title: SEB Markets — multi-marketplace integration
-tagline: A B2B platform connecting retailers' catalog, stock, prices and orders with Amazon, eBay, Miravia, Mirakl and Fnac. I hardened its public API, added resilience and migrated it to Huawei Cloud.
+tagline: "A B2B platform connecting retailers' catalog, stock, prices and orders with Amazon, eBay, Miravia, Mirakl and Fnac. I was assigned to support testing and integration: I strengthened the public API's security and tests, added resilience and supported the migration to Huawei Cloud."
 client: SEB Business
 company: Rawson BPO · for Thinkia
-role: Backend & platform · Workspace tech lead (2026)
+role: Backend developer · Testing & integration
 start: 2024-04
 order: 3
 metrics:
@@ -36,7 +36,7 @@ tags: [FastAPI, Security, Marketplaces, Resilience, Cloud migration, Claude Code
 I worked on it in two phases:
 
 - **2024**: OpenAPI documentation and API schemas, the product validation library (`market-lib`) and eBay integration fixtures.
-- **2026**: a workspace-wide **security, testing, resilience and modernization** pass, and the platform's migration to Huawei Cloud.
+- **2026**: I was assigned to **help test and integrate** the whole workspace. That work included security, testing and resilience improvements, and support for the platform's migration to Huawei Cloud.
 
 ## Architecture
 
@@ -63,7 +63,7 @@ flowchart TB
 
 ## Hardening the public API (OWASP Top 10)
 
-The public API is the most exposed surface in the system. I reviewed it against the **OWASP Top 10** and hardened it layer by layer:
+The public API is the most exposed surface in the system. As part of testing I reviewed it against the **OWASP Top 10** and strengthened each layer:
 
 - **Authentication and authorization**: a mandatory token on every business route, per-marketplace authorization and login **rate limiting** per user and per IP (429 responses).
 - **Input and output**: identifiers are sanitized before being sent to connectors, file uploads are protected against *path traversal*, security headers (CSP, HSTS…) are on, and interactive docs are hidden in production.
@@ -111,6 +111,8 @@ In the stock, price and product service I added real validation of Excel uploads
 
 ## Migration to Huawei Cloud
 
+As part of the integration work I supported the move to Huawei Cloud: pipelines, deployment scripts and end-to-end validation.
+
 ```mermaid
 flowchart TB
   subgraph CI["Jenkins · per repository"]
@@ -137,7 +139,7 @@ flowchart TB
 
 ## AI-native workspace
 
-I set up the 10-repository workspace to work with **Claude Code** safely and repeatably:
+To test and integrate 10 repositories safely and repeatably, I prepared the working environment with **Claude Code**:
 
 - **8 specialized subagents**: repo mapping, contract auditing, security auditing, running and writing tests, changelog, connector reading and per-repo work.
 - **Skills** for repetitive tasks (`new-endpoint`, `new-page`, `sync-product-schema`) and **hooks** that format Python and validate JSON after every edit.
