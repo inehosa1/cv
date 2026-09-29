@@ -59,6 +59,19 @@ const card =
               {basics.location.city}, {basics.location.country}
               {basics.location.remote && <span>· {basics.location.remote}</span>}
             </li>
+            {
+              basics.phone && (
+                <li>
+                  <a
+                    href={`tel:${basics.phone.replaceAll(' ', '')}`}
+                    class="flex items-center gap-1.5 underline-offset-4 hover:text-accent-ink hover:underline"
+                  >
+                    <Icon name="phone" class="size-4 shrink-0" />
+                    {basics.phone}
+                  </a>
+                </li>
+              )
+            }
             <li>
               <a
                 href={`mailto:${basics.email}`}

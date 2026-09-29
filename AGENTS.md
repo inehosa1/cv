@@ -115,7 +115,7 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
   - Objetivo Lighthouse: 100 en Performance, Accessibility, Best Practices y SEO.
   - Sin JavaScript de cliente salvo que sea imprescindible (p. ej. selector de idioma puede ser un enlace).
 - Botón visible "Descargar PDF" que apunte al PDF del idioma actual.
-- **Privacidad:** el teléfono sale solo en el PDF, nunca en el HTML ni en el JSON-LD (evita scraping).
+- **Privacidad:** el teléfono sale en el PDF y en la cabecera de la web (decisión del usuario), pero nunca en el JSON-LD.
 - Biome no entiende el uso de variables en las plantillas `.astro`: las reglas de "unused" están desactivadas para esos archivos en `biome.json`; no borrar imports "sin usar" en `.astro`.
 - Textos de interfaz (títulos de sección, meses, botones) viven en `meta.labels` del YAML, no en el código.
 - TypeScript en modo `strict`; sin `any`.
