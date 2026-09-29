@@ -23,9 +23,9 @@ export const ui = {
     nowTitle: 'Actualmente',
     liveLinks: 'Ver en producción',
     nowClients: 'Clientes',
-    contactTitle: '¿Hablamos?',
+    contactTitle: 'Contacto',
     contactText:
-      'Busco nuevos retos donde construir software de calidad. Escríbeme y te respondo lo antes posible.',
+      'Si quieres saber más sobre mi trayectoria o mi trabajo, puedes contactarme por cualquiera de estos medios.',
     contactEmail: 'Escribir un email',
     filterLabel: 'Filtrar por tecnología',
     filterAll: 'Todos',
@@ -65,9 +65,9 @@ export const ui = {
     nowTitle: 'Currently',
     liveLinks: 'See it live',
     nowClients: 'Clients',
-    contactTitle: "Let's talk",
+    contactTitle: 'Contact',
     contactText:
-      "I'm looking for new challenges where I can build quality software. Drop me a line and I'll get back to you soon.",
+      "If you'd like to know more about my background or my work, you can reach me through any of these channels.",
     contactEmail: 'Send an email',
     filterLabel: 'Filter by technology',
     filterAll: 'All',
