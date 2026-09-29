@@ -94,8 +94,7 @@ work:
   - name: Talenta
     position: Desarrollador de Software (Fullstack / Backend)
     location: Medellín, Colombia
-    # TODO: confirmar el mes de inicio en Talenta.
-    startDate: "2017"
+    startDate: 2020-01
     endDate: 2022-11
     highlights:
       - Desarrollé aplicaciones y APIs en **Python (Django)** con interfaces en **React** y persistencia en **PostgreSQL**, manteniendo código desacoplado.
@@ -103,6 +102,16 @@ work:
       - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
       - Configuré pipelines de CI con **Docker** y **Jenkins** y aprovisionamiento con **Ansible** sobre AWS.
     technologies: [Python, Django, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
+
+  # TODO: confirmar meses de inicio/fin y añadir 1–2 logros concretos de Emtelco.
+  - name: Emtelco
+    position: Analista de Aplicaciones (inicio como practicante)
+    location: Medellín, Colombia
+    startDate: "2017"
+    endDate: "2019"
+    highlights:
+      - Inicié como **practicante** y pasé a **Analista de Aplicaciones**, dando soporte, mantenimiento y mejoras a aplicaciones internas de la operación.
+    technologies: []
 
 projects:
   - name: Casos de estudio técnicos
