@@ -1,0 +1,327 @@
+---
+import Base from '../layouts/Base.astro';
+import { loadCV } from '../lib/cv.ts';
+import { duration, formatDate } from '../lib/format.ts';
+import type { Lang } from '../lib/schema.ts';
+import { prettyUrl, withBase } from '../lib/url.ts';
+import Icon, { type IconName } from './Icon.astro';
+import Rich from './Rich.astro';
+import Section from './Section.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const cv = loadCV(lang);
+const { basics, meta } = cv;
+const t = meta.labels;
+
+const otherLang: Lang = lang === 'es' ? 'en' : 'es';
+const otherHref = withBase(otherLang === 'es' ? '/' : `/${otherLang}/`);
+const pdfHref = withBase(`/cv-${lang}.pdf`);
+const pdfName = `${basics.name.replaceAll(' ', '_')}_CV_${lang.toUpperCase()}.pdf`;
+
+const profileIcon = (network: string): IconName => {
+  const n = network.toLowerCase();
+  return n === 'linkedin' || n === 'github' ? n : 'link';
+};
+
+const chip =
+  'inline-flex items-center rounded-md border border-chip-border bg-chip px-2 py-0.5 text-xs font-medium text-accent-ink';
+const card =
+  'print-flat rounded-2xl border border-rule bg-surface p-6 shadow-sm sm:p-8 dark:shadow-none';
+---
+
+<Base cv={cv}>
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-10 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:shadow"
+  >
+    {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+  </a>
+
+  <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:py-14">
+    <!-- Cabecera -->
+    <header class:list={[card, 'relative overflow-hidden']}>
+      <div class="absolute inset-x-0 top-0 h-1.5 bg-accent" aria-hidden="true"></div>
+
+      <div class="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+        <div class="min-w-0">
+          <h1 class="text-3xl font-bold tracking-tight text-balance sm:text-4xl lg:text-5xl">
+            {basics.name}
+          </h1>
+          <p class="mt-2 text-base font-semibold text-pretty text-accent-ink sm:text-lg">
+            {basics.label}
+          </p>
+
+          <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted" aria-label={t.contact}>
+            <li class="flex items-center gap-1.5">
+              <Icon name="pin" class="size-4 shrink-0" />
+              {basics.location.city}, {basics.location.country}
+              {basics.location.remote && <span>· {basics.location.remote}</span>}
+            </li>
+            <li>
+              <a
+                href={`mailto:${basics.email}`}
+                class="flex items-center gap-1.5 underline-offset-4 hover:text-accent-ink hover:underline"
+              >
+                <Icon name="mail" class="size-4 shrink-0" />
+                {basics.email}
+              </a>
+            </li>
+            {
+              basics.profiles.map((p) => (
+                <li>
+                  <a
+                    href={p.url}
+                    rel="me noopener"
+                    target="_blank"
+                    class="flex items-center gap-1.5 underline-offset-4 hover:text-accent-ink hover:underline"
+                  >
+                    <Icon name={profileIcon(p.network)} class="size-4 shrink-0" />
+                    <span class="sr-only">{p.network}:</span>
+                    {prettyUrl(p.url)}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <nav class="no-print flex shrink-0 gap-2 md:flex-col md:items-stretch" aria-label="PDF / idioma">
+          <a
+            href={pdfHref}
+            download={pdfName}
+            class="inline-flex items-center justify-center gap-2 rounded-lg bg-accent-ink px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:brightness-110 dark:text-[#0b1120]"
+          >
+            <Icon name="download" />
+            {t.downloadPdf}
+          </a>
+          <a
+            href={otherHref}
+            hreflang={otherLang}
+            lang={otherLang}
+            class="inline-flex items-center justify-center gap-2 rounded-lg border border-rule px-4 py-2.5 text-sm font-semibold transition hover:border-accent hover:text-accent-ink"
+          >
+            <Icon name="globe" />
+            {t.switchLang}
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem] print:block">
+      <!-- Columna principal -->
+      <main id="main" class:list={[card, 'space-y-10']}>
+        <Section id="summary" title={t.summary}>
+          <p class="leading-relaxed text-pretty"><Rich text={basics.summary} /></p>
+          <ul class="mt-4 flex flex-wrap gap-2" aria-label={t.competencies}>
+            {cv.competencies.map((c) => <li class={chip}>{c}</li>)}
+          </ul>
+        </Section>
+
+        <Section id="work" title={t.work}>
+          <ol class="relative space-y-8 border-l border-rule pl-6">
+            {
+              cv.work.map((job) => (
+                <li class="relative">
+                  <span
+                    class:list={[
+                      'absolute top-1.5 -left-[1.9rem] size-3 rounded-full ring-4 ring-surface',
+                      job.endDate ? 'bg-muted/60' : 'bg-accent',
+                    ]}
+                    aria-hidden="true"
+                  />
+                  <article>
+                    <header class="flex flex-col gap-x-4 gap-y-1 sm:flex-row sm:items-baseline sm:justify-between">
+                      <h3 class="text-lg leading-snug font-semibold">{job.position}</h3>
+                      <p class="shrink-0 text-sm text-muted tabular-nums">
+                        <time datetime={job.startDate}>{formatDate(job.startDate, t)}</time> –{' '}
+                        {job.endDate ? (
+                          <time datetime={job.endDate}>{formatDate(job.endDate, t)}</time>
+                        ) : (
+                          t.present
+                        )}
+                        <span class="sr-only sm:not-sr-only"> · {duration(job.startDate, job.endDate, lang)}</span>
+                      </p>
+                    </header>
+                    <p class="mt-0.5 text-sm font-medium text-muted">
+                      {job.url ? (
+                        <a href={job.url} class="hover:text-accent-ink hover:underline">
+                          {job.name}
+                        </a>
+                      ) : (
+                        job.name
+                      )}{' '}
+                      · {job.location}
+                    </p>
+                    {job.summary && (
+                      <p class="mt-3">
+                        <Rich text={job.summary} />
+                      </p>
+                    )}
+                    <ul class="mt-3 list-disc space-y-1.5 pl-5 leading-relaxed marker:text-accent">
+                      {job.highlights.map((h) => (
+                        <li>
+                          <Rich text={h} />
+                        </li>
+                      ))}
+                    </ul>
+                    {job.technologies.length > 0 && (
+                      <ul class="mt-4 flex flex-wrap gap-1.5" aria-label={t.technologies}>
+                        {job.technologies.map((tech) => (
+                          <li class="rounded bg-bg px-2 py-0.5 text-xs text-muted ring-1 ring-rule">{tech}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </article>
+                </li>
+              ))
+            }
+          </ol>
+        </Section>
+
+        {
+          cv.projects.length > 0 && (
+            <Section id="projects" title={t.projects}>
+              <div class="space-y-6">
+                {cv.projects.map((p) => (
+                  <article>
+                    <h3 class="font-semibold">
+                      {p.url ? (
+                        <a
+                          href={p.url}
+                          class="inline-flex items-center gap-1.5 hover:text-accent-ink hover:underline"
+                        >
+                          {p.name}
+                          <Icon name="link" class="size-3.5" />
+                        </a>
+                      ) : (
+                        p.name
+                      )}
+                    </h3>
+                    <p class="mt-1 leading-relaxed text-pretty">
+                      <Rich text={p.description} />
+                    </p>
+                    {p.highlights.length > 0 && (
+                      <ul class="mt-2 list-disc space-y-1 pl-5 marker:text-accent">
+                        {p.highlights.map((h) => (
+                          <li>
+                            <Rich text={h} />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    {p.technologies.length > 0 && (
+                      <ul class="mt-3 flex flex-wrap gap-1.5" aria-label={t.technologies}>
+                        {p.technologies.map((tech) => (
+                          <li class="rounded bg-bg px-2 py-0.5 text-xs text-muted ring-1 ring-rule">{tech}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </article>
+                ))}
+              </div>
+            </Section>
+          )
+        }
+      </main>
+
+      <!-- Barra lateral -->
+      <aside class="space-y-6 print:mt-8 print:space-y-8">
+        <div class={card}>
+          <Section id="skills" title={t.skills}>
+            <dl class="space-y-4">
+              {
+                cv.skills.map((s) => (
+                  <div>
+                    <dt class="text-sm font-semibold">{s.name}</dt>
+                    <dd class="mt-1.5">
+                      <ul class="flex flex-wrap gap-1.5">
+                        {s.featured.map((k) => (
+                          <li class={chip}>{k}</li>
+                        ))}
+                        {s.keywords.map((k) => (
+                          <li class="rounded-md px-1.5 py-0.5 text-xs text-muted ring-1 ring-rule">{k}</li>
+                        ))}
+                      </ul>
+                    </dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </Section>
+        </div>
+
+        <div class:list={[card, 'space-y-8']}>
+          <Section id="education" title={t.education}>
+            <ul class="space-y-3">
+              {
+                cv.education.map((e) => (
+                  <li>
+                    <p class="font-semibold leading-snug">
+                      {e.studyType} {t.degreeIn} {e.area}
+                    </p>
+                    <p class="mt-0.5 text-sm text-muted">
+                      {e.institution} · <time datetime={e.endDate}>{formatDate(e.endDate, t)}</time>
+                    </p>
+                  </li>
+                ))
+              }
+            </ul>
+          </Section>
+
+          {
+            cv.certificates.length > 0 && (
+              <Section id="certificates" title={t.certificates}>
+                <ul class="space-y-2 text-sm">
+                  {cv.certificates.map((c) => (
+                    <li class="leading-snug">
+                      {c.url ? (
+                        <a href={c.url} class="hover:text-accent-ink hover:underline">
+                          {c.name}
+                        </a>
+                      ) : (
+                        c.name
+                      )}
+                      {(c.issuer || c.date) && (
+                        <span class="block text-xs text-muted">
+                          {[c.issuer, c.date && formatDate(c.date, t)].filter(Boolean).join(' · ')}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </Section>
+            )
+          }
+
+          <Section id="languages" title={t.languages}>
+            <dl class="space-y-2 text-sm">
+              {
+                cv.languages.map((l) => (
+                  <div>
+                    <dt class="font-semibold">{l.language}</dt>
+                    <dd class="text-muted">{l.fluency}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          </Section>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="no-print mt-10 text-center text-xs text-muted">
+      <p>
+        {lang === 'es' ? 'Actualizado' : 'Updated'}
+        <time datetime={meta.lastModified}>{formatDate(meta.lastModified, t)}</time> ·
+        {lang === 'es' ? 'Generado desde YAML con' : 'Generated from YAML with'} Astro + Typst ·
+        <a href="https://github.com/inehosa1/cv" class="underline underline-offset-4 hover:text-accent-ink">
+          {lang === 'es' ? 'código fuente' : 'source code'}
+        </a>
+      </p>
+    </footer>
+  </div>
+</Base>

@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+/*
+ * Tokens de diseño. Mantener sincronizados con typst/cv.typ.
+ * Todas las combinaciones de texto cumplen WCAG AA (≥ 4.5:1).
+ */
+:root {
+  color-scheme: light dark;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --ink: #1e293b;
+  --muted: #64748b;
+  --rule: #e2e8f0;
+  --accent: #e5484d; /* decorativo: barras, puntos, bordes */
+  --accent-ink: #c9302c; /* texto sobre fondo claro (5.3:1) */
+  --chip: #fff1f1;
+  --chip-border: #fbd5d6;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1120;
+    --surface: #111827;
+    --ink: #e2e8f0;
+    --muted: #94a3b8;
+    --rule: #1f2937;
+    --accent: #ff6b70;
+    --accent-ink: #ff7a7e;
+    --chip: #2a1519;
+    --chip-border: #4a1d22;
+  }
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-chip: var(--chip);
+  --color-chip-border: var(--chip-border);
+}
+
+@layer base {
+  html {
+    @apply bg-bg font-sans text-ink antialiased;
+    font-feature-settings: "cv11", "ss01"; /* Inter: dígitos y 'a' más legibles */
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    @apply rounded-sm outline-2 outline-offset-2 outline-accent;
+  }
+
+  ::selection {
+    @apply bg-accent text-white;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Impresión desde el navegador: una columna, sin controles. El PDF oficial lo genera Typst. */
+@media print {
+  :root {
+    --bg: #fff;
+    --surface: #fff;
+    --ink: #000;
+    --muted: #444;
+  }
+
+  @page {
+    size: A4;
+    margin: 1.4cm;
+  }
+
+  html {
+    font-size: 11px;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-flat {
+    display: block !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+  }
+
+  article,
+  section {
+    break-inside: avoid-page;
+  }
+}

@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=../schema/cv.schema.json
+# Fuente de verdad del CV (español). Ver AGENTS.md para las reglas de contenido.
+# Énfasis: usa **negrita** solo en tecnologías o resultados clave (máx. 2–3 por bullet).
+
+meta:
+  lang: es
+  title: Ricardo Andrés Arango Ruiz — Desarrollador Fullstack (Python, React, IA)
+  description: >-
+    CV de Ricardo Arango, desarrollador Fullstack con Python (FastAPI, Django), React e
+    integración de IA (LLMs, Claude, OpenAI). Remoto desde Medellín, Colombia.
+  lastModified: 2026-09
+  labels:
+    summary: Perfil profesional
+    competencies: Competencias clave
+    work: Experiencia laboral
+    projects: Proyectos
+    skills: Habilidades técnicas
+    education: Educación
+    certificates: Certificaciones
+    languages: Idiomas
+    technologies: Tecnologías
+    present: Actualidad
+    downloadPdf: Descargar PDF
+    switchLang: English
+    contact: Contacto
+    degreeIn: en
+    months: [ene, feb, mar, abr, may, jun, jul, ago, sep, oct, nov, dic]
+
+basics:
+  name: Ricardo Andrés Arango Ruiz
+  label: Desarrollador Fullstack · Python (FastAPI / Django) · React · Integración de IA
+  email: chanix1998@gmail.com
+  phone: +57 319 449 5717
+  url: https://inehosa1.github.io/cv/
+  # TODO: los años de experiencia deben cuadrar con la sección de experiencia (hoy empieza en 2020).
+  #       Añade los empleos anteriores a 2020 o ajusta la cifra.
+  summary: >-
+    Ingeniero de software con **9 años de experiencia** construyendo productos Fullstack de punta a
+    punta. Especialista en backend con **Python (FastAPI, Django, Flask)** y frontend con
+    **React y TypeScript**, con sólida experiencia en APIs REST, microservicios y **PostgreSQL**.
+    Integro **IA generativa (LLMs, agentes, Claude / OpenAI)** en productos y en el propio ciclo de
+    desarrollo para automatizar procesos y entregar más rápido. Trabajo con Clean Code, SOLID,
+    OWASP Top 10 y testing automatizado en equipos ágiles 100 % remotos.
+  location:
+    city: Medellín
+    country: Colombia
+    countryCode: CO
+    remote: 100 % remoto
+  profiles:
+    - network: LinkedIn
+      username: ricardo-andres-arango-ruiz
+      url: https://www.linkedin.com/in/ricardo-andres-arango-ruiz
+    - network: GitHub
+      username: inehosa1
+      url: https://github.com/inehosa1
+
+competencies:
+  - Python backend (FastAPI / Django)
+  - Frontend con React y TypeScript
+  - Integración de IA y LLMs
+  - Desarrollo Fullstack end-to-end
+  - APIs REST y microservicios
+  - PostgreSQL y optimización SQL
+  - Clean Code, SOLID y Pytest
+  - AWS y CI/CD
+
+work:
+  - name: Rawson BPO
+    position: Consultor de Software Fullstack & Backend Python
+    location: España (100 % remoto)
+    startDate: 2023-10
+    # TODO(métricas): añade cifras reales donde las tengas (latencia, % de mejora, usuarios, horas ahorradas).
+    highlights:
+      - Desarrollo soluciones Fullstack de punta a punta para plataformas de distribución masiva, con APIs de alto rendimiento en **Python/FastAPI** e interfaces modulares en **React**.
+      - Integré flujos con **modelos de IA (APIs LLM, Claude Code)** para acelerar el análisis de datos, validar sintáctica y semánticamente contratos de API y generar automatizaciones.
+      - Modelé y optimicé consultas avanzadas en **PostgreSQL**, reduciendo latencias y soportando alta concurrencia en producción.
+      - Apliqué **OWASP Top 10** (autenticación JWT, saneamiento de entradas, gestión segura de credenciales) junto con principios SOLID y Clean Code.
+      - Diseñé pruebas unitarias y de integración con **Pytest** y documentación viva con **OpenAPI/Swagger**.
+      - Contenedoricé servicios con **Docker** y los desplegué en **AWS** (Lambda, RDS, S3) con flujo Git/GitHub en equipo multidisciplinario.
+    technologies: [Python, FastAPI, React, TypeScript, PostgreSQL, Claude API, Claude Code, Docker, AWS Lambda, AWS RDS, Pytest, OpenAPI]
+
+  - name: Mercado Libre
+    position: Software Engineer (Fullstack & Backend)
+    location: Medellín, Colombia
+    startDate: 2022-11
+    endDate: 2023-11
+    highlights:
+      - Desarrollé servicios en **Python (Django REST, Flask)** y JavaScript para orquestar y procesar flujos de datos en tiempo real entre subsistemas de alto tráfico.
+      - Construí pipelines de integración de datos que alimentaron módulos de automatización y **modelos predictivos** sobre grandes volúmenes.
+      - Monitoreé rendimiento con **DataDog** y **Kibana**, diagnosticando cuellos de botella y mejorando la resiliencia del ecosistema.
+      - Aprovisioné y desplegué infraestructura como código con **CloudFormation** sobre AWS (Lambda, S3, EC2) en equipos ágiles distribuidos.
+    technologies: [Python, Django REST Framework, Flask, JavaScript, DynamoDB, AWS, CloudFormation, Docker, DataDog, Kibana]
+
+  - name: Talenta
+    position: Desarrollador de Software (Fullstack / Backend)
+    location: Medellín, Colombia
+    startDate: 2020-01
+    endDate: 2022-11
+    highlights:
+      - Desarrollé aplicaciones y APIs en **Python (Django)** con interfaces en **React** y persistencia en **PostgreSQL**, manteniendo código desacoplado.
+      - Diseñé esquemas relacionales, ejecuté migraciones controladas y optimicé índices para responder a alta demanda.
+      - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
+      - Configuré pipelines de CI con **Docker** y **Jenkins** y aprovisionamiento con **Ansible** sobre AWS.
+    technologies: [Python, Django, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
+
+projects:
+  - name: CV as Code
+    url: https://github.com/inehosa1/cv
+    description: Este CV. Una sola fuente de datos en YAML genera un sitio web estático y un PDF compatible con ATS, validados con esquemas y publicados con CI/CD.
+    technologies: [Astro, TypeScript, Tailwind CSS, Typst, Zod, GitHub Actions]
+
+skills:
+  - name: Lenguajes
+    featured: [Python, TypeScript, JavaScript (ES6+), SQL]
+    keywords: [Rust, Bash, HTML5, CSS3]
+  - name: Backend
+    featured: [FastAPI, Django, Django REST Framework, Flask]
+    keywords: [APIs REST, Microservicios, Pydantic, SQLAlchemy, Django ORM, Arquitectura hexagonal / Clean Architecture]
+  - name: Frontend
+    featured: [React, TypeScript]
+    keywords: [Componentes reutilizables, Gestión de estado, Validación de formularios, Diseño responsive]
+  - name: Inteligencia artificial
+    featured: [Claude API, OpenAI API, Claude Code]
+    keywords: [Agentes, Prompting estructurado, Automatización con IA, Desarrollo AI-Native]
+  - name: Bases de datos
+    featured: [PostgreSQL]
+    keywords: [Modelado relacional, Optimización de queries, Índices, Migraciones, DynamoDB]
+  - name: Calidad y seguridad
+    featured: [Pytest, OWASP Top 10]
+    keywords: [Clean Code, SOLID, OpenAPI / Swagger, Code reviews, JWT]
+  - name: Cloud y DevOps
+    featured: [AWS, Docker]
+    keywords: [Lambda, RDS, S3, EC2, GitHub Actions, Jenkins, CloudFormation, Ansible, DataDog, Kibana, Git]
+
+education:
+  - institution: SENA
+    studyType: Tecnólogo
+    area: Análisis y Desarrollo de Sistemas de Información
+    endDate: "2018"
+
+# TODO: añade emisor (p. ej. Platzi, Udemy, AWS) y año de cada certificación; da credibilidad.
+certificates:
+  - name: Backend con Python y Django (intermedio/avanzado)
+  - name: "FastAPI: modularización, rendimiento y manejo de errores"
+  - name: Desarrollo frontend con JavaScript y React
+  - name: Arquitecturas limpias y principios SOLID
+  - name: "Introducción a AWS: Cloud Computing"
+
+languages:
+  - language: Español
+    fluency: Nativo
+  - language: Inglés
+    fluency: Intermedio (lectura técnica y documentación)

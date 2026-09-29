@@ -1,0 +1,12 @@
+---
+/** Renderiza texto con `**negrita**`. Astro escapa el contenido: no hay HTML crudo. */
+import { richSegments } from '../lib/format.ts';
+
+interface Props {
+  text: string;
+}
+
+const { text } = Astro.props;
+---
+
+{richSegments(text).map((s) => (s.bold ? <strong class="font-semibold">{s.text}</strong> : s.text))}
