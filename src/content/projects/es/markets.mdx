@@ -1,0 +1,144 @@
+---
+title: SEB Markets — integración multi-marketplace
+tagline: Plataforma B2B que conecta el catálogo, el stock, los precios y los pedidos de retailers con Amazon, eBay, Miravia, Mirakl y Fnac. Blindé la API pública, añadí resiliencia y la migré a Huawei Cloud.
+client: SEB Business
+company: Thinkia · Eanmatic
+role: Backend & plataforma · Tech lead del workspace (2026)
+start: 2024-04
+order: 3
+metrics:
+  - value: "28 → 0"
+    label: vulnerabilidades en dependencias de la API pública
+  - value: "99 %"
+    label: cobertura de la API (506 tests)
+  - value: "208"
+    label: tests creados desde cero en el backend Django
+  - value: "5"
+    label: servicios con pipeline nuevo hacia Huawei Cloud
+stack:
+  - group: API pública
+    items: [Python 3.12, FastAPI, Starlette, Pydantic 2, Motor (MongoDB), httpx, PyJWT]
+  - group: Backends
+    items: [Django 4.2, Django REST Framework, Celery, PostgreSQL, MongoDB, Redis]
+  - group: Frontends
+    items: [React 18, TypeScript, Vite, MUI, Redux Toolkit, Redux-Saga, Formik, Vitest]
+  - group: Marketplaces
+    items: [Amazon, eBay, Miravia, Mirakl / MediaMarkt, Fnac]
+  - group: Infra y CI/CD
+    items: [Docker, Jenkins, GCP Cloud Run, Huawei Cloud ECS / SWR / OBS, VPC privada]
+  - group: Calidad y seguridad
+    items: [pytest, pytest-asyncio, respx, mongomock-motor, pip-audit, bandit, OWASP Top 10]
+tags: [FastAPI, Seguridad, Marketplaces, Resiliencia, Migración cloud, Claude Code]
+---
+
+**SEB Markets** permite a los retailers gestionar desde un solo lugar productos, stock, precios, ofertas y pedidos en varios marketplaces. Es multi-tenant (cliente → tiendas → marketplace y país), tiene un portal para el staff de SEB y otro para los clientes, y ofrece una **API pública** para que los sistemas de los clientes se integren directamente.
+
+Participé en dos etapas:
+
+- **2024**: documentación OpenAPI y esquemas de la API, la librería de validación de producto (`market-lib`) y *fixtures* de integración con eBay.
+- **2026**: una pasada transversal de **seguridad, testing, resiliencia y modernización** por todo el workspace, y la migración de la plataforma a Huawei Cloud.
+
+## Arquitectura
+
+```mermaid
+flowchart TB
+  EXT["Sistemas del cliente"] -->|"REST + JWT"| API
+  STAFF["Portal staff<br/>React + TS"] --> BACK
+  CLI["Portal clientes<br/>React + TS"] --> BACK
+
+  API["API pública · FastAPI<br/>~30 endpoints"]
+  BACK["Backend staff · Django + DRF<br/>órdenes, permisos, tenants"]
+  STOCK["Servicio stock / precio / productos<br/>Django + Celery · cargas Excel"]
+
+  API --> MDB[("MongoDB")]
+  BACK --> PG[("PostgreSQL")]
+  STOCK --> PG
+  BACK --> STOCK
+
+  CON["Conectores de marketplace<br/>Amazon · eBay · Miravia · Mirakl · Fnac"]
+
+  API -->|"JWT por marketplace<br/>timeouts + reintentos"| CON
+  BACK --> CON
+```
+
+## Blindaje de la API pública (OWASP Top 10)
+
+La API pública es la superficie más expuesta del sistema. La revisé contra el **OWASP Top 10** y la endurecí por capas:
+
+- **Autenticación y autorización**: token obligatorio en todas las rutas de negocio, autorización por marketplace y **rate limiting** del login por usuario y por IP (respuesta 429).
+- **Entrada y salida**: los identificadores se sanean antes de enviarlos a los conectores, las subidas de ficheros tienen protección contra *path traversal*, las cabeceras de seguridad (CSP, HSTS…) están activas y la documentación interactiva se oculta en producción.
+- **Dependencias**: actualicé Python (3.10 → 3.12), FastAPI y Starlette y sustituí `python-jose` por PyJWT. Las vulnerabilidades reportadas por `pip-audit` bajaron de **28 a 0**.
+- **Observabilidad**: logs JSON estructurados con `request_id` y eventos de auditoría.
+- **Contenedores y pipeline**: imagen Docker que se ejecuta sin root y una etapa de auditoría de seguridad (pip-audit y bandit) en Jenkins.
+
+La suite de la API pasó de 396 tests (~92 %) a **506 tests con un 99 % de cobertura**. Usé `respx` para simular los conectores HTTP y `mongomock-motor` para MongoDB, así que ningún test depende de servicios externos.
+
+## Resiliencia en la sincronización de pedidos
+
+Antes, un marketplace caído o lento podía dejar pedidos desincronizados sin que nadie se enterara. Rediseñé el flujo de cambios de estado de las líneas de pedido:
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant U as Staff / cliente
+  participant B as Backend
+  participant C as Conector marketplace
+  participant Q as Cola de reintentos (Mongo)
+
+  U->>B: acepta / rechaza / cancela
+  B->>B: permisos del tenant
+  B->>C: notifica (con timeout)
+  alt respuesta OK
+    C-->>B: 200
+    B-->>U: actualizado
+  else error o timeout
+    B->>C: reintento con backoff
+    C--xB: falla de nuevo
+    B->>Q: encola la notificación
+    B-->>U: actualizado · sync pendiente
+    Q->>C: reintento diferido
+  end
+```
+
+## Aislamiento multi-tenant en el backend Django
+
+- **Reescribí la validación de permisos**: guardaba estado en atributos de clase compartidos entre peticiones e hilos, una condición de carrera que podía mezclar permisos entre usuarios.
+- Añadí permisos por método HTTP y bloqueo de escalada de privilegios, con un despliegue gradual **`warn` → `enforce`**: primero se registran las violaciones y después se bloquean, sin romper a los clientes existentes.
+- Nuevo **contrato de Orders API v1** con upserts y filtros.
+- **208 tests** nuevos en un backend que no tenía suite.
+
+En el servicio de stock, precios y productos añadí validación real de las cargas Excel y endpoints de creación idempotentes (409/404), corregí problemas de seguridad y de aislamiento entre tenants y alcancé **154 tests con un 89 % de cobertura**. El contenedor ahora ejecuta migraciones y gunicorn en lugar del servidor de desarrollo.
+
+## Migración a Huawei Cloud
+
+```mermaid
+flowchart TB
+  subgraph CI["Jenkins · por repositorio"]
+    direction LR
+    T["Test + auditoría de seguridad"] --> BLD["Build Docker"] --> PSH["Push a SWR"] --> DEP["Deploy"]
+  end
+  subgraph HW["Huawei Cloud · VPC privada"]
+    direction TB
+    ECS["ECS de aplicaciones<br/>5 servicios"]
+    DS["ECS de datos<br/>PostgreSQL · MongoDB · Redis"]
+    OBS[("OBS · buckets privados")]
+  end
+  DEP --> ECS
+  ECS --> DS
+  ECS --> OBS
+  ORQ["Orquestador<br/>deploy-all"] --> CI
+```
+
+- Despliegue sobre VMs con una **VPC privada**, security groups restringidos y un *datastore* separado de las aplicaciones.
+- **5 pipelines nuevos** (`Jenkinsfile.huawei`) con test y auditoría de seguridad, build, push y deploy; un `deploy.sh` con modos parciales, un orquestador para desplegar todo y un script de apagado nocturno para reducir costes.
+- Almacenamiento de GCS a **OBS** con buckets privados.
+- Evalué **FunctionGraph** (serverless) y lo descarté por las limitaciones de IAM de la cuenta. La decisión quedó documentada.
+- Validé la migración de punta a punta en un Jenkins sandbox, y la validación destapó bugs de configuración reales (autenticación de MongoDB, orígenes CORS).
+
+## Desarrollo AI-native del workspace
+
+Configuré el workspace de 10 repositorios para trabajar con **Claude Code** de forma segura y repetible:
+
+- **8 subagentes especializados**: mapeo de repos, auditoría de contratos, auditoría de seguridad, ejecución y escritura de tests, changelog, lectura de conectores y trabajo por repositorio.
+- **Skills** para las tareas repetitivas (`new-endpoint`, `new-page`, `sync-product-schema`) y **hooks** que formatean Python y validan JSON después de cada edición.
+- **Reglas que impiden leer secretos** y un `AGENTS.md`/`CLAUDE.md` en cada repositorio con contratos y convenciones.

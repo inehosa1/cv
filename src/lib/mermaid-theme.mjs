@@ -1,0 +1,78 @@
+// Temas de Mermaid alineados con los tokens de src/styles/global.css.
+// Los SVG se sirven como <img>, que no puede cargar webfonts: se usa una fuente de sistema
+// ancha (Verdana ≈ DejaVu Sans en Linux/CI) para que el texto medido en build nunca se recorte.
+const base = {
+  theme: 'base',
+  fontFamily: 'Verdana, "DejaVu Sans", sans-serif',
+  flowchart: { curve: 'basis', htmlLabels: true, padding: 12 },
+  sequence: {
+    mirrorActors: false,
+    showSequenceNumbers: true,
+    width: 120,
+    actorMargin: 30,
+    boxMargin: 8,
+    noteMargin: 8,
+    messageMargin: 32,
+  },
+};
+
+export const mermaidLight = {
+  ...base,
+  themeVariables: {
+    fontFamily: base.fontFamily,
+    fontSize: '13px',
+    background: '#ffffff',
+    primaryColor: '#fff1f1',
+    primaryBorderColor: '#e5484d',
+    primaryTextColor: '#1e293b',
+    secondaryColor: '#f1f5f9',
+    secondaryBorderColor: '#94a3b8',
+    tertiaryColor: '#f8fafc',
+    tertiaryBorderColor: '#cbd5e1',
+    lineColor: '#64748b',
+    textColor: '#1e293b',
+    clusterBkg: '#f8fafc',
+    clusterBorder: '#cbd5e1',
+    edgeLabelBackground: '#ffffff',
+    actorBkg: '#fff1f1',
+    actorBorder: '#e5484d',
+    signalColor: '#475569',
+    noteBkgColor: '#fef9c3',
+    noteBorderColor: '#eab308',
+    sequenceNumberColor: '#ffffff',
+    signalTextColor: '#1e293b',
+    labelBoxBkgColor: '#fff1f1',
+    labelBoxBorderColor: '#e5484d',
+  },
+};
+
+export const mermaidDark = {
+  ...base,
+  themeVariables: {
+    fontFamily: base.fontFamily,
+    fontSize: '13px',
+    darkMode: true,
+    background: '#111827',
+    primaryColor: '#2a1519',
+    primaryBorderColor: '#ff6b70',
+    primaryTextColor: '#e2e8f0',
+    secondaryColor: '#1e293b',
+    secondaryBorderColor: '#64748b',
+    tertiaryColor: '#0f172a',
+    tertiaryBorderColor: '#334155',
+    lineColor: '#94a3b8',
+    textColor: '#e2e8f0',
+    clusterBkg: '#0f172a',
+    clusterBorder: '#334155',
+    edgeLabelBackground: '#111827',
+    actorBkg: '#2a1519',
+    actorBorder: '#ff6b70',
+    signalColor: '#cbd5e1',
+    noteBkgColor: '#3f3a1a',
+    noteBorderColor: '#ca8a04',
+    sequenceNumberColor: '#0b1120',
+    signalTextColor: '#e2e8f0',
+    labelBoxBkgColor: '#2a1519',
+    labelBoxBorderColor: '#ff6b70',
+  },
+};

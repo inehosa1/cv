@@ -36,11 +36,11 @@ basics:
   #       Añade los empleos anteriores a 2020 o ajusta la cifra.
   summary: >-
     Ingeniero de software con **9 años de experiencia** construyendo productos Fullstack de punta a
-    punta. Especialista en backend con **Python (FastAPI, Django, Flask)** y frontend con
-    **React y TypeScript**, con sólida experiencia en APIs REST, microservicios y **PostgreSQL**.
-    Integro **IA generativa (LLMs, agentes, Claude / OpenAI)** en productos y en el propio ciclo de
-    desarrollo para automatizar procesos y entregar más rápido. Trabajo con Clean Code, SOLID,
-    OWASP Top 10 y testing automatizado en equipos ágiles 100 % remotos.
+    punta. Especialista en backend con **Python (Django, FastAPI, Flask)** y frontend con **React,
+    TypeScript y Next.js**. Diseño plataformas multi-país de e-commerce, pagos y facturación en
+    producción: microservicios en **GCP**, **webhooks** idempotentes, integraciones con pasarelas de
+    pago, CRMs y marketplaces, y migraciones cloud. Desarrollo **AI-native** con Claude Code y
+    agentes, con foco en seguridad (OWASP Top 10), testing automatizado (+90 % de cobertura) y CI/CD.
   location:
     city: Medellín
     country: Colombia
@@ -55,29 +55,32 @@ basics:
       url: https://github.com/inehosa1
 
 competencies:
-  - Python backend (FastAPI / Django)
-  - Frontend con React y TypeScript
-  - Integración de IA y LLMs
-  - Desarrollo Fullstack end-to-end
-  - APIs REST y microservicios
-  - PostgreSQL y optimización SQL
-  - Clean Code, SOLID y Pytest
-  - AWS y CI/CD
+  - Python backend (Django / FastAPI)
+  - Frontend con React, TypeScript y Next.js
+  - Webhooks e integraciones de pago
+  - Microservicios serverless en GCP
+  - E-commerce multi-país (Shopify, marketplaces)
+  - Testing (+90 % cobertura) y CI/CD
+  - Seguridad OWASP Top 10
+  - Desarrollo AI-native (Claude Code)
 
 work:
   - name: Rawson BPO
     position: Consultor de Software Fullstack & Backend Python
     location: España (100 % remoto)
     startDate: 2023-10
-    # TODO(métricas): añade cifras reales donde las tengas (latencia, % de mejora, usuarios, horas ahorradas).
+    # TODO(confirmar): relación Rawson BPO ↔ Thinkia / Eanmatic (el historial de git muestra correos de Thinkia y Eanmatic).
+    summary: Consultor externo asignado a **Thinkia** y **Eanmatic**, a cargo de plataformas de producción para Culligan y SEB Business.
     highlights:
-      - Desarrollo soluciones Fullstack de punta a punta para plataformas de distribución masiva, con APIs de alto rendimiento en **Python/FastAPI** e interfaces modulares en **React**.
-      - Integré flujos con **modelos de IA (APIs LLM, Claude Code)** para acelerar el análisis de datos, validar sintáctica y semánticamente contratos de API y generar automatizaciones.
-      - Modelé y optimicé consultas avanzadas en **PostgreSQL**, reduciendo latencias y soportando alta concurrencia en producción.
-      - Apliqué **OWASP Top 10** (autenticación JWT, saneamiento de entradas, gestión segura de credenciales) junto con principios SOLID y Clean Code.
-      - Diseñé pruebas unitarias y de integración con **Pytest** y documentación viva con **OpenAPI/Swagger**.
-      - Contenedoricé servicios con **Docker** y los desplegué en **AWS** (Lambda, RDS, S3) con flujo Git/GitHub en equipo multidisciplinario.
-    technologies: [Python, FastAPI, React, TypeScript, PostgreSQL, Claude API, Claude Code, Docker, AWS Lambda, AWS RDS, Pytest, OpenAPI]
+      - "**Culligan España y Portugal:** diseñé y construí casi en solitario (~97 % de 720+ commits en 15 repos) la venta online de suscripciones: funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y dashboard de analítica en **Next.js**."
+      - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore**, reconstrucción automática y reproceso idempotente; el contrato solo se crea tras el pago.
+      - Unifiqué 8 servicios en una **librería Python interna versionada** (auth fail-closed, redacción de PII) y monté **CI/CD sin llaves** (OIDC + Workload Identity) con +1.100 tests y cobertura mínima del 90–95 %.
+      - Lancé Portugal con resolución **multi-mercado** por petición, migración de catálogo idempotente vía **Shopify GraphQL** y medición server-side (**GA4 Measurement Protocol**, **Meta CAPI**).
+      - "**SEB One** (back-office de pagos y facturación, 7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits): multi-tenancy, RBAC, notas de crédito, comisiones, reembolsos y disputas; ~1.500 tests, 88 % de cobertura."
+      - Construí un ETL Excel → **Parquet** → PostgreSQL (~590k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago (Adyen, PayPal, Klarna, Alma…); migré servicios y almacenamiento de **GCP a Huawei Cloud**.
+      - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): endurecí la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura) y añadí reintentos con backoff y colas de reintento."
+      - "Adopté desarrollo **AI-native** en todos los repositorios: subagentes, skills y hooks de **Claude Code**, y agentes Codex para ampliar cobertura de tests."
+    technologies: [Python, Django REST Framework, FastAPI, Flask, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, Redis, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Sentry, Claude Code]
 
   - name: Mercado Libre
     position: Software Engineer (Fullstack & Backend)
@@ -104,33 +107,35 @@ work:
     technologies: [Python, Django, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
 
 projects:
-  - name: CV as Code
-    url: https://github.com/inehosa1/cv
-    description: Este CV. Una sola fuente de datos en YAML genera un sitio web estático y un PDF compatible con ATS, validados con esquemas y publicados con CI/CD.
-    technologies: [Astro, TypeScript, Tailwind CSS, Typst, Zod, GitHub Actions]
+  - name: Casos de estudio técnicos
+    url: https://inehosa1.github.io/cv/proyectos/
+    description: Arquitectura, diagramas y decisiones técnicas de Culligan, SEB One, SEB Markets y más, con detalle de webhooks, integraciones y CI/CD.
 
 skills:
   - name: Lenguajes
     featured: [Python, TypeScript, JavaScript (ES6+), SQL]
-    keywords: [Rust, Bash, HTML5, CSS3]
+    keywords: [Liquid, Rust, Bash, HTML5, CSS3]
   - name: Backend
-    featured: [FastAPI, Django, Django REST Framework, Flask]
-    keywords: [APIs REST, Microservicios, Pydantic, SQLAlchemy, Django ORM, Arquitectura hexagonal / Clean Architecture]
+    featured: [Django, Django REST Framework, FastAPI, Flask]
+    keywords: [APIs REST, Webhooks, Microservicios, Celery, Pydantic, SQLAlchemy, Arquitectura hexagonal]
   - name: Frontend
-    featured: [React, TypeScript]
-    keywords: [Componentes reutilizables, Gestión de estado, Validación de formularios, Diseño responsive]
+    featured: [React, TypeScript, Next.js]
+    keywords: [Redux Toolkit, TanStack Query, MUI, Tailwind CSS, Shopify (Liquid), Vitest]
+  - name: Integraciones
+    featured: [Shopify, Stripe, Adyen]
+    keywords: [PayPal, Klarna, GA4 Measurement Protocol, Meta Conversions API, Amazon, eBay, Mirakl, CRMs]
   - name: Inteligencia artificial
-    featured: [Claude API, OpenAI API, Claude Code]
-    keywords: [Agentes, Prompting estructurado, Automatización con IA, Desarrollo AI-Native]
-  - name: Bases de datos
-    featured: [PostgreSQL]
-    keywords: [Modelado relacional, Optimización de queries, Índices, Migraciones, DynamoDB]
+    featured: [Claude Code, Claude API, OpenAI API]
+    keywords: [Agentes y subagentes, Skills y hooks, Codex, Prompting estructurado]
+  - name: Datos
+    featured: [PostgreSQL, Firestore]
+    keywords: [MongoDB, Redis, DynamoDB, pandas, Parquet, ETL, Índices y particionado]
   - name: Calidad y seguridad
     featured: [Pytest, OWASP Top 10]
-    keywords: [Clean Code, SOLID, OpenAPI / Swagger, Code reviews, JWT]
+    keywords: [Cobertura ≥ 90 %, Selenium, HMAC, JWT, Sentry, Clean Code, SOLID]
   - name: Cloud y DevOps
-    featured: [AWS, Docker]
-    keywords: [Lambda, RDS, S3, EC2, GitHub Actions, Jenkins, CloudFormation, Ansible, DataDog, Kibana, Git]
+    featured: [GCP, Docker, AWS]
+    keywords: [Cloud Run, Artifact Registry, Workload Identity, Huawei Cloud, Jenkins, Bitbucket Pipelines, GitHub Actions, CloudFormation]
 
 education:
   - institution: SENA

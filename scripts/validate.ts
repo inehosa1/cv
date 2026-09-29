@@ -2,7 +2,7 @@
  * Valida data/cv.<lang>.yaml contra el esquema, comprueba que los idiomas tengan
  * la misma estructura y regenera schema/cv.schema.json (autocompletado en el editor).
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { z } from 'zod';
 import { loadCV } from '../src/lib/cv.ts';
 import { cvSchema, LANGS } from '../src/lib/schema.ts';
@@ -42,13 +42,35 @@ if (base) {
     const lang = LANGS[i + 1];
     const cur = new Set(shape({ ...cv, meta: {} }));
     const diff = [...ref].filter((x) => !cur.has(x)).concat([...cur].filter((x) => !ref.has(x)));
-    // Las URLs propias pueden variar por idioma (p. ej. /en/).
-    const relevant = diff.filter((d) => !d.startsWith('basics.url='));
+    // Las URLs del propio sitio pueden variar por idioma (p. ej. /en/).
+    const own = new URL(base.basics.url ?? 'https://invalid').origin;
+    const relevant = diff.filter((d) => !/url=/.test(d) || !d.split('=')[1]?.startsWith(own));
     if (relevant.length)
       errors.push(
         `cv.${lang}.yaml difiere en estructura de cv.es.yaml:\n  ${relevant.join('\n  ')}`,
       );
   });
+}
+
+// Casos de estudio: mismo slug, nº de diagramas y de métricas en ambos idiomas.
+const projectsDir = 'src/content/projects';
+const signature = (lang: string, file: string) => {
+  const src = readFileSync(`${projectsDir}/${lang}/${file}`, 'utf8');
+  return `diagramas=${src.match(/```mermaid/g)?.length ?? 0} métricas=${src.match(/^ {2}- value:/gm)?.length ?? 0}`;
+};
+const [refLang, ...restLangs] = LANGS;
+const refFiles = readdirSync(`${projectsDir}/${refLang}`).sort();
+for (const lang of restLangs) {
+  const files = readdirSync(`${projectsDir}/${lang}`).sort();
+  const missing = refFiles.filter((f) => !files.includes(f));
+  const extra = files.filter((f) => !refFiles.includes(f));
+  if (missing.length || extra.length)
+    errors.push(`Casos de estudio ${lang}: faltan [${missing}] · sobran [${extra}]`);
+  for (const f of refFiles.filter((f) => files.includes(f))) {
+    const a = signature(refLang, f);
+    const b = signature(lang, f);
+    if (a !== b) errors.push(`Caso ${f}: ${refLang} (${a}) ≠ ${lang} (${b})`);
+  }
 }
 
 if (errors.length) {

@@ -1,0 +1,50 @@
+---
+title: CV as Code — este sitio
+tagline: Una única fuente de datos en YAML genera un sitio web bilingüe y un PDF compatible con ATS. Todo se valida con esquemas y se publica con CI/CD.
+client: Proyecto personal
+company: Open source
+role: Autor
+start: 2026-09
+order: 5
+nda: false
+metrics:
+  - value: "1"
+    label: fuente de datos para web y PDF
+  - value: "0 KB"
+    label: de JavaScript en el cliente
+  - value: "2"
+    label: idiomas con paridad validada
+stack:
+  - group: Web
+    items: [Astro 7, TypeScript, Tailwind CSS 4, MDX]
+  - group: PDF
+    items: [Typst]
+  - group: Datos
+    items: [YAML, Zod 4, JSON Schema]
+  - group: Diagramas
+    items: [Mermaid, Playwright, rehype-mermaid]
+  - group: CI/CD
+    items: [GitHub Actions, GitHub Pages, Biome]
+tags: [Astro, Typst, CI/CD, Accesibilidad, Open source]
+---
+
+Mi CV no se edita en un procesador de texto: se **compila**. Los datos viven en un único YAML por idioma y todo lo demás se genera a partir de ellos: esta web, el PDF para los sistemas ATS, la imagen para redes sociales y los metadatos para buscadores. El código es público en [github.com/inehosa1/cv](https://github.com/inehosa1/cv).
+
+```mermaid
+flowchart LR
+  Y["data/cv.es.yaml<br/>data/cv.en.yaml"] --> Z{"Zod<br/>esquema + paridad es/en"}
+  Z -- "error" --> X["Falla el build"]
+  Z -- "ok" --> A["Astro<br/>HTML estático"]
+  Z -- "ok" --> T["Typst<br/>PDF ATS · máx. 2 páginas"]
+  Z -- "ok" --> O["Typst<br/>imagen Open Graph"]
+  M["Casos de estudio MDX<br/>+ diagramas Mermaid"] --> P["Playwright<br/>SVG claro y oscuro"] --> A
+  A & T & O --> GH["GitHub Actions → GitHub Pages"]
+```
+
+## Decisiones
+
+- **Typst para el PDF.** Lee el YAML directamente, compila en milisegundos y produce texto real con las fuentes embebidas, en una sola columna, para que los ATS lo interpreten sin errores. El build falla si el CV supera las dos páginas.
+- **Astro sin JavaScript de cliente.** Genera HTML estático y semántico, con modo oscuro por `prefers-color-scheme`, contraste WCAG AA, JSON-LD `Person` y `hreflang`.
+- **Diagramas como código.** Los diagramas de estos casos de estudio se escriben en Mermaid y se renderizan en build con Playwright a SVG, en una variante clara y otra oscura. No se carga ninguna librería en el navegador.
+- **Validación estricta.** El esquema rechaza campos desconocidos y comprueba que la versión en español y la versión en inglés tengan exactamente la misma estructura.
+- **Privacidad.** El teléfono aparece solo en el PDF, nunca en el HTML ni en los datos estructurados.

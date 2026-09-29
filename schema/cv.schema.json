@@ -233,7 +233,7 @@
           },
           "highlights": {
             "minItems": 1,
-            "maxItems": 6,
+            "maxItems": 8,
             "type": "array",
             "items": {
               "type": "string",

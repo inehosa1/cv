@@ -2,29 +2,38 @@
 import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { plain } from '../lib/format.ts';
-import type { CV } from '../lib/schema.ts';
+import type { CV, Lang } from '../lib/schema.ts';
 import { withBase } from '../lib/url.ts';
 
 interface Props {
   cv: CV;
+  /** Por defecto, los del CV. */
+  title?: string;
+  description?: string;
+  /** Ruta de esta página en cada idioma (para canonical y hreflang). */
+  paths?: Record<Lang, string>;
+  /** JSON-LD propio; si se omite, se usa el ProfilePage/Person del CV. */
+  jsonLd?: Record<string, unknown>;
 }
 
-const { cv } = Astro.props;
+const { cv, paths = { es: '/', en: '/en/' } } = Astro.props;
 const { meta, basics } = cv;
+const title = Astro.props.title ?? meta.title;
+const description = Astro.props.description ?? meta.description;
 const site = Astro.site ?? new URL('http://localhost:4321');
 const abs = (path: string) => new URL(withBase(path), site).href;
 
-const canonical = abs(meta.lang === 'es' ? '/' : `/${meta.lang}/`);
+const canonical = abs(paths[meta.lang]);
 const alternates = [
-  { hreflang: 'es', href: abs('/') },
-  { hreflang: 'en', href: abs('/en/') },
-  { hreflang: 'x-default', href: abs('/') },
+  { hreflang: 'es', href: abs(paths.es) },
+  { hreflang: 'en', href: abs(paths.en) },
+  { hreflang: 'x-default', href: abs(paths.es) },
 ];
 const ogImage = abs(`/og-${meta.lang}.png`);
 const current = cv.work.find((w) => !w.endDate);
 
 // schema.org/Person para buscadores (sin teléfono: evita scraping).
-const jsonLd = {
+const profileLd = {
   '@context': 'https://schema.org',
   '@type': 'ProfilePage',
   dateModified: meta.lastModified,
@@ -51,6 +60,7 @@ const jsonLd = {
     ...(current && { worksFor: { '@type': 'Organization', name: current.name } }),
   },
 };
+const jsonLd = Astro.props.jsonLd ?? profileLd;
 ---
 
 <!doctype html>
@@ -58,8 +68,8 @@ const jsonLd = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{meta.title}</title>
-    <meta name="description" content={meta.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <meta name="author" content={basics.name} />
     <link rel="canonical" href={canonical} />
     {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
@@ -69,8 +79,8 @@ const jsonLd = {
     <meta name="theme-color" content="#0b1120" media="(prefers-color-scheme: dark)" />
 
     <meta property="og:type" content="profile" />
-    <meta property="og:title" content={meta.title} />
-    <meta property="og:description" content={meta.description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />

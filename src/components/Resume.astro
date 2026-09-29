@@ -2,11 +2,13 @@
 import Base from '../layouts/Base.astro';
 import { loadCV } from '../lib/cv.ts';
 import { duration, formatDate } from '../lib/format.ts';
+import { routes, ui } from '../lib/i18n.ts';
 import type { Lang } from '../lib/schema.ts';
 import { prettyUrl, withBase } from '../lib/url.ts';
 import Icon, { type IconName } from './Icon.astro';
 import Rich from './Rich.astro';
 import Section from './Section.astro';
+import SiteNav from './SiteNav.astro';
 
 interface Props {
   lang: Lang;
@@ -18,7 +20,7 @@ const { basics, meta } = cv;
 const t = meta.labels;
 
 const otherLang: Lang = lang === 'es' ? 'en' : 'es';
-const otherHref = withBase(otherLang === 'es' ? '/' : `/${otherLang}/`);
+const projectsHref = withBase(routes.projects[lang]);
 const pdfHref = withBase(`/cv-${lang}.pdf`);
 const pdfName = `${basics.name.replaceAll(' ', '_')}_CV_${lang.toUpperCase()}.pdf`;
 
@@ -34,12 +36,7 @@ const card =
 ---
 
 <Base cv={cv}>
-  <a
-    href="#main"
-    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-10 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:shadow"
-  >
-    {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
-  </a>
+  <SiteNav lang={lang} current="cv" altPath={routes.cv[otherLang]} name={basics.name} />
 
   <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:py-14">
     <!-- Cabecera -->
@@ -89,7 +86,7 @@ const card =
           </ul>
         </div>
 
-        <nav class="no-print flex shrink-0 gap-2 md:flex-col md:items-stretch" aria-label="PDF / idioma">
+        <nav class="no-print flex shrink-0 gap-2 md:flex-col md:items-stretch" aria-label="PDF">
           <a
             href={pdfHref}
             download={pdfName}
@@ -99,13 +96,11 @@ const card =
             {t.downloadPdf}
           </a>
           <a
-            href={otherHref}
-            hreflang={otherLang}
-            lang={otherLang}
+            href={projectsHref}
             class="inline-flex items-center justify-center gap-2 rounded-lg border border-rule px-4 py-2.5 text-sm font-semibold transition hover:border-accent hover:text-accent-ink"
           >
-            <Icon name="globe" />
-            {t.switchLang}
+            <Icon name="layers" />
+            {ui[lang].navProjects}
           </a>
         </nav>
       </div>

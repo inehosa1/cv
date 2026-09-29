@@ -1,0 +1,50 @@
+---
+title: CV as Code — this site
+tagline: A single YAML data source generates a bilingual website and an ATS-friendly PDF. Everything is schema-validated and published through CI/CD.
+client: Personal project
+company: Open source
+role: Author
+start: 2026-09
+order: 5
+nda: false
+metrics:
+  - value: "1"
+    label: data source for web and PDF
+  - value: "0 KB"
+    label: of client-side JavaScript
+  - value: "2"
+    label: languages with validated parity
+stack:
+  - group: Web
+    items: [Astro 7, TypeScript, Tailwind CSS 4, MDX]
+  - group: PDF
+    items: [Typst]
+  - group: Data
+    items: [YAML, Zod 4, JSON Schema]
+  - group: Diagrams
+    items: [Mermaid, Playwright, rehype-mermaid]
+  - group: CI/CD
+    items: [GitHub Actions, GitHub Pages, Biome]
+tags: [Astro, Typst, CI/CD, Accessibility, Open source]
+---
+
+My resume is not edited in a word processor: it is **compiled**. The data lives in a single YAML file per language, and everything else is generated from it: this website, the PDF for ATS systems, the social preview image and the search-engine metadata. The code is public at [github.com/inehosa1/cv](https://github.com/inehosa1/cv).
+
+```mermaid
+flowchart LR
+  Y["data/cv.es.yaml<br/>data/cv.en.yaml"] --> Z{"Zod<br/>schema + es/en parity"}
+  Z -- "error" --> X["Build fails"]
+  Z -- "ok" --> A["Astro<br/>static HTML"]
+  Z -- "ok" --> T["Typst<br/>ATS PDF · max 2 pages"]
+  Z -- "ok" --> O["Typst<br/>Open Graph image"]
+  M["MDX case studies<br/>+ Mermaid diagrams"] --> P["Playwright<br/>light and dark SVG"] --> A
+  A & T & O --> GH["GitHub Actions → GitHub Pages"]
+```
+
+## Decisions
+
+- **Typst for the PDF.** It reads the YAML directly, compiles in milliseconds and produces real text with embedded fonts in a single column, so ATS systems parse it without errors. The build fails if the resume exceeds two pages.
+- **Astro with no client-side JavaScript.** It generates static, semantic HTML with dark mode via `prefers-color-scheme`, WCAG AA contrast, `Person` JSON-LD and `hreflang`.
+- **Diagrams as code.** The diagrams in these case studies are written in Mermaid and rendered at build time with Playwright into SVG, in a light and a dark variant. No library is loaded in the browser.
+- **Strict validation.** The schema rejects unknown fields and checks that the Spanish and English versions have exactly the same structure.
+- **Privacy.** The phone number appears only in the PDF, never in the HTML or the structured data.

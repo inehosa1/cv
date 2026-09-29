@@ -1,0 +1,65 @@
+---
+import { routes, ui } from '../lib/i18n.ts';
+import type { Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  current: 'cv' | 'projects';
+  /** Ruta equivalente en el otro idioma. */
+  altPath: string;
+  name: string;
+}
+
+const { lang, current, altPath, name } = Astro.props;
+const t = ui[lang];
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const links = [
+  { key: 'cv', label: t.navCv, href: withBase(routes.cv[lang]) },
+  { key: 'projects', label: t.navProjects, href: withBase(routes.projects[lang]) },
+] as const;
+---
+
+<a
+  href="#main"
+  class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-lg focus:bg-surface focus:px-4 focus:py-2 focus:shadow"
+>
+  {t.skip}
+</a>
+<header class="no-print sticky top-0 z-40 border-b border-rule bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
+  <nav class="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6" aria-label="Principal">
+    <a href={withBase(routes.cv[lang])} class="mr-auto flex items-center gap-2 font-semibold tracking-tight">
+      <span class="grid size-7 place-items-center rounded-md bg-accent text-xs font-bold text-white" aria-hidden="true">RA</span>
+      <span class="hidden sm:inline">{name}</span>
+    </a>
+    <ul class="flex items-center gap-1 text-sm font-medium">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              aria-current={current === l.key ? 'page' : undefined}
+              class:list={[
+                'rounded-md px-3 py-1.5 transition hover:text-accent-ink',
+                current === l.key ? 'bg-chip text-accent-ink' : 'text-muted',
+              ]}
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a
+      href={withBase(altPath)}
+      hreflang={other}
+      lang={other}
+      class="flex items-center gap-1.5 rounded-md border border-rule px-2.5 py-1.5 text-sm font-medium text-muted transition hover:border-accent hover:text-accent-ink"
+    >
+      <Icon name="globe" class="size-4" />
+      <span class="uppercase">{other}</span>
+      <span class="sr-only">— {t.switchLang}</span>
+    </a>
+  </nav>
+</header>

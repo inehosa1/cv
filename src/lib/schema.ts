@@ -82,7 +82,7 @@ export const cvSchema = z.strictObject({
         startDate: partialDate,
         endDate: partialDate.optional(),
         summary: richText.optional(),
-        highlights: z.array(richText).min(1).max(6),
+        highlights: z.array(richText).min(1).max(8),
         technologies: z.array(z.string()).default([]),
       }),
     )

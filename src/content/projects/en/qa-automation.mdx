@@ -1,0 +1,71 @@
+---
+title: SebPay Connect — automated QA platform
+tagline: A service that orchestrates, via API, backend integration and front-end (Selenium) test suites against SEB One's payments and e-commerce microservices.
+client: SEB Business
+company: Eanmatic · Thinkia
+role: Creator and lead developer
+start: 2024-08
+end: 2025-09
+order: 4
+metrics:
+  - value: "36%"
+    label: of 215 commits · project creator
+  - value: "63"
+    label: Selenium front-end test files
+  - value: "3"
+    label: payment-provider suites (Hyperswitch, Stripe, Adyen)
+stack:
+  - group: Backend
+    items: [Python, Django 5.1, Django REST Framework, SimpleJWT, PostgreSQL 15]
+  - group: Testing
+    items: [pytest, pytest-django, pytest-html, Selenium 4]
+  - group: Data & reports
+    items: [pandas, XlsxWriter]
+  - group: Integrations under test
+    items: [Hyperswitch, Stripe, Adyen, SEB One microservices]
+tags: [QA, Selenium, pytest, Django, Payments]
+---
+
+As **SEB One** grew, so did its microservices: alerts, dashboards, email, order imports, uploads of payment and settlement files, and payment orchestration with **Hyperswitch**, **Stripe** and **Adyen**. Testing every release by hand no longer scaled. I created **SebPay Connect**, a platform that turns test suites into a service anyone on the team can trigger through an API.
+
+## How it works
+
+```mermaid
+flowchart TB
+  U["QA / developer / CI"] -->|"POST /run_tests<br/>POST /run_tests_front"| API["Django REST API<br/>JWT + roles"]
+  API --> REG[("PostgreSQL registry<br/>projects · modules · tests · runs")]
+  API -->|"background thread"| RUN["Runner<br/>pytest subprocess"]
+  RUN --> BE["Backend suites<br/>microservice integration"]
+  RUN --> FE["Front-end suites<br/>Selenium"]
+  BE & FE --> RPT["pytest-html reports<br/>and Excel results"]
+  RUN -->|"call_back_execution"| API
+  API --> REG
+```
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant C as Client
+  participant A as API
+  participant DB as PostgreSQL
+  participant R as Runner
+
+  C->>A: run_tests(project, module)
+  A->>A: Check user role
+  A->>DB: Create run (pending)
+  A->>R: Start pytest in background
+  A-->>C: 202 · run id
+  R->>R: Run the suite
+  R->>A: call_back_execution(result)
+  A->>DB: Store status, metrics and report
+  C->>A: Query the run
+  A-->>C: Result + HTML report
+```
+
+## Technical decisions
+
+- **Tests registered in the database.** Projects, modules, tests, functions and runs are queryable entities, so result history is auditable and comparable across releases.
+- **Asynchronous execution with callbacks.** The API responds immediately and the runner reports back through a callback, so long Selenium suites never block whoever triggered them.
+- **Role-based execution.** Each user can only trigger the suites for their own projects.
+- **Front-end suites split into their own repositories**, one for the staff portal and one for the client portal, with 63 test files.
+- **Payment-integration coverage**: dedicated suites for the Hyperswitch, Stripe and Adyen flows, and for uploads of order, payment, settlement, tax and transaction files.

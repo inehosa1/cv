@@ -1,0 +1,180 @@
+---
+import { render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { loadCV } from '../lib/cv.ts';
+import { formatDate } from '../lib/format.ts';
+import { routes, ui } from '../lib/i18n.ts';
+import { type Project, projectSlug } from '../lib/projects.ts';
+import type { Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Icon from './Icon.astro';
+import SiteNav from './SiteNav.astro';
+
+interface Props {
+  lang: Lang;
+  entry: Project;
+  prev?: Project | undefined;
+  next?: Project | undefined;
+}
+
+const { lang, entry, prev, next } = Astro.props;
+const cv = loadCV(lang);
+const t = ui[lang];
+const L = cv.meta.labels;
+const d = entry.data;
+const slug = projectSlug(entry);
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const { Content, headings } = await render(entry);
+const toc = headings.filter((h) => h.depth === 2);
+const period = `${formatDate(d.start, L)} – ${d.end ? formatDate(d.end, L) : L.present}`;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TechArticle',
+  headline: d.title,
+  description: d.tagline,
+  inLanguage: lang,
+  author: { '@type': 'Person', name: cv.basics.name, url: cv.basics.url },
+  about: d.tags,
+};
+---
+
+<Base
+  cv={cv}
+  title={`${d.title} — ${cv.basics.name}`}
+  description={d.tagline}
+  paths={routes.project(slug)}
+  jsonLd={jsonLd}
+>
+  <SiteNav lang={lang} current="projects" altPath={routes.project(slug)[other]} name={cv.basics.name} />
+
+  <main id="main" class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+    <a
+      href={withBase(routes.projects[lang])}
+      class="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-accent-ink"
+    >
+      <Icon name="arrowLeft" class="size-4" />
+      {t.allProjects}
+    </a>
+
+    <header class="mt-6 max-w-4xl">
+      <ul class="flex flex-wrap gap-1.5" aria-label={t.stack}>
+        {
+          d.tags.map((tag) => (
+            <li class="rounded-md border border-chip-border bg-chip px-2 py-0.5 text-xs font-medium text-accent-ink">
+              {tag}
+            </li>
+          ))
+        }
+      </ul>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-5xl">{d.title}</h1>
+      <p class="mt-4 text-lg leading-relaxed text-pretty text-muted">{d.tagline}</p>
+
+      <dl class="mt-6 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4">
+        {
+          [
+            [t.client, d.client],
+            [t.company, d.company],
+            [t.role, d.role],
+            [t.period, period],
+          ].map(([k, v]) => (
+            <div>
+              <dt class="text-xs text-muted">{k}</dt>
+              <dd class="mt-0.5 font-medium">{v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </header>
+
+    {
+      d.metrics.length > 0 && (
+        <dl class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          {d.metrics.map((m) => (
+            <div class="rounded-xl border border-rule bg-surface p-4">
+              <dt class="text-xs leading-snug text-muted">{m.label}</dt>
+              <dd class="mt-1 text-2xl font-bold text-accent-ink tabular-nums">{m.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <section aria-labelledby="stack-title" class="mt-6 rounded-2xl border border-rule bg-surface p-5 sm:p-6">
+      <h2 id="stack-title" class="text-xs font-bold tracking-[0.12em] text-accent-ink uppercase">{t.stack}</h2>
+      <dl class="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          d.stack.map((s) => (
+            <div>
+              <dt class="text-xs font-semibold">{s.group}</dt>
+              <dd class="mt-1.5 flex flex-wrap gap-1">
+                {s.items.map((i) => (
+                  <span class="rounded bg-bg px-1.5 py-0.5 text-xs text-muted ring-1 ring-rule">{i}</span>
+                ))}
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    {
+      toc.length > 0 && (
+        <nav aria-labelledby="toc-title" class="mt-8">
+          <h2 id="toc-title" class="sr-only">{t.onThisPage}</h2>
+          <ol class="flex flex-wrap gap-2 text-sm">
+            {toc.map((h, i) => (
+              <li>
+                <a
+                  href={`#${h.slug}`}
+                  class="inline-flex items-center gap-2 rounded-full border border-rule px-3 py-1 text-muted transition hover:border-accent hover:text-accent-ink"
+                >
+                  <span class="text-xs font-semibold text-accent-ink tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    <article class="prose-cv prose mt-4 max-w-none prose-headings:tracking-tight prose-h2:mt-14 prose-h2:border-b prose-h2:border-rule prose-h2:pb-2 prose-a:underline-offset-4">
+      <Content />
+    </article>
+
+    {
+      d.nda && (
+        <p class="mt-10 flex max-w-3xl gap-2 text-xs leading-relaxed text-muted">
+          <Icon name="lock" class="mt-0.5 size-3.5 shrink-0" />
+          {t.nda}
+        </p>
+      )
+    }
+
+    <nav class="mt-16 grid gap-4 border-t border-rule pt-8 sm:grid-cols-2" aria-label={t.allProjects}>
+      {
+        prev ? (
+          <a href={withBase(routes.project(projectSlug(prev))[lang])} class="group rounded-xl border border-rule p-4 hover:border-accent">
+            <span class="flex items-center gap-1 text-xs text-muted">
+              <Icon name="arrowLeft" class="size-3.5" /> {t.prev}
+            </span>
+            <span class="mt-1 block font-semibold group-hover:text-accent-ink">{prev.data.title}</span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next && (
+          <a href={withBase(routes.project(projectSlug(next))[lang])} class="group rounded-xl border border-rule p-4 text-right hover:border-accent">
+            <span class="flex items-center justify-end gap-1 text-xs text-muted">
+              {t.next} <Icon name="arrowRight" class="size-3.5" />
+            </span>
+            <span class="mt-1 block font-semibold group-hover:text-accent-ink">{next.data.title}</span>
+          </a>
+        )
+      }
+    </nav>
+  </main>
+</Base>
