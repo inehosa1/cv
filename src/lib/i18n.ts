@@ -17,7 +17,7 @@ export const ui = {
     projectsTitle: 'Proyectos',
     projectsKicker: 'Casos de estudio técnicos',
     projectsIntro:
-      'Sistemas que he diseñado y construido en producción: arquitectura, integraciones, decisiones técnicas y resultados. Los diagramas se generan desde código.',
+      'Sistemas que he diseñado y construido, en producción y en desarrollo: arquitectura, integraciones, decisiones técnicas y resultados. Los diagramas se generan desde código.',
     readCase: 'Ver caso de estudio',
     client: 'Cliente',
     company: 'Empresa',
@@ -31,6 +31,7 @@ export const ui = {
     nda: 'Proyecto bajo confidencialidad: se omiten datos internos, código y nombres de sistemas privados.',
     viewCv: 'Ver CV completo',
     projectsLd: 'Proyectos de',
+    inDevelopment: 'En desarrollo',
   },
   en: {
     navCv: 'Resume',
@@ -40,7 +41,7 @@ export const ui = {
     projectsTitle: 'Projects',
     projectsKicker: 'Technical case studies',
     projectsIntro:
-      'Production systems I have designed and built: architecture, integrations, technical decisions and outcomes. Diagrams are generated from code.',
+      'Systems I have designed and built, in production and in development: architecture, integrations, technical decisions and outcomes. Diagrams are generated from code.',
     readCase: 'Read case study',
     client: 'Client',
     company: 'Company',
@@ -54,5 +55,6 @@ export const ui = {
     nda: 'Project under NDA: internal data, source code and private system names are omitted.',
     viewCv: 'View full resume',
     projectsLd: 'Projects by',
+    inDevelopment: 'In development',
   },
 } as const satisfies Record<Lang, Record<string, string>>;

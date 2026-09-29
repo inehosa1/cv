@@ -58,6 +58,13 @@ const jsonLd = {
     </a>
 
     <header class="mt-6 max-w-4xl">
+      <div class="flex flex-wrap items-center gap-1.5">
+      {d.status === 'development' && (
+        <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-300">
+          <span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true" />
+          {t.inDevelopment}
+        </span>
+      )}
       <ul class="flex flex-wrap gap-1.5" aria-label={t.stack}>
         {
           d.tags.map((tag) => (
@@ -67,6 +74,7 @@ const jsonLd = {
           ))
         }
       </ul>
+      </div>
       <h1 class="mt-4 text-3xl font-bold tracking-tight text-balance sm:text-5xl">{d.title}</h1>
       <p class="mt-4 text-lg leading-relaxed text-pretty text-muted">{d.tagline}</p>
 

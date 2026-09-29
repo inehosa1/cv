@@ -1,0 +1,116 @@
+---
+title: Culligan Analytics — dashboard de analítica y operación
+tagline: "Dashboard interno en Next.js que convierte GA4, Firestore y el pipeline de pedidos en números fiables: funnel, adquisición, diagnóstico diario de anomalías, reproceso de pedidos y NPS, para España y Portugal."
+client: Culligan España y Portugal
+company: Rawson BPO · cliente Thinkia
+role: Desarrollador único · Fullstack
+start: 2026-05
+end: 2026-08
+order: 3
+metrics:
+  - value: "23"
+    label: informes GA4 en paralelo por carga, con límite de concurrencia
+  - value: "21"
+    label: rutas API (backend-for-frontend)
+  - value: "75"
+    label: tests de métricas, permisos, funnel y anomalías
+  - value: "3"
+    label: capas de autorización (sección, mercado, reproceso)
+stack:
+  - group: Frontend
+    items: [Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, Recharts, lucide-react]
+  - group: Backend (BFF)
+    items: [Next.js API routes, NextAuth (Google OAuth), google-auth-library]
+  - group: Datos
+    items: [GA4 Data API, Firestore, Microservicios Culligan]
+  - group: Infra
+    items: [Docker, Cloud Build, Artifact Registry, Cloud Run, Secret Manager]
+  - group: Calidad
+    items: [node:test con tsx, Auditoría de métricas en vivo]
+tags: [Next.js, GA4, Analítica, RBAC, Detección de anomalías]
+---
+
+El equipo de marketing de Culligan no confiaba en los números de GA4: la atribución del funnel se perdía y nadie sabía responder rápido a preguntas como *"hoy hubo 0 compras, ¿por qué?"*. Construí un **dashboard interno** que reúne tráfico, conversión, funnel, pedidos, NPS y soporte en un solo lugar, con los números auditados y separados por mercado (España, Portugal y una vista comparativa).
+
+Lo usan el equipo de negocio y marketing, analistas y administradores, cada uno con permisos distintos.
+
+## Arquitectura
+
+```mermaid
+flowchart TB
+  U["Usuario<br/>Google OAuth"] --> MW["proxy.ts<br/>sesión + allowlist"]
+  MW --> UI["Next.js App Router<br/>9 secciones · es / pt / en"]
+  UI --> BFF["API routes (BFF)<br/>guard por sección, mercado y reproceso"]
+
+  BFF -->|"cuenta de servicio<br/>semáforo de 6 slots"| GA4["GA4 Data API<br/>una propiedad por mercado"]
+  BFF --> FS[("Firestore<br/>dashboard_users")]
+  BFF -->|"secreto interno"| WH["shopify-webhook<br/>pedidos · NPS · reproceso"]
+  BFF -->|"un secreto por acción"| TK["Servicio de tickets"]
+```
+
+- **Backend-for-frontend.** El navegador nunca habla con GA4, Firestore ni los microservicios: todo pasa por rutas API que validan permisos y ocultan los secretos.
+- **GA4 con cuenta de servicio**, separada de la identidad del usuario. Así los usuarios no necesitan permisos en Google Analytics, y la puerta queda abierta a alertas programadas.
+- **Configuración multi-mercado** por variables `NOMBRE_ES` / `NOMBRE_PT`. Portugal no hereda la configuración de España por defecto: si falta una variable, el mercado aparece deshabilitado en lugar de mostrar datos de otro país.
+
+## Carga del dashboard: 23 informes en paralelo sin romper la cuota
+
+```mermaid
+flowchart TB
+  REQ["GET /api/dashboard<br/>mercado + rango de fechas"] --> TOK["Token de GA4 en caché<br/>una sola petición en vuelo"]
+  TOK --> ALL["Promise.all de 23 informes"]
+  ALL --> SEM{"Semáforo<br/>máx. 6 a la vez"}
+  SEM --> B["10 bloqueantes<br/>KPIs, canales, dispositivos,<br/>páginas, geo, serie, funnel…"]
+  SEM --> T["13 tolerantes<br/>CTAs, validaciones, errores,<br/>leads, compras por campaña…"]
+  B -- "falla" --> ERR["Error visible<br/>reintento ×2 si es cuota"]
+  T -- "falla" --> EMPTY["Sección vacía<br/>sin tumbar el resto"]
+  B & T --> AGG["Agregación<br/>periodo actual vs. anterior<br/>sin compras de prueba"]
+  AGG --> RES["JSON + cabeceras<br/>X-Data-Source · X-GA4-Error"]
+```
+
+- GA4 admite 10 peticiones concurrentes por propiedad. Un **semáforo de proceso** limita la concurrencia real a 6 y el token de acceso se cachea con una única petición en vuelo, así que una carga no genera más de 22 tokens.
+- Los informes se dividen en **bloqueantes**, sin los que la vista no tiene sentido, y **tolerantes**, que devuelven vacío si fallan. Un bug real enseñó a no esconder los errores de cuota como secciones vacías: ahora se reintentan con backoff y se muestran.
+- **Nunca datos simulados.** Sin credenciales, la API devuelve ceros y cabeceras que activan avisos en la interfaz, para que nadie confunda una demo con la realidad.
+
+## Funnel reconstruido desde las URLs
+
+El funnel de suscripción tiene 11 pasos. Lo reconstruyo con los parámetros de la URL (`?cta=&step=&flow=&product=`) y, como alternativa, con eventos personalizados. Para que el funnel no engañe:
+
+- El abandono se mide contra el **total declarado y el siguiente paso con tráfico**, nunca contra el paso anterior.
+- Las entradas a mitad del funnel se muestran aparte como *"+N entran aquí"* en lugar de producir abandonos negativos.
+- Un informe específico cruza compras con campañas por producto, porque la redirección al pago perdía la atribución de la sesión.
+
+## Diagnóstico diario de anomalías
+
+```mermaid
+flowchart TB
+  D["Día consultado<br/>~8 informes horarios"] --> M["Modelo de Poisson<br/>λ reescalado por sesiones"]
+  BASE["Línea base<br/>mismo día de la semana<br/>4 rangos de fechas"] --> M
+  M --> V{"Veredicto"}
+  V --> A["anómalo · p menor que 2 %"]
+  V --> L["bajo · p menor que 10 %"]
+  V --> N["sin tráfico / sin referencia"]
+  FS[("Pedidos en Firestore")] --> X["Cruce GA4 ↔ pedidos"]
+  A & L --> X
+  X --> R["¿Nadie compró<br/>o no se midió la compra?"]
+```
+
+El dashboard compara el día con los mismos días de la semana anteriores, ajusta la expectativa al tráfico real con un modelo de **Poisson** y cruza las compras de GA4 con los pedidos reales de Firestore. Así distingue *"nadie compró"* de *"compraron, pero la medición falló"*. Los días se agrupan en horario de Madrid.
+
+## Permisos en tres capas
+
+- **Identidad** con Google OAuth (solo `openid email profile`) y **autorización** con una allowlist en Firestore. Los permisos se guardan expandidos en tres ejes (secciones, mercados y `canReprocess`), con plantillas de rol *admin*, *analista* y *lector*, y el JWT los relee cada 5 minutos.
+- **Middleware** que corta el acceso sin sesión, **guards por ruta** en el servidor (la capa que realmente protege) y una función isomórfica, *fail-closed*, que solo decide qué dibuja la interfaz.
+- **Reglas de seguridad administrativas**: nadie puede editarse ni borrarse a sí mismo, siempre queda al menos un administrador activo y hay administradores de arranque como red de seguridad.
+
+## Números en los que se puede confiar
+
+Construí una **auditoría de métricas** que evalúa cada cifra (imposible, contradictoria, cero con denominador distinto de cero) contra datos en vivo y contra fixtures. En 5 ejecuciones llegó a 0 fallos y destapó dos problemas reales:
+
+- una métrica que se leía por posición mostraba *sesiones por usuario* como *páginas por sesión*; ahora las métricas se leen por nombre de cabecera;
+- tráfico de Portugal contaminaba la propiedad GA4 de España durante una semana.
+
+La vista **Comparar** usa tasas, diferencias en puntos porcentuales y series rebasadas a 100, y lanza una petición por mercado para que uno pueda fallar sin afectar al otro.
+
+## Despliegue
+
+Imagen Docker multi-stage que se ejecuta sin root, con **Cloud Build → Artifact Registry → Cloud Run** y secretos inyectados desde Secret Manager. El servicio es público a nivel de red a propósito, porque la aplicación hace su propia autenticación.

@@ -67,8 +67,9 @@ work:
     position: Consultor de Software Fullstack & Backend Python
     location: España (100 % remoto)
     startDate: 2023-10
-    summary: Contratado por Rawson BPO como consultor externo para **Thinkia** (cliente final), a cargo de plataformas en producción para Culligan y SEB Business.
+    summary: Contratado por Rawson BPO como consultor externo para **Thinkia** (cliente final), a cargo de plataformas para SegurCaixa Adeslas, Culligan y SEB Business.
     highlights:
+      - "**SegurCaixa Adeslas** (en desarrollo): construyo en solitario la plataforma de venta de seguros para mascotas: API **FastAPI** (107 endpoints, 94 % de cobertura), dos frontends **React 19**, webhooks firmados con **transactional outbox** y CMS visual sin despliegues."
       - "**Culligan España y Portugal:** diseñé y construí casi en solitario (~97 % de 720+ commits en 15 repos) la venta online de suscripciones: funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y dashboard de analítica en **Next.js**."
       - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore**, reconstrucción automática y reproceso idempotente; el contrato solo se crea tras el pago.
       - Unifiqué 8 servicios en una **librería Python interna versionada** (auth fail-closed, redacción de PII) y monté **CI/CD sin llaves** (OIDC + Workload Identity) con +1.100 tests y cobertura mínima del 90–95 %.
@@ -76,16 +77,15 @@ work:
       - "**SEB One** (back-office de pagos y facturación, 7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits): multi-tenancy, RBAC, notas de crédito, comisiones, reembolsos y disputas; ~1.500 tests, 88 % de cobertura."
       - Construí un ETL Excel → **Parquet** → PostgreSQL (~590k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago (Adyen, PayPal, Klarna, Alma…); migré servicios y almacenamiento de **GCP a Huawei Cloud**.
       - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): asignado a pruebas e integración; reforcé la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura) y añadí reintentos con backoff y colas de reintento."
-      - "Adopté desarrollo **AI-native** en todos los repositorios: subagentes, skills y hooks de **Claude Code**, y agentes Codex para ampliar cobertura de tests."
     technologies: [Python, Django REST Framework, FastAPI, Flask, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, Redis, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Sentry, Claude Code]
 
   - name: Mercado Libre
-    position: Software Engineer (Fullstack & Backend)
+    position: Software Engineer (Backend)
     location: Medellín, Colombia
     startDate: 2022-11
     endDate: 2023-11
     highlights:
-      - Desarrollé servicios en **Python (Django REST, Flask)** y JavaScript para orquestar y procesar flujos de datos en tiempo real entre subsistemas de alto tráfico.
+      - Desarrollé una **librería Python** que ayuda a analistas y científicos de datos a **comparar y elegir el mejor modelo** para cada caso, integrada en sus flujos de trabajo.
       - Construí pipelines de integración de datos que alimentaron módulos de automatización y **modelos predictivos** sobre grandes volúmenes.
       - Monitoreé rendimiento con **DataDog** y **Kibana**, diagnosticando cuellos de botella y mejorando la resiliencia del ecosistema.
       - Aprovisioné y desplegué infraestructura como código con **CloudFormation** sobre AWS (Lambda, S3, EC2) en equipos ágiles distribuidos.
@@ -97,11 +97,11 @@ work:
     startDate: 2020-01
     endDate: 2022-11
     highlights:
-      - Desarrollé aplicaciones y APIs en **Python (Django)** con interfaces en **React** y persistencia en **PostgreSQL**, manteniendo código desacoplado.
+      - Fui el **desarrollador principal** de un **sistema de medición de desempeño para psicólogos**, construido de punta a punta en **Django** (backend, plantillas HTML y JavaScript) sobre **PostgreSQL**.
       - Diseñé esquemas relacionales, ejecuté migraciones controladas y optimicé índices para responder a alta demanda.
       - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
       - Configuré pipelines de CI con **Docker** y **Jenkins** y aprovisionamiento con **Ansible** sobre AWS.
-    technologies: [Python, Django, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
+    technologies: [Python, Django, HTML5, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
 
   # TODO: confirmar meses de inicio/fin y añadir 1–2 logros concretos de Emtelco.
   - name: Emtelco
@@ -116,7 +116,7 @@ work:
 projects:
   - name: Casos de estudio técnicos
     url: https://inehosa1.github.io/cv/proyectos/
-    description: Arquitectura, diagramas y decisiones técnicas de Culligan, SEB One, SEB Markets y más, con detalle de webhooks, integraciones y CI/CD.
+    description: Arquitectura, diagramas y decisiones técnicas de SegurCaixa Adeslas, Culligan, SEB One, SEB Markets y más, con detalle de webhooks, integraciones y CI/CD.
 
 skills:
   - name: Lenguajes

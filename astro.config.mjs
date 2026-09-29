@@ -1,4 +1,5 @@
 // @ts-check
+import { unified } from '@astrojs/markdown-remark';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -22,9 +23,11 @@ export default defineConfig({
     // Mermaid se renderiza a SVG en build (Playwright); sin JS en el cliente.
     syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
     shikiConfig: { themes: { light: 'github-light', dark: 'github-dark' } },
-    rehypePlugins: [
-      [rehypeMermaid, { strategy: 'img-svg', mermaidConfig: mermaidLight, dark: mermaidDark }],
-    ],
+    processor: unified({
+      rehypePlugins: [
+        [rehypeMermaid, { strategy: 'img-svg', mermaidConfig: mermaidLight, dark: mermaidDark }],
+      ],
+    }),
   },
   integrations: [
     mdx(),

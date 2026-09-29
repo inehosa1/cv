@@ -5,7 +5,7 @@ client: Culligan España y Portugal
 company: Rawson BPO · cliente Thinkia
 role: Responsable técnico · Fullstack & DevOps
 start: 2026-01
-order: 1
+order: 2
 metrics:
   - value: "97 %"
     label: de 720+ commits en 15 repositorios
@@ -157,15 +157,12 @@ flowchart TB
 - La compra se envía a **GA4 por Measurement Protocol** desde el backend, con el `client_id` y el `session_id` del navegador para no perder la atribución. Los eventos de **Meta Conversions API** se deduplican contra el píxel del navegador con un `event_id` compartido, y los datos personales viajan hasheados.
 - Buena parte del tráfico llega desde el **navegador interno de Instagram y Facebook** y desde Samsung Internet. Por eso el funnel está escrito en **ES5** (sin `async/await` ni `?.`). Con **Sentry Session Replay** diagnostiqué y resolví un bloqueo de renderizado exclusivo de esos navegadores. El botón de pago lanza llamadas en paralelo con timeouts estrictos y un *warm-up* que evita los arranques en frío de 2–3 s.
 
-## Dashboard de operación
+## Dashboard de operación y tickets
 
-Construí un dashboard privado con **Next.js 16 y React 19** y login con Google. Lo usan el equipo comercial y el de operaciones:
+Dos piezas del ecosistema tienen su propio caso de estudio:
 
-- funnel canónico de 11 pasos, reconstruido desde las URLs de GA4 (más del 95 % de los casos) con **19 consultas a la GA4 Data API en paralelo** por carga;
-- panel de pedidos con el estado de cada paso del webhook y reproceso con un clic;
-- NPS, diagnóstico diario de anomalías, gestión de usuarios por roles y selector de mercado ES/PT.
-
-También reemplacé un flujo de soporte basado en **Power Automate y Excel** por un servicio de **tickets en FastAPI**. Asigna IDs de forma transaccional (el sistema anterior generaba IDs duplicados), sigue cada ticket con una máquina de estados, controla SLA de 24, 72 y 120 h y ejecuta un job diario con Cloud Scheduler.
+- **[Culligan Analytics](../culligan-dashboard/)**: dashboard en Next.js que carga 23 informes de GA4 en paralelo, reconstruye el funnel, diagnostica anomalías diarias con un modelo de Poisson y permite reprocesar pedidos con un clic.
+- **[Culligan Tickets](../culligan-tickets/)**: el servicio en FastAPI que sustituyó a Power Automate y Excel, con máquina de estados, IDs transaccionales, SLA y bolsa de horas.
 
 ## Resultados
 

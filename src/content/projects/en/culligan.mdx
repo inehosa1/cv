@@ -5,7 +5,7 @@ client: Culligan Spain & Portugal
 company: Rawson BPO · for Thinkia
 role: Technical lead · Fullstack & DevOps
 start: 2026-01
-order: 1
+order: 2
 metrics:
   - value: "97%"
     label: of 720+ commits across 15 repositories
@@ -157,15 +157,12 @@ flowchart TB
 - The purchase is sent to **GA4 via the Measurement Protocol** from the backend, carrying the browser's `client_id` and `session_id` so attribution is not lost. **Meta Conversions API** events are de-duplicated against the browser pixel with a shared `event_id`, and personal data is sent hashed.
 - A large share of traffic comes from the **Instagram and Facebook in-app browsers** and from Samsung Internet. That is why the funnel is written in **ES5** (no `async/await` or `?.`). Using **Sentry Session Replay** I diagnosed and fixed a rendering freeze that only happened in those browsers. The pay button fires parallel calls with strict timeouts and a *warm-up* call that avoids 2–3 s cold starts.
 
-## Operations dashboard
+## Operations dashboard and tickets
 
-I built a private dashboard with **Next.js 16 and React 19** and Google sign-in. It is used by the sales and operations teams:
+Two parts of the ecosystem have their own case study:
 
-- an 11-step canonical funnel rebuilt from GA4 URLs (more than 95% of cases), with **19 parallel GA4 Data API queries** per load;
-- an orders panel showing the status of each webhook step, with one-click reprocessing;
-- NPS, daily anomaly diagnosis, role-based user management and an ES/PT market selector.
-
-I also replaced a support workflow built on **Power Automate and Excel** with a **FastAPI ticketing service**. It allocates IDs transactionally (the old system produced duplicate IDs), tracks each ticket through a state machine, monitors 24, 72 and 120 h SLAs and runs a daily Cloud Scheduler job.
+- **[Culligan Analytics](../culligan-dashboard/)**: a Next.js dashboard that loads 23 GA4 reports in parallel, rebuilds the funnel, diagnoses daily anomalies with a Poisson model and reprocesses orders in one click.
+- **[Culligan Tickets](../culligan-tickets/)**: the FastAPI service that replaced Power Automate and Excel, with a state machine, transactional IDs, SLAs and an hours bank.
 
 ## Outcomes
 

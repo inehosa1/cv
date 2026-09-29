@@ -31,6 +31,8 @@ const projects = defineCollection({
     stack: z.array(z.strictObject({ group: z.string(), items: z.array(z.string()).min(1) })),
     /** Etiquetas cortas para filtrar/escanear. */
     tags: z.array(z.string()).max(6),
+    /** `development` muestra una etiqueta "En desarrollo". */
+    status: z.enum(['production', 'development']).default('production'),
     /** Confidencialidad: si true, no se enlaza código ni se nombran datos internos. */
     nda: z.boolean().default(true),
   }),
