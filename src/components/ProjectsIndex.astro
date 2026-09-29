@@ -8,6 +8,7 @@ import { projectSlug, sortProjects } from '../lib/projects.ts';
 import type { Lang } from '../lib/schema.ts';
 import { withBase } from '../lib/url.ts';
 import Icon from './Icon.astro';
+import Principles from './Principles.astro';
 import SiteNav from './SiteNav.astro';
 
 interface Props {
@@ -124,5 +125,9 @@ const jsonLd = {
         })
       }
     </ol>
+
+    <div class="mt-20">
+      <Principles principles={cv.principles} title={t.principlesTitle} variant="wide" />
+    </div>
   </main>
 </Base>

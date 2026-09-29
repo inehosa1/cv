@@ -32,12 +32,13 @@ basics:
   phone: +57 319 449 5717
   url: https://inehosa1.github.io/cv/en/
   summary: >-
-    Software engineer with **9 years of experience** building end-to-end Fullstack products.
-    Backend specialist in **Python (Django, FastAPI, Flask)** with frontend work in **React,
-    TypeScript and Next.js**. I design multi-country e-commerce, payments and invoicing platforms in
-    production: microservices on **GCP**, idempotent **webhooks**, payment-gateway, CRM and
-    marketplace integrations, and cloud migrations. **AI-native** development with Claude Code and
-    agents, focused on security (OWASP Top 10), automated testing (90%+ coverage) and CI/CD.
+    Software engineer with **9 years of experience** building end-to-end Fullstack products with
+    **Python (Django, FastAPI)**, **React, TypeScript and Next.js**. I design production e-commerce,
+    payments and invoicing platforms: microservices on **GCP**, idempotent **webhooks**,
+    integrations and cloud migrations, with **AI-native** development (Claude Code). I adapt to each
+    challenge and deliver at the highest quality: **OWASP Top 10** security, test coverage as close
+    to **100%** as possible (88–99% on recent projects) and attention to detail. I bring technical
+    judgment and improvement ideas, and I support clients and end users in adopting the tools.
   location:
     city: Medellín
     country: Colombia
@@ -50,6 +51,22 @@ basics:
     - network: GitHub
       username: inehosa1
       url: https://github.com/inehosa1
+
+principles:
+  - title: I adapt to the challenge
+    description: From a .NET monolith on SQL Server to serverless microservices or a cloud migration. I pick the solution for the business need, not for the hype.
+  - title: Quality without shortcuts
+    description: Layered architecture, a pure domain, strict typing and CI that lets no regression through. I deliver at the highest quality I can.
+  - title: OWASP Top 10 security
+    description: Security is part of the design. Fail-closed authentication, secrets out of the code, audited dependencies and an OWASP Top 10 review on every project.
+  - title: Coverage close to 100%
+    description: I want everything that matters to be tested. My recent projects sit between 88% and 99% coverage, with mandatory floors in CI.
+  - title: Attention to detail
+    description: A thousands separator, a clock stepping back or an in-app browser can break a system. I find these issues, explain them and fix them.
+  - title: Judgment and improvement ideas
+    description: I give my technical opinion and proactively suggest improvements, from the product to how the team works.
+  - title: Hands-on support
+    description: I support clients and end users in adopting the tools, with documentation, training and close follow-up.
 
 competencies:
   - Python backend (Django / FastAPI)
@@ -66,13 +83,13 @@ work:
     position: Fullstack Software Consultant & Python Backend
     location: Spain (fully remote)
     startDate: 2023-10
-    summary: Hired by Rawson BPO as an external consultant for **Thinkia** (end client), owning platforms for SegurCaixa Adeslas, Culligan and SEB Business.
+    summary: Hired by Rawson BPO as an external consultant for **Thinkia** and **Eanmatic** (end clients), owning platforms for SegurCaixa Adeslas, Culligan, SEB Business and an international school.
     highlights:
       - "**SegurCaixa Adeslas** (in development): building single-handedly a pet insurance sales platform: **FastAPI** API (107 endpoints, 94% coverage), two **React 19** front ends, signed webhooks with a **transactional outbox** and a visual CMS with no deployments."
       - "**Culligan Spain & Portugal:** designed and built almost single-handedly (~97% of 720+ commits across 15 repos) the online subscription sales platform: **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard."
       - Built the Shopify → CRM order **webhook** with HMAC verification, atomic de-duplication in **Firestore**, automatic rebuild and idempotent reprocessing; contracts are created only after payment.
       - Consolidated 8 services onto a **versioned internal Python library** (fail-closed auth, PII redaction) and set up **keyless CI/CD** (OIDC + Workload Identity) with 1,100+ tests and 90–95% coverage gates.
-      - Launched Portugal with per-request **multi-market** resolution, idempotent catalog migration via **Shopify GraphQL**, and server-side tracking (**GA4 Measurement Protocol**, **Meta CAPI**).
+      - "**K-12 international school** (Eanmatic): rewrote a .NET school management system in **Django** on its live shared **SQL Server**: ASP.NET Identity-compatible login, PDF/Excel report cards and grade records, and the student page from 193 s to 1.6 s."
       - "**SEB One** (payments & invoicing back office, 7 countries): main developer of the **Django/DRF** backend (~67% of 1,450 commits): multi-tenancy, RBAC, credit notes, commissions, refunds and disputes; ~1,500 tests, 88% coverage."
       - Built an Excel → **Parquet** → PostgreSQL ETL (~590k invoice lines) and settlement parsers for 9+ payment providers (Adyen, PayPal, Klarna, Alma…); migrated services and storage from **GCP to Huawei Cloud**.
       - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): assigned to testing and integration; strengthened the public **FastAPI** gateway against the OWASP Top 10 (dependency vulnerabilities 28 → 0; 506 tests, 99% coverage) and added backoff retries and retry queues."

@@ -32,6 +32,7 @@ export const ui = {
     viewCv: 'Ver CV completo',
     projectsLd: 'Proyectos de',
     inDevelopment: 'En desarrollo',
+    principlesTitle: 'Cómo trabajo',
   },
   en: {
     navCv: 'Resume',
@@ -56,5 +57,6 @@ export const ui = {
     viewCv: 'View full resume',
     projectsLd: 'Projects by',
     inDevelopment: 'In development',
+    principlesTitle: 'How I work',
   },
 } as const satisfies Record<Lang, Record<string, string>>;

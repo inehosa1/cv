@@ -69,6 +69,12 @@ export const cvSchema = z.strictObject({
     ),
   }),
 
+  /** Principios de trabajo (sección "Cómo trabajo" de la web; el PDF los resume en el perfil). */
+  principles: z
+    .array(z.strictObject({ title: z.string(), description: z.string() }))
+    .max(8)
+    .default([]),
+
   /** Competencias clave (chips bajo el resumen). */
   competencies: z.array(z.string()).min(3).max(10),
 

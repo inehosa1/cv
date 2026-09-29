@@ -6,6 +6,7 @@ import { routes, ui } from '../lib/i18n.ts';
 import type { Lang } from '../lib/schema.ts';
 import { prettyUrl, withBase } from '../lib/url.ts';
 import Icon, { type IconName } from './Icon.astro';
+import Principles from './Principles.astro';
 import Rich from './Rich.astro';
 import Section from './Section.astro';
 import SiteNav from './SiteNav.astro';
@@ -115,6 +116,8 @@ const card =
             {cv.competencies.map((c) => <li class={chip}>{c}</li>)}
           </ul>
         </Section>
+
+        <Principles principles={cv.principles} title={ui[lang].principlesTitle} />
 
         <Section id="work" title={t.work}>
           <ol class="relative space-y-8 border-l border-rule pl-6">

@@ -57,6 +57,9 @@
 #set list(indent: 0.2em, body-indent: 0.5em, spacing: 0.5em, marker: text(fill: accent)[•])
 #set strong(delta: 200)
 #show link: it => it // conservar color del texto; los enlaces siguen siendo clicables
+// Palabras con guion (AI-native, e-commerce…) nunca se parten: en español Typst repetiría
+// el guion al cortar la línea ("AI-" / "-native"), lo que confunde a los ATS.
+#show regex("[\p{L}\d]+(-[\p{L}\d]+)+"): box
 
 #show heading.where(level: 1): it => {
   v(0.9em, weak: true)
