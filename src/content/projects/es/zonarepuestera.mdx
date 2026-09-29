@@ -1,0 +1,121 @@
+---
+title: Zona Repuestera — e-commerce de autopartes y su migración a FastAPI + Next.js
+tagline: "Tienda online de repuestos para vehículos en Colombia: búsqueda por compatibilidad, pagos con Wompi, Google Merchant y bot de WhatsApp. En producción con Django y reescrita con una estrategia strangler fig verificada por 1.445 tests de contrato."
+client: Zona Repuestera
+company: Freelance
+role: Desarrollador principal · Fullstack
+start: 2025-06
+order: 5
+metrics:
+  - value: "97 %"
+    label: de 707 commits del sistema en producción
+  - value: "1.445"
+    label: tests de contrato entre Django y FastAPI
+  - value: "~45"
+    label: modelos en 17 apps de dominio
+  - value: "39"
+    label: tablas con paridad de esquema verificada
+stack:
+  - group: Sistema en producción
+    items: [Python 3.11, Django 5.2, Django REST Framework, SimpleJWT, django-unfold, PostgreSQL, Gunicorn]
+  - group: Nuevo backend
+    items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
+  - group: Nuevos frontends
+    items: [Next.js 16, React 19, Zod, Vite, Mantine, TanStack Query, openapi-typescript]
+  - group: Integraciones
+    items: [Wompi, Google Merchant Content API, Google OAuth, Bot de WhatsApp, DigitalOcean Spaces]
+  - group: Documentos y media
+    items: [WeasyPrint (PDF), pandas / openpyxl (importación), Pillow-HEIF, mozjpeg]
+  - group: Calidad
+    items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
+tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
+---
+
+[Zona Repuestera](https://zonarepuestera.com.co) es una tienda online de autopartes en Colombia. Es un trabajo **independiente** que hago en paralelo: construí el sistema que está en producción y ahora estoy terminando su reescritura a una arquitectura moderna **sin detener la venta**.
+
+La tienda la usan tres tipos de cliente: los compradores (como invitados o registrados, con OTP o Google), el equipo de la tienda desde el panel de administración y un **bot de WhatsApp** que consulta pedidos, catálogo y recomendaciones a través de la API.
+
+## El sistema en producción
+
+```mermaid
+flowchart TB
+  C["Comprador"] --> DJ
+  S["Equipo de la tienda"] -->|"django-unfold"| DJ
+  BOT["Bot de WhatsApp"] -->|"API REST + JWT"| DJ
+
+  DJ["Django 5.2 + DRF<br/>17 apps · plantillas SSR con caché"]
+  DJ --> PG[("PostgreSQL")]
+  DJ --> SP[("DigitalOcean Spaces<br/>imágenes optimizadas")]
+  DJ -->|"pagos"| WOMPI["Wompi"]
+  DJ -->|"sincroniza stock y precio"| GM["Google Merchant"]
+  DJ -->|"confirmaciones + PDF"| MAIL["Email · WeasyPrint"]
+```
+
+- **Búsqueda por compatibilidad de vehículo**: cada producto se relaciona con los modelos de vehículo compatibles (marca → modelo), y eso guía la navegación y las recomendaciones.
+- **Catálogo operable por la tienda**: importación masiva desde Excel y ZIP de imágenes, alias de categorías y productos para mejorar la búsqueda, precios de inventario y ubicación física en bodega.
+- **Pedidos completos**: carrito anónimo o de usuario, facturación a persona o empresa, envío por transportadora o recogida en tienda, historial de estados, PDF del pedido y auditoría.
+- **Imágenes optimizadas al subirlas** (HEIF, mozjpeg) y páginas SSR con caché de una hora que se invalida al cambiar productos o categorías.
+
+## Google Merchant dirigido por el stock
+
+```mermaid
+flowchart LR
+  E["Cambio de producto o stock"] --> Q{"¿Stock mayor que 0?"}
+  Q -- "no" --> R["Retirar de Merchant"]
+  Q -- "sí" --> P{"¿Precio mayor que 0?"}
+  P -- "no" --> SK["Omitir"]
+  P -- "sí" --> U["Upsert en Merchant"]
+```
+
+El catálogo de Google Shopping se mantiene sincronizado automáticamente, así que no se anuncian productos agotados ni sin precio.
+
+## La reescritura: strangler fig verificado por contratos
+
+El monolito cumplió su función, pero para crecer necesitaba una API más rápida y tipada, un storefront con SSR/ISR y un panel de administración propio. En lugar de reescribirlo todo y cambiar de golpe, apliqué el patrón **strangler fig**: el sistema nuevo convive con el antiguo sobre **la misma base de datos** y reemplaza sus rutas de forma gradual.
+
+```mermaid
+flowchart TB
+  C["Comprador"] --> NX["Next.js · SSR/ISR<br/>BFF con JWT en cookie httpOnly"]
+  S["Equipo"] --> AD["Admin React · Vite + Mantine<br/>tipos generados desde OpenAPI"]
+  BOT["Bot de WhatsApp"] --> API
+
+  NX -->|"/api/v1"| API["FastAPI · async<br/>~128 endpoints"]
+  AD -->|"/api/v1/admin"| API
+  API --> PG[("PostgreSQL<br/>compartido con Django")]
+  DJ["Django (legacy)<br/>dueño del esquema hasta el corte"] --> PG
+```
+
+- **Compatibilidad total durante la transición**: los JWT son compatibles con SimpleJWT, así que la sesión funciona en ambos sistemas; los *presenters* devuelven exactamente la forma JSON de DRF, y las URLs públicas quedan congeladas para no perder SEO ni el feed de Merchant.
+- **Efectos secundarios explícitos**: las señales implícitas de Django (email, PDF, Merchant, imágenes, contadores) se convierten en hooks y eventos declarados en el código.
+- **Panel de administración genérico**: 29 recursos se describen desde un endpoint `/meta/`, y el frontend genera sus tipos desde el esquema OpenAPI.
+
+## Cómo se garantiza que nada se rompa
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant T as Suite de contratos
+  participant DB as PostgreSQL desechable
+  participant D as Django
+  participant F as FastAPI
+
+  T->>DB: carga los datos de prueba
+  T->>D: misma petición
+  T->>F: misma petición
+  D-->>T: respuesta de referencia
+  F-->>T: respuesta candidata
+  T->>T: compara estado, cabeceras y JSON byte a byte
+  T->>DB: verifica la paridad del esquema (39 tablas)
+```
+
+- **1.445 tests de contrato** ejecutan cada petición contra los dos sistemas sobre la misma base de datos y exigen respuestas idénticas.
+- El mapeo de SQLAlchemy **se genera desde los modelos de Django**, así que el esquema no puede divergir mientras Django sea su dueño.
+- Los contratos del bot de WhatsApp están **congelados**, incluidas algunas rarezas del sistema antiguo que se replican a propósito.
+- Durante la reescritura hice además una revisión de seguridad y **corregí problemas en la verificación de pagos, la autorización de recursos, el login social y la generación de códigos OTP**, cada uno cubierto por tests.
+
+## Calidad
+
+- **464 tests** en el sistema en producción.
+- En el stack nuevo: tests async con pytest; 52 unitarios y 15 e2e en el storefront; 46 unitarios y 12 e2e en el panel.
+- **GitHub Actions** con lint, tipos, tests, `pip-audit`, `npm audit` y `knip`, con las acciones fijadas por SHA. Los despliegues quedan fuera del CI a propósito hasta el corte.
+- Workspace preparado para **desarrollo asistido por IA**, con `AGENTS.md` y `CLAUDE.md` que describen los contratos y las reglas de cada repositorio.

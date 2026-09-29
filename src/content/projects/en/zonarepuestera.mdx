@@ -1,0 +1,121 @@
+---
+title: Zona Repuestera — auto-parts e-commerce and its migration to FastAPI + Next.js
+tagline: "An online vehicle-parts store in Colombia: compatibility search, Wompi payments, Google Merchant and a WhatsApp bot. Live on Django and rewritten with a strangler-fig approach verified by 1,445 contract tests."
+client: Zona Repuestera
+company: Freelance
+role: Lead developer · Fullstack
+start: 2025-06
+order: 5
+metrics:
+  - value: "97%"
+    label: of 707 commits in the production system
+  - value: "1,445"
+    label: contract tests between Django and FastAPI
+  - value: "~45"
+    label: models across 17 domain apps
+  - value: "39"
+    label: tables with verified schema parity
+stack:
+  - group: Production system
+    items: [Python 3.11, Django 5.2, Django REST Framework, SimpleJWT, django-unfold, PostgreSQL, Gunicorn]
+  - group: New backend
+    items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
+  - group: New front ends
+    items: [Next.js 16, React 19, Zod, Vite, Mantine, TanStack Query, openapi-typescript]
+  - group: Integrations
+    items: [Wompi, Google Merchant Content API, Google OAuth, WhatsApp bot, DigitalOcean Spaces]
+  - group: Documents & media
+    items: [WeasyPrint (PDF), pandas / openpyxl (imports), Pillow-HEIF, mozjpeg]
+  - group: Quality
+    items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
+tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
+---
+
+[Zona Repuestera](https://zonarepuestera.com.co) is an online auto-parts store in Colombia. It is **independent** work I do on the side: I built the system that runs in production, and I am now finishing its rewrite to a modern architecture **without stopping sales**.
+
+The store has three kinds of users: shoppers (guest or registered, with OTP or Google sign-in), the store team through the admin panel, and a **WhatsApp bot** that looks up orders, catalog and recommendations through the API.
+
+## The production system
+
+```mermaid
+flowchart TB
+  C["Shopper"] --> DJ
+  S["Store team"] -->|"django-unfold"| DJ
+  BOT["WhatsApp bot"] -->|"REST API + JWT"| DJ
+
+  DJ["Django 5.2 + DRF<br/>17 apps · cached SSR templates"]
+  DJ --> PG[("PostgreSQL")]
+  DJ --> SP[("DigitalOcean Spaces<br/>optimized images")]
+  DJ -->|"payments"| WOMPI["Wompi"]
+  DJ -->|"syncs stock and price"| GM["Google Merchant"]
+  DJ -->|"confirmations + PDF"| MAIL["Email · WeasyPrint"]
+```
+
+- **Vehicle-compatibility search**: every product is linked to the compatible vehicle models (make → model), which drives navigation and recommendations.
+- **A catalog the store can run itself**: bulk import from Excel and image ZIPs, category and product aliases for better search, inventory pricing and physical warehouse location.
+- **Complete orders**: anonymous or user carts, billing to individuals or companies, carrier shipping or in-store pickup, status history, order PDFs and auditing.
+- **Images optimized on upload** (HEIF, mozjpeg) and SSR pages with a one-hour cache that is invalidated when products or categories change.
+
+## Stock-driven Google Merchant
+
+```mermaid
+flowchart LR
+  E["Product or stock change"] --> Q{"Stock above 0?"}
+  Q -- "no" --> R["Remove from Merchant"]
+  Q -- "yes" --> P{"Price above 0?"}
+  P -- "no" --> SK["Skip"]
+  P -- "yes" --> U["Upsert to Merchant"]
+```
+
+The Google Shopping catalog stays in sync automatically, so sold-out or unpriced products are never advertised.
+
+## The rewrite: a contract-verified strangler fig
+
+The monolith did its job, but growing required a faster, typed API, an SSR/ISR storefront and a dedicated admin panel. Instead of rewriting everything and switching over in one go, I applied the **strangler fig** pattern: the new system lives alongside the old one on **the same database** and replaces its routes gradually.
+
+```mermaid
+flowchart TB
+  C["Shopper"] --> NX["Next.js · SSR/ISR<br/>BFF with JWT in httpOnly cookie"]
+  S["Team"] --> AD["React admin · Vite + Mantine<br/>types generated from OpenAPI"]
+  BOT["WhatsApp bot"] --> API
+
+  NX -->|"/api/v1"| API["FastAPI · async<br/>~128 endpoints"]
+  AD -->|"/api/v1/admin"| API
+  API --> PG[("PostgreSQL<br/>shared with Django")]
+  DJ["Django (legacy)<br/>owns the schema until cut-over"] --> PG
+```
+
+- **Full compatibility during the transition**: JWTs are SimpleJWT-compatible, so sessions work on both systems; *presenters* return exactly DRF's JSON shape, and public URLs are frozen so SEO and the Merchant feed are not lost.
+- **Explicit side effects**: Django's implicit signals (email, PDF, Merchant, images, counters) become hooks and events declared in code.
+- **Generic admin panel**: 29 resources are described by a `/meta/` endpoint, and the front end generates its types from the OpenAPI schema.
+
+## How we make sure nothing breaks
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant T as Contract suite
+  participant DB as Disposable PostgreSQL
+  participant D as Django
+  participant F as FastAPI
+
+  T->>DB: load test data
+  T->>D: same request
+  T->>F: same request
+  D-->>T: reference response
+  F-->>T: candidate response
+  T->>T: compare status, headers and JSON byte by byte
+  T->>DB: check schema parity (39 tables)
+```
+
+- **1,445 contract tests** run each request against both systems on the same database and require identical responses.
+- The SQLAlchemy mapping is **generated from the Django models**, so the schema cannot drift while Django owns it.
+- The WhatsApp bot contracts are **frozen**, including some legacy quirks that are replicated on purpose.
+- During the rewrite I also ran a security review and **fixed issues in payment verification, resource authorization, social login and OTP code generation**, each covered by tests.
+
+## Quality
+
+- **464 tests** in the production system.
+- In the new stack: async pytest tests; 52 unit and 15 e2e tests in the storefront; 46 unit and 12 e2e tests in the admin.
+- **GitHub Actions** with lint, types, tests, `pip-audit`, `npm audit` and `knip`, with actions pinned by SHA. Deployments are intentionally kept out of CI until the cut-over.
+- A workspace set up for **AI-assisted development**, with `AGENTS.md` and `CLAUDE.md` describing each repository's contracts and rules.

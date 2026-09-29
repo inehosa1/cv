@@ -78,6 +78,17 @@ work:
       - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): assigned to testing and integration; strengthened the public **FastAPI** gateway against the OWASP Top 10 (dependency vulnerabilities 28 → 0; 506 tests, 99% coverage) and added backoff retries and retry queues."
     technologies: [Python, Django REST Framework, FastAPI, Flask, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, Redis, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Sentry, Claude Code]
 
+  - name: Zona Repuestera
+    position: Fullstack Developer (freelance)
+    location: Colombia (remote)
+    url: https://zonarepuestera.com.co
+    startDate: 2025-06
+    summary: A live auto-parts e-commerce I develop independently, alongside my main role.
+    highlights:
+      - Built the production system (~97% of 707 commits) on **Django/DRF**, with vehicle-compatibility search, **Wompi** payments, **Google Merchant** sync and an API for a WhatsApp bot.
+      - Leading its rewrite to **FastAPI + Next.js + React** using the **strangler fig** pattern on the same database, verified by **1,445 contract tests** against the current system.
+    technologies: [Django, FastAPI, Next.js, React, PostgreSQL, Wompi, Google Merchant API]
+
   - name: Mercado Libre
     position: Software Engineer (Backend)
     location: Medellín, Colombia
@@ -114,7 +125,7 @@ work:
 projects:
   - name: Technical case studies
     url: https://inehosa1.github.io/cv/en/projects/
-    description: Architecture, diagrams and technical decisions behind SegurCaixa Adeslas, Culligan, SEB One, SEB Markets and more, detailing webhooks, integrations and CI/CD.
+    description: Architecture, diagrams and technical decisions behind SegurCaixa Adeslas, Culligan, Zona Repuestera, SEB One, SEB Markets and more, detailing webhooks, integrations and CI/CD.
 
 skills:
   - name: Languages
