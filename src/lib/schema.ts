@@ -54,7 +54,7 @@ export const cvSchema = z.strictObject({
     phone: z.string().optional(),
     url: url.optional(),
     summary: richText,
-    /** Modalidad y zona horaria, p. ej. "Remoto · UTC−5 · solapamiento con Europa y EE. UU.". */
+    /** Modalidad y zona horaria, p. ej. "Remoto · UTC−5". */
     availability: z.string().optional(),
     location: z.strictObject({
       city: z.string(),
