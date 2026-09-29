@@ -102,7 +102,7 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 - Diagramas en bloques ```` ```mermaid ````. Priorizar `flowchart TB`, agrupar nodos similares en uno y mensajes cortos en `sequenceDiagram`: el SVG debe medir ≤ ~1100 px de ancho para leerse sin escalar (comprobar el atributo `width` del `<img>` en `dist/`).
 - Tras cambiar un caso, revisar la página renderizada (escritorio, móvil y modo oscuro).
 - Frontmatter opcional: `featured: true` (máx. 3; tarjeta grande con miniatura del primer diagrama en la home y la landing), `status: development`, `links` (solo URLs públicas).
-- Animaciones: solo CSS nativo y bajo `prefers-reduced-motion: no-preference`. Nunca animar la opacidad del contenido principal desde 0 (si la animación no corre, queda invisible y penaliza el LCP).
+- Animaciones: solo CSS nativo y bajo `prefers-reduced-motion: no-preference`, limitadas a secciones que aparecen al hacer scroll (`.reveal`). No usar View Transitions ni animar el hero: al cambiar de idioma superponían los textos de ambas páginas y se repetían en cada navegación. El cambio de idioma conserva la posición del scroll (script en `Base.astro`, enlaces con `data-lang-switch`).
 
 ## Reglas técnicas
 

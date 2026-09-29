@@ -49,17 +49,17 @@ const career = cv.work.map((w) => ({
       </div>
       <div class="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:py-28">
         <div>
-        <p class="hero-in inline-flex items-center gap-2 rounded-full border border-rule bg-surface px-3 py-1 text-xs font-medium text-muted">
+        <p class="inline-flex items-center gap-2 rounded-full border border-rule bg-surface px-3 py-1 text-xs font-medium text-muted">
           <span class="size-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
           {b.name} · {b.availability ?? b.location.remote}
         </p>
-        <p class="hero-in mt-6 text-sm font-semibold tracking-[0.12em] text-accent-ink uppercase">{t.homeKicker}</p>
-        <h1 class="hero-in mt-3 max-w-4xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+        <p class="mt-6 text-sm font-semibold tracking-[0.12em] text-accent-ink uppercase">{t.homeKicker}</p>
+        <h1 class="mt-3 max-w-4xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
           {cv.home.headline}
         </h1>
-        <p class="hero-in mt-6 max-w-2xl text-lg leading-relaxed text-pretty text-muted">{cv.home.intro}</p>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-pretty text-muted">{cv.home.intro}</p>
 
-        <div class="hero-in mt-10 flex flex-wrap gap-3">
+        <div class="mt-10 flex flex-wrap gap-3">
           <a
             href={withBase(routes.projects[lang])}
             class="inline-flex items-center gap-2 rounded-xl bg-accent-ink px-5 py-3 font-semibold text-white shadow-sm transition hover:brightness-110 dark:text-[#0b1120]"
@@ -83,7 +83,7 @@ const career = cv.work.map((w) => ({
           </a>
         </div>
 
-        <dl class="hero-in mt-14 grid max-w-2xl grid-cols-2 gap-4">
+        <dl class="mt-14 grid max-w-2xl grid-cols-2 gap-4">
           {
             cv.home.stats.map((s) => (
               <div class="rounded-2xl border border-rule bg-surface/80 p-5 backdrop-blur">
@@ -98,7 +98,7 @@ const career = cv.work.map((w) => ({
 
         {
           current && (
-            <aside class="hero-in hidden rounded-2xl border border-rule bg-surface/90 p-6 shadow-sm backdrop-blur lg:block dark:shadow-none">
+            <aside class="hidden rounded-2xl border border-rule bg-surface/90 p-6 shadow-sm backdrop-blur lg:block dark:shadow-none">
               <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-accent-ink uppercase">
                 <span class="size-2 animate-pulse rounded-full bg-emerald-500" aria-hidden="true" />
                 {t.nowTitle}

@@ -61,13 +61,13 @@ const jsonLd = {
   <SiteNav lang={lang} current="projects" altPath={routes.projects[other]} name={cv.basics.name} />
 
   <main id="main" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
-    <header class="hero-in max-w-3xl">
+    <header class="max-w-3xl">
       <p class="text-sm font-semibold tracking-[0.12em] text-accent-ink uppercase">{t.projectsKicker}</p>
       <h1 class="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">{t.projectsTitle}</h1>
       <p class="mt-4 text-lg leading-relaxed text-pretty text-muted">{t.projectsIntro}</p>
     </header>
 
-    <dl class="hero-in mt-10 grid max-w-2xl grid-cols-3 gap-4">
+    <dl class="mt-10 grid max-w-2xl grid-cols-3 gap-4">
       {
         [
           { value: projects.length, label: lang === 'es' ? 'casos de estudio' : 'case studies' },

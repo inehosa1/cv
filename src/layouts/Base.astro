@@ -92,5 +92,40 @@ const jsonLd = Astro.props.jsonLd ?? profileLd;
   </head>
   <body class="min-h-dvh">
     <slot />
+
+    <!--
+      Al cambiar de idioma se conserva la posición relativa del scroll (las dos versiones de
+      cada página tienen la misma estructura). Mejora progresiva: sin JS o sin sessionStorage,
+      la página simplemente abre arriba.
+    -->
+    <script is:inline>
+      (() => {
+        const KEY = 'lang-switch-scroll';
+        const maxScroll = () => document.documentElement.scrollHeight - innerHeight;
+        try {
+          const saved = sessionStorage.getItem(KEY);
+          if (saved) {
+            sessionStorage.removeItem(KEY);
+            const { path, ratio } = JSON.parse(saved);
+            if (path === location.pathname && ratio > 0) {
+              const restore = () => scrollTo(0, Math.round(ratio * maxScroll()));
+              restore();
+              addEventListener('load', restore, { once: true });
+            }
+          }
+        } catch {}
+        document.addEventListener('click', (event) => {
+          const link = event.target instanceof Element && event.target.closest('a[data-lang-switch]');
+          if (!link) return;
+          try {
+            const max = maxScroll();
+            sessionStorage.setItem(
+              KEY,
+              JSON.stringify({ path: new URL(link.href).pathname, ratio: max > 0 ? scrollY / max : 0 }),
+            );
+          } catch {}
+        });
+      })();
+    </script>
   </body>
 </html>
