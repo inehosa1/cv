@@ -113,11 +113,19 @@
   margin: 0;
 }
 
-/* En móvil no se encoge por debajo de un tamaño legible: scroll horizontal. */
+/*
+ * En móvil cada diagrama se escala según su ancho natural (--w, lo inyecta
+ * src/lib/rehype-diagram-width.mjs): los estrechos caben sin scroll y los anchos
+ * se muestran al 75 % con scroll horizontal, sin quedar ilegibles.
+ */
 @media (max-width: 640px) {
+  .prose-cv :where(picture) {
+    padding: 0.75rem;
+  }
+
   .prose-cv :where(picture img) {
     max-width: none;
-    width: 36rem;
+    width: min(var(--w, 36rem), max(100%, calc(var(--w, 36rem) * 0.75)));
   }
 }
 

@@ -6,6 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import rehypeMermaid from 'rehype-mermaid';
 import { mermaidDark, mermaidLight } from './src/lib/mermaid-theme.mjs';
+import rehypeDiagramWidth from './src/lib/rehype-diagram-width.mjs';
 
 // En GitHub Actions, SITE y BASE_PATH los inyecta actions/configure-pages.
 const site = process.env.SITE || 'https://inehosa1.github.io';
@@ -26,6 +27,7 @@ export default defineConfig({
     processor: unified({
       rehypePlugins: [
         [rehypeMermaid, { strategy: 'img-svg', mermaidConfig: mermaidLight, dark: mermaidDark }],
+        rehypeDiagramWidth,
       ],
     }),
   },
