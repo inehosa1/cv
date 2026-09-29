@@ -83,13 +83,13 @@ work:
     position: Fullstack Software Consultant & Python Backend
     location: Spain (fully remote)
     startDate: 2023-10
-    summary: Hired by Rawson BPO as an external consultant for **Thinkia** and **Eanmatic** (end clients), owning platforms for SegurCaixa Adeslas, Culligan, SEB Business and an international school.
+    summary: Hired by Rawson BPO as an external consultant for **Thinkia** (end client), owning platforms for SegurCaixa Adeslas, Culligan, SEB Business and an international school.
     highlights:
       - "**SegurCaixa Adeslas** (in development): building single-handedly a pet insurance sales platform: **FastAPI** API (107 endpoints, 94% coverage), two **React 19** front ends, signed webhooks with a **transactional outbox** and a visual CMS with no deployments."
       - "**Culligan Spain & Portugal:** designed and built almost single-handedly (~97% of 720+ commits across 15 repos) the online subscription sales platform: **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard."
       - Built the Shopify → CRM order **webhook** with HMAC verification, atomic de-duplication in **Firestore**, automatic rebuild and idempotent reprocessing; contracts are created only after payment.
       - Consolidated 8 services onto a **versioned internal Python library** (fail-closed auth, PII redaction) and set up **keyless CI/CD** (OIDC + Workload Identity) with 1,100+ tests and 90–95% coverage gates.
-      - "**K-12 international school** (Eanmatic): rewrote a .NET school management system in **Django** on its live shared **SQL Server**: ASP.NET Identity-compatible login, PDF/Excel report cards and grade records, and the student page from 193 s to 1.6 s."
+      - "**K-12 international school**: rewrote a .NET school management system in **Django** on its live shared **SQL Server**: ASP.NET Identity-compatible login, PDF/Excel report cards and grade records, and the student page from 193 s to 1.6 s."
       - "**SEB One** (payments & invoicing back office, 7 countries): main developer of the **Django/DRF** backend (~67% of 1,450 commits): multi-tenancy, RBAC, credit notes, commissions, refunds and disputes; ~1,500 tests, 88% coverage."
       - Built an Excel → **Parquet** → PostgreSQL ETL (~590k invoice lines) and settlement parsers for 9+ payment providers (Adyen, PayPal, Klarna, Alma…); migrated services and storage from **GCP to Huawei Cloud**.
       - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): assigned to testing and integration; strengthened the public **FastAPI** gateway against the OWASP Top 10 (dependency vulnerabilities 28 → 0; 506 tests, 99% coverage) and added backoff retries and retry queues."
