@@ -32,8 +32,6 @@ basics:
   email: chanix1998@gmail.com
   phone: +57 319 449 5717
   url: https://inehosa1.github.io/cv/
-  # TODO: los años de experiencia deben cuadrar con la sección de experiencia (hoy empieza en 2020).
-  #       Añade los empleos anteriores a 2020 o ajusta la cifra.
   summary: >-
     Ingeniero de software con **9 años de experiencia** construyendo productos Fullstack de punta a
     punta. Especialista en backend con **Python (Django, FastAPI, Flask)** y frontend con **React,
@@ -69,8 +67,7 @@ work:
     position: Consultor de Software Fullstack & Backend Python
     location: España (100 % remoto)
     startDate: 2023-10
-    # TODO(confirmar): relación Rawson BPO ↔ Thinkia / Eanmatic (el historial de git muestra correos de Thinkia y Eanmatic).
-    summary: Consultor externo asignado a **Thinkia** y **Eanmatic**, a cargo de plataformas de producción para Culligan y SEB Business.
+    summary: Contratado por Rawson BPO como consultor externo para **Thinkia** (cliente final), a cargo de plataformas en producción para Culligan y SEB Business.
     highlights:
       - "**Culligan España y Portugal:** diseñé y construí casi en solitario (~97 % de 720+ commits en 15 repos) la venta online de suscripciones: funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y dashboard de analítica en **Next.js**."
       - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore**, reconstrucción automática y reproceso idempotente; el contrato solo se crea tras el pago.
@@ -97,7 +94,8 @@ work:
   - name: Talenta
     position: Desarrollador de Software (Fullstack / Backend)
     location: Medellín, Colombia
-    startDate: 2020-01
+    # TODO: confirmar el mes de inicio en Talenta.
+    startDate: "2017"
     endDate: 2022-11
     highlights:
       - Desarrollé aplicaciones y APIs en **Python (Django)** con interfaces en **React** y persistencia en **PostgreSQL**, manteniendo código desacoplado.

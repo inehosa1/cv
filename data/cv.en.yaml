@@ -66,7 +66,7 @@ work:
     position: Fullstack Software Consultant & Python Backend
     location: Spain (fully remote)
     startDate: 2023-10
-    summary: External consultant assigned to **Thinkia** and **Eanmatic**, owning production platforms for Culligan and SEB Business.
+    summary: Hired by Rawson BPO as an external consultant for **Thinkia** (end client), owning production platforms for Culligan and SEB Business.
     highlights:
       - "**Culligan Spain & Portugal:** designed and built almost single-handedly (~97% of 720+ commits across 15 repos) the online subscription sales platform: **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard."
       - Built the Shopify → CRM order **webhook** with HMAC verification, atomic de-duplication in **Firestore**, automatic rebuild and idempotent reprocessing; contracts are created only after payment.
@@ -93,7 +93,7 @@ work:
   - name: Talenta
     position: Software Developer (Fullstack / Backend)
     location: Medellín, Colombia
-    startDate: 2020-01
+    startDate: "2017"
     endDate: 2022-11
     highlights:
       - Developed **Python (Django)** applications and APIs with **React** interfaces and **PostgreSQL** persistence, keeping code decoupled.
