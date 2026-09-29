@@ -135,6 +135,7 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 
 - Push a `main` → GitHub Actions ejecuta `pnpm build` (incluye Typst) → publica `dist/` en GitHub Pages.
 - URLs: home `https://inehosa1.github.io/cv/` (ES) y `/cv/en/`; CV `/cv/curriculum/` y `/cv/en/resume/`; proyectos `/cv/proyectos/` y `/cv/en/projects/`; PDFs `/cv/cv-es.pdf` y `/cv/cv-en.pdf`.
+- **CSS incrustado** (`build.inlineStylesheets: 'always'`): GitHub Pages cachea el HTML ~10 min y cada despliegue borra los assets con hash anteriores; no volver a CSS/JS externos con hash o los HTML cacheados darán 404. Los scripts de página son `is:inline`.
 - El build necesita Chromium de Playwright (`pnpm exec playwright install chromium`) para los diagramas.
 - En pull requests no se publica: los PDFs quedan como artefacto `cv-pdf` del workflow.
 - Rebuild mensual programado (actualiza la duración del empleo actual).

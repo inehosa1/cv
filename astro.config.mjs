@@ -16,6 +16,12 @@ export default defineConfig({
   site,
   base,
   trailingSlash: 'ignore',
+  build: {
+    // CSS incrustado en cada HTML: GitHub Pages cachea el HTML ~10 min y cada despliegue
+    // borra los CSS con hash anteriores; un HTML cacheado pedía un CSS ya borrado (404) y la
+    // página se veía sin estilos. Incrustado, cada página es autosuficiente.
+    inlineStylesheets: 'always',
+  },
   i18n: {
     locales: ['es', 'en'],
     defaultLocale: 'es',
