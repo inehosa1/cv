@@ -1,41 +1,39 @@
 ---
 title: Zona Repuestera — e-commerce de autopartes y su migración a FastAPI + Next.js
-tagline: "Tienda online de repuestos para vehículos en Colombia: búsqueda por compatibilidad, pagos con Wompi, Google Merchant y bot de WhatsApp. En producción con Django y reescrita con una estrategia strangler fig verificada por 1.445 tests de contrato."
+tagline: "Reescritura de una tienda online de repuestos en producción a FastAPI, Next.js y React con el patrón strangler fig, sobre la misma base de datos y verificada por 1.445 tests de contrato."
 client: Zona Repuestera
 company: Freelance
-role: Desarrollador principal · Fullstack
-start: 2025-06
+role: Desarrollador de la reescritura · Fullstack
+start: "2026"
 order: 5
 metrics:
-  - value: "97 %"
-    label: de 707 commits del sistema en producción
+  - value: "~128"
+    label: endpoints en el nuevo backend FastAPI
   - value: "1.445"
     label: tests de contrato entre Django y FastAPI
-  - value: "~45"
-    label: modelos en 17 apps de dominio
+  - value: "125"
+    label: tests unitarios y e2e en los dos nuevos frontends
   - value: "39"
     label: tablas con paridad de esquema verificada
 stack:
-  - group: Sistema en producción
-    items: [Python 3.11, Django 5.2, Django REST Framework, SimpleJWT, django-unfold, PostgreSQL, Gunicorn]
   - group: Nuevo backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
   - group: Nuevos frontends
     items: [Next.js 16, React 19, Zod, Vite, Mantine, TanStack Query, openapi-typescript]
   - group: Integraciones
     items: [Wompi, Google Merchant Content API, Google OAuth, Bot de WhatsApp, DigitalOcean Spaces]
-  - group: Documentos y media
-    items: [WeasyPrint (PDF), pandas / openpyxl (importación), Pillow-HEIF, mozjpeg]
+  - group: Sistema legado (convive)
+    items: [Django, Django REST Framework, PostgreSQL]
   - group: Calidad
     items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
 tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
 ---
 
-[Zona Repuestera](https://zonarepuestera.com.co) es una tienda online de autopartes en Colombia. Es un trabajo **independiente** que hago en paralelo: construí el sistema que está en producción y ahora estoy terminando su reescritura a una arquitectura moderna **sin detener la venta**.
+[Zona Repuestera](https://zonarepuestera.com.co) es una tienda online de autopartes en Colombia que funciona sobre un monolito Django. Como trabajo **independiente**, en paralelo a mi puesto principal, estoy liderando su reescritura a una arquitectura moderna **sin detener la venta**: un backend en FastAPI, un storefront en Next.js y un panel de administración en React.
 
 La tienda la usan tres tipos de cliente: los compradores (como invitados o registrados, con OTP o Google), el equipo de la tienda desde el panel de administración y un **bot de WhatsApp** que consulta pedidos, catálogo y recomendaciones a través de la API.
 
-## El sistema en producción
+## Punto de partida: el monolito en producción
 
 ```mermaid
 flowchart TB
@@ -50,6 +48,8 @@ flowchart TB
   DJ -->|"sincroniza stock y precio"| GM["Google Merchant"]
   DJ -->|"confirmaciones + PDF"| MAIL["Email · WeasyPrint"]
 ```
+
+El sistema actual resuelve todo el negocio, y la reescritura tiene que conservarlo sin romper nada:
 
 - **Búsqueda por compatibilidad de vehículo**: cada producto se relaciona con los modelos de vehículo compatibles (marca → modelo), y eso guía la navegación y las recomendaciones.
 - **Catálogo operable por la tienda**: importación masiva desde Excel y ZIP de imágenes, alias de categorías y productos para mejorar la búsqueda, precios de inventario y ubicación física en bodega.
@@ -115,7 +115,6 @@ sequenceDiagram
 
 ## Calidad
 
-- **464 tests** en el sistema en producción.
 - En el stack nuevo: tests async con pytest; 52 unitarios y 15 e2e en el storefront; 46 unitarios y 12 e2e en el panel.
 - **GitHub Actions** con lint, tipos, tests, `pip-audit`, `npm audit` y `knip`, con las acciones fijadas por SHA. Los despliegues quedan fuera del CI a propósito hasta el corte.
 - Workspace preparado para **desarrollo asistido por IA**, con `AGENTS.md` y `CLAUDE.md` que describen los contratos y las reglas de cada repositorio.

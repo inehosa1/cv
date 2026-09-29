@@ -132,6 +132,9 @@
           "type": "string",
           "minLength": 1
         },
+        "availability": {
+          "type": "string"
+        },
         "location": {
           "type": "object",
           "properties": {
@@ -253,12 +256,42 @@
             "minLength": 1
           },
           "highlights": {
-            "minItems": 1,
+            "default": [],
             "maxItems": 8,
             "type": "array",
             "items": {
               "type": "string",
               "minLength": 1
+            }
+          },
+          "groups": {
+            "default": [],
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "highlights": {
+                  "minItems": 1,
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "name",
+                "highlights"
+              ],
+              "additionalProperties": false
             }
           },
           "technologies": {
@@ -273,8 +306,7 @@
           "name",
           "position",
           "location",
-          "startDate",
-          "highlights"
+          "startDate"
         ],
         "additionalProperties": false
       }

@@ -4,7 +4,7 @@
 
 meta:
   lang: es
-  title: Ricardo Andrés Arango Ruiz — Desarrollador Fullstack (Python, React, IA)
+  title: Ricardo Andrés Arango Ruiz — Desarrollador Fullstack Senior (Python, React, IA)
   description: >-
     CV de Ricardo Arango, desarrollador Fullstack con Python (FastAPI, Django), React e
     integración de IA (LLMs, Claude, OpenAI). Remoto desde Medellín, Colombia.
@@ -28,19 +28,17 @@ meta:
 
 basics:
   name: Ricardo Andrés Arango Ruiz
-  label: Desarrollador Fullstack · Python (FastAPI / Django) · React · Integración de IA
+  label: Desarrollador Fullstack Senior · Python (Django / FastAPI) · React · IA
   email: chanix1998@gmail.com
   phone: +57 319 449 5717
   url: https://inehosa1.github.io/cv/
   summary: >-
-    Ingeniero de software con **9 años de experiencia** construyendo productos Fullstack de punta a
-    punta con **Python (Django, FastAPI)**, **React, TypeScript y Next.js**. Diseño plataformas de
-    e-commerce, pagos y facturación en producción: microservicios en **GCP**, **webhooks**
-    idempotentes, integraciones y migraciones cloud, con desarrollo **AI-native** (Claude Code).
-    Me adapto a cada reto y entrego con la mayor calidad: seguridad **OWASP Top 10**, cobertura de
-    tests lo más cercana al **100 %** (88–99 % en mis proyectos recientes) y atención al detalle.
-    Aporto criterio e ideas de mejora y acompaño a clientes y usuarios finales en el uso de las
-    herramientas.
+    Desarrollador de software con **9 años de experiencia** construyendo productos Fullstack de punta
+    a punta con **Python (Django, FastAPI)**, **React y TypeScript**: plataformas de e-commerce, pagos
+    y facturación en producción, **webhooks**, integraciones y migraciones cloud, con desarrollo
+    **AI-native**. Entrego con la mayor calidad: **OWASP Top 10**, cobertura de tests cercana al
+    **100 %** y acompañamiento a clientes y usuarios finales.
+  availability: Remoto · UTC−5 · solapamiento con horario europeo y de EE. UU.
   location:
     city: Medellín
     country: Colombia
@@ -85,28 +83,38 @@ work:
     position: Consultor de Software Fullstack & Backend Python
     location: España (100 % remoto)
     startDate: 2023-10
-    summary: Contratado por Rawson BPO como consultor externo para **Thinkia** (cliente final), a cargo de plataformas para SegurCaixa Adeslas, Culligan, SEB Business y un colegio internacional.
-    highlights:
-      - "**SegurCaixa Adeslas** (en desarrollo): construyo en solitario la plataforma de venta de seguros para mascotas: API **FastAPI** (107 endpoints, 94 % de cobertura), dos frontends **React 19**, webhooks firmados con **transactional outbox** y CMS visual sin despliegues."
-      - "**Culligan España y Portugal:** diseñé y construí casi en solitario (~97 % de 720+ commits en 15 repos) la venta online de suscripciones: funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y dashboard de analítica en **Next.js**."
-      - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore**, reconstrucción automática y reproceso idempotente; el contrato solo se crea tras el pago.
-      - Unifiqué 8 servicios en una **librería Python interna versionada** (auth fail-closed, redacción de PII) y monté **CI/CD sin llaves** (OIDC + Workload Identity) con +1.100 tests y cobertura mínima del 90–95 %.
-      - "**Colegio internacional K-12**: reescribí en **Django** un sistema de gestión escolar .NET compartiendo su **SQL Server** en producción: login compatible con ASP.NET Identity, boletines y actas en PDF/Excel, y la ficha del alumno de 193 s a 1,6 s."
-      - "**SEB One** (back-office de pagos y facturación, 7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits): multi-tenancy, RBAC, notas de crédito, comisiones, reembolsos y disputas; ~1.500 tests, 88 % de cobertura."
-      - Construí un ETL Excel → **Parquet** → PostgreSQL (~590k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago (Adyen, PayPal, Klarna, Alma…); migré servicios y almacenamiento de **GCP a Huawei Cloud**.
-      - "**SEB Markets** (Amazon, eBay, Miravia, Mirakl, Fnac): asignado a pruebas e integración; reforcé la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura) y añadí reintentos con backoff y colas de reintento."
-    technologies: [Python, Django REST Framework, FastAPI, Flask, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, Redis, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Sentry, Claude Code]
+    summary: Contratado por Rawson BPO como consultor externo para **Thinkia** (cliente final).
+    groups:
+      - name: SegurCaixa Adeslas
+        note: en desarrollo
+        highlights:
+          - Construyo en solitario la plataforma de venta de seguros para mascotas con una API **FastAPI** (107 endpoints, 94 % de cobertura), dos frontends **React 19**, webhooks firmados con **transactional outbox** y un CMS visual sin despliegues.
+      - name: Culligan España y Portugal
+        highlights:
+          - Diseñé y construí casi en solitario (~97 % de 720+ commits en 15 repos) la venta online de suscripciones con funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y un dashboard de analítica en **Next.js**.
+          - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore** y reproceso idempotente; el contrato solo se crea tras el pago.
+          - Unifiqué los servicios en una **librería Python interna versionada** y monté **CI/CD sin llaves** (OIDC + Workload Identity) con más de 1.100 tests y cobertura mínima del 90–95 %.
+      - name: SEB Business
+        highlights:
+          - "**SEB One** (pagos y facturación, 7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits), con ~1.500 tests y 88 % de cobertura."
+          - Construí un ETL Excel → **Parquet** → PostgreSQL (~590k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago; migré servicios y almacenamiento de **GCP a Huawei Cloud**.
+          - "**SEB Markets**: en pruebas e integración, reforcé la API pública **FastAPI** según OWASP Top 10 (vulnerabilidades de dependencias 28 → 0; 506 tests, 99 % de cobertura)."
+      - name: Colegio internacional K-12
+        highlights:
+          - Reescribí en **Django** un sistema de gestión escolar .NET compartiendo su **SQL Server** en producción, con login compatible con ASP.NET Identity y boletines y actas en PDF/Excel; la ficha del alumno pasó de 193 s a 1,6 s.
+    technologies: [Python, Django REST Framework, FastAPI, React, TypeScript, Next.js, Shopify, PostgreSQL, SQL Server, Firestore, MongoDB, Celery, GCP Cloud Run, Huawei Cloud, AWS EC2, Docker, Pytest, Sentry, Claude Code]
 
   - name: Zona Repuestera
     position: Desarrollador Fullstack (freelance)
     location: Colombia (remoto)
     url: https://zonarepuestera.com.co
-    startDate: 2025-06
-    summary: E-commerce de autopartes en producción que desarrollo de forma independiente, en paralelo a mi puesto principal.
+    # TODO: confirmar el mes de inicio de la reescritura.
+    startDate: "2026"
+    summary: E-commerce de autopartes en producción que modernizo de forma independiente, en paralelo a mi puesto principal.
     highlights:
-      - Construí el sistema en producción (~97 % de 707 commits) en **Django/DRF**, con búsqueda por compatibilidad de vehículo, pagos con **Wompi**, sincronización con **Google Merchant** y una API para un bot de WhatsApp.
-      - Lidero su reescritura a **FastAPI + Next.js + React** con el patrón **strangler fig** sobre la misma base de datos, verificada con **1.445 tests de contrato** contra el sistema actual.
-    technologies: [Django, FastAPI, Next.js, React, PostgreSQL, Wompi, Google Merchant API]
+      - Lidero la reescritura del e-commerce a **FastAPI + Next.js + React** con el patrón **strangler fig** sobre la misma base de datos, verificada con **1.445 tests de contrato** contra el sistema actual.
+      - Nuevo backend async (~128 endpoints, **SQLAlchemy 2**) con pagos **Wompi**, sincronización con **Google Merchant**, API para un bot de WhatsApp y un panel de administración tipado desde **OpenAPI**.
+    technologies: [FastAPI, SQLAlchemy, Next.js, React, TypeScript, PostgreSQL, Wompi, Google Merchant API, Playwright, GitHub Actions]
 
   - name: Mercado Libre
     position: Software Engineer (Backend)
@@ -115,10 +123,7 @@ work:
     endDate: 2023-11
     highlights:
       - Desarrollé una **librería Python** que ayuda a analistas y científicos de datos a **comparar y elegir el mejor modelo** para cada caso, integrada en sus flujos de trabajo.
-      - Construí pipelines de integración de datos que alimentaron módulos de automatización y **modelos predictivos** sobre grandes volúmenes.
-      - Monitoreé rendimiento con **DataDog** y **Kibana**, diagnosticando cuellos de botella y mejorando la resiliencia del ecosistema.
-      - Aprovisioné y desplegué infraestructura como código con **CloudFormation** sobre AWS (Lambda, S3, EC2) en equipos ágiles distribuidos.
-    technologies: [Python, Django REST Framework, Flask, JavaScript, DynamoDB, AWS, CloudFormation, Docker, DataDog, Kibana]
+    technologies: [Python]
 
   - name: Talenta
     position: Desarrollador de Software (Fullstack / Backend)
@@ -129,18 +134,18 @@ work:
       - Fui el **desarrollador principal** de un **sistema de medición de desempeño para psicólogos**, construido de punta a punta en **Django** (backend, plantillas HTML y JavaScript) sobre **PostgreSQL**.
       - Diseñé esquemas relacionales, ejecuté migraciones controladas y optimicé índices para responder a alta demanda.
       - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
-      - Configuré pipelines de CI con **Docker** y **Jenkins** y aprovisionamiento con **Ansible** sobre AWS.
-    technologies: [Python, Django, HTML5, JavaScript, React, PostgreSQL, Docker, Jenkins, Ansible, AWS]
+    technologies: [Python, Django, HTML5, JavaScript, PostgreSQL]
 
-  # TODO: confirmar meses de inicio/fin y añadir 1–2 logros concretos de Emtelco.
+  # TODO: confirmar meses de inicio y fin en Emtelco.
   - name: Emtelco
     position: Analista de Aplicaciones (inicio como practicante)
     location: Medellín, Colombia
     startDate: "2017"
     endDate: "2019"
     highlights:
-      - Inicié como **practicante** y pasé a **Analista de Aplicaciones**, dando soporte, mantenimiento y mejoras a aplicaciones internas de la operación.
-    technologies: []
+      - Desarrollé aplicaciones internas con **Django** y **Vue.js** para distintos proyectos, empezando como **practicante** y pasando a **Analista de Aplicaciones**.
+      - Automaticé de punta a punta procesos de gestión humana, desde la **contratación de candidatos** hasta ausencias, cambios de jefe, rotación, solicitudes y vacaciones.
+    technologies: [Python, Django, Vue.js, JavaScript]
 
 projects:
   - name: Casos de estudio técnicos
@@ -156,7 +161,7 @@ skills:
     keywords: [APIs REST, Webhooks, Microservicios, Celery, Pydantic, SQLAlchemy, Arquitectura hexagonal]
   - name: Frontend
     featured: [React, TypeScript, Next.js]
-    keywords: [Redux Toolkit, TanStack Query, MUI, Tailwind CSS, Shopify (Liquid), Vitest]
+    keywords: [Vue.js, Redux Toolkit, TanStack Query, MUI, Tailwind CSS, Shopify (Liquid), Vitest]
   - name: Integraciones
     featured: [Shopify, Stripe, Adyen]
     keywords: [PayPal, Klarna, GA4 Measurement Protocol, Meta Conversions API, Amazon, eBay, Mirakl, CRMs]
@@ -164,14 +169,14 @@ skills:
     featured: [Claude Code, Claude API, OpenAI API]
     keywords: [Agentes y subagentes, Skills y hooks, Codex, Prompting estructurado]
   - name: Datos
-    featured: [PostgreSQL, Firestore]
-    keywords: [MongoDB, Redis, DynamoDB, pandas, Parquet, ETL, Índices y particionado]
+    featured: [PostgreSQL, SQL Server, Firestore]
+    keywords: [MongoDB, Redis, pandas, Parquet, ETL, Índices y particionado]
   - name: Calidad y seguridad
     featured: [Pytest, OWASP Top 10]
     keywords: [Cobertura ≥ 90 %, Selenium, HMAC, JWT, Sentry, Clean Code, SOLID]
   - name: Cloud y DevOps
     featured: [GCP, Docker, AWS]
-    keywords: [Cloud Run, Artifact Registry, Workload Identity, Huawei Cloud, Jenkins, Bitbucket Pipelines, GitHub Actions, CloudFormation]
+    keywords: [Cloud Run, Artifact Registry, Workload Identity, Huawei Cloud, Jenkins, Bitbucket Pipelines, GitHub Actions]
 
 education:
   - institution: SENA
@@ -179,16 +184,9 @@ education:
     area: Análisis y Desarrollo de Sistemas de Información
     endDate: "2018"
 
-# TODO: añade emisor (p. ej. Platzi, Udemy, AWS) y año de cada certificación; da credibilidad.
-certificates:
-  - name: Backend con Python y Django (intermedio/avanzado)
-  - name: "FastAPI: modularización, rendimiento y manejo de errores"
-  - name: Desarrollo frontend con JavaScript y React
-  - name: Arquitecturas limpias y principios SOLID
-  - name: "Introducción a AWS: Cloud Computing"
 
 languages:
   - language: Español
     fluency: Nativo
   - language: Inglés
-    fluency: Intermedio (lectura técnica y documentación)
+    fluency: Lectura técnica (documentación y código)

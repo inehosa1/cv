@@ -54,6 +54,8 @@ export const cvSchema = z.strictObject({
     phone: z.string().optional(),
     url: url.optional(),
     summary: richText,
+    /** Modalidad y zona horaria, p. ej. "Remoto · UTC−5 · solapamiento con Europa y EE. UU.". */
+    availability: z.string().optional(),
     location: z.strictObject({
       city: z.string(),
       countryCode: z.string().length(2),
@@ -80,17 +82,33 @@ export const cvSchema = z.strictObject({
 
   work: z
     .array(
-      z.strictObject({
-        name: z.string(),
-        position: z.string(),
-        location: z.string(),
-        url: url.optional(),
-        startDate: partialDate,
-        endDate: partialDate.optional(),
-        summary: richText.optional(),
-        highlights: z.array(richText).min(1).max(8),
-        technologies: z.array(z.string()).default([]),
-      }),
+      z
+        .strictObject({
+          name: z.string(),
+          position: z.string(),
+          location: z.string(),
+          url: url.optional(),
+          startDate: partialDate,
+          endDate: partialDate.optional(),
+          summary: richText.optional(),
+          highlights: z.array(richText).max(8).default([]),
+          /** Logros agrupados por cliente (puestos de consultoría con varios clientes). */
+          groups: z
+            .array(
+              z.strictObject({
+                name: z.string(),
+                note: z.string().optional(),
+                highlights: z.array(richText).min(1).max(4),
+              }),
+            )
+            .max(5)
+            .default([]),
+          technologies: z.array(z.string()).default([]),
+        })
+        .refine(
+          (w) => w.highlights.length + w.groups.length > 0,
+          'Cada puesto necesita highlights o groups',
+        ),
     )
     .min(1),
 

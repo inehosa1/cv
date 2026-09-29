@@ -77,7 +77,9 @@
   #set text(size: 8.5pt, fill: muted)
   #{
     let loc = b.location.city + ", " + b.location.country
-    if "remote" in b.location { loc += " (" + b.location.remote + ")" }
+    if "availability" in b { loc += " · " + b.availability } else if "remote" in b.location {
+      loc += " (" + b.location.remote + ")"
+    }
     let items = (loc,)
     if "phone" in b { items.push(link("tel:" + b.phone.replace(" ", ""), b.phone)) }
     items.push(link("mailto:" + b.email, b.email))
@@ -121,7 +123,15 @@
       #if "url" in job { link(job.url, job.name) } else { job.name } · #job.location
     ]
     #if "summary" in job { par(rich(job.summary)) }
-    #list(..job.highlights.map(rich))
+    #if job.at("highlights", default: ()).len() > 0 { list(..job.highlights.map(rich)) }
+    // Consultoría con varios clientes: logros agrupados bajo el nombre de cada cliente.
+    #for g in job.at("groups", default: ()) [
+      #block(above: 0.55em, below: 0.35em, sticky: true)[
+        #text(weight: "semibold", fill: accent, g.name)
+        #if "note" in g { text(size: 8.5pt, fill: muted, style: "italic")[ · #g.note] }
+      ]
+      #list(..g.highlights.map(rich))
+    ]
     #if job.at("technologies", default: ()).len() > 0 {
       text(size: 8.5pt)[*#labels.technologies:* #job.technologies.join(", ")]
     }

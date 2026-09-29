@@ -1,41 +1,39 @@
 ---
 title: Zona Repuestera — auto-parts e-commerce and its migration to FastAPI + Next.js
-tagline: "An online vehicle-parts store in Colombia: compatibility search, Wompi payments, Google Merchant and a WhatsApp bot. Live on Django and rewritten with a strangler-fig approach verified by 1,445 contract tests."
+tagline: "Rewriting a live online parts store to FastAPI, Next.js and React with the strangler fig pattern, on the same database and verified by 1,445 contract tests."
 client: Zona Repuestera
 company: Freelance
-role: Lead developer · Fullstack
-start: 2025-06
+role: Rewrite developer · Fullstack
+start: "2026"
 order: 5
 metrics:
-  - value: "97%"
-    label: of 707 commits in the production system
+  - value: "~128"
+    label: endpoints in the new FastAPI backend
   - value: "1,445"
     label: contract tests between Django and FastAPI
-  - value: "~45"
-    label: models across 17 domain apps
+  - value: "125"
+    label: unit and e2e tests in the two new front ends
   - value: "39"
     label: tables with verified schema parity
 stack:
-  - group: Production system
-    items: [Python 3.11, Django 5.2, Django REST Framework, SimpleJWT, django-unfold, PostgreSQL, Gunicorn]
   - group: New backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
   - group: New front ends
     items: [Next.js 16, React 19, Zod, Vite, Mantine, TanStack Query, openapi-typescript]
   - group: Integrations
     items: [Wompi, Google Merchant Content API, Google OAuth, WhatsApp bot, DigitalOcean Spaces]
-  - group: Documents & media
-    items: [WeasyPrint (PDF), pandas / openpyxl (imports), Pillow-HEIF, mozjpeg]
+  - group: Legacy system (coexisting)
+    items: [Django, Django REST Framework, PostgreSQL]
   - group: Quality
     items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
 tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
 ---
 
-[Zona Repuestera](https://zonarepuestera.com.co) is an online auto-parts store in Colombia. It is **independent** work I do on the side: I built the system that runs in production, and I am now finishing its rewrite to a modern architecture **without stopping sales**.
+[Zona Repuestera](https://zonarepuestera.com.co) is an online auto-parts store in Colombia running on a Django monolith. As **independent** work alongside my main role, I am leading its rewrite to a modern architecture **without stopping sales**: a FastAPI backend, a Next.js storefront and a React admin panel.
 
 The store has three kinds of users: shoppers (guest or registered, with OTP or Google sign-in), the store team through the admin panel, and a **WhatsApp bot** that looks up orders, catalog and recommendations through the API.
 
-## The production system
+## Starting point: the production monolith
 
 ```mermaid
 flowchart TB
@@ -50,6 +48,8 @@ flowchart TB
   DJ -->|"syncs stock and price"| GM["Google Merchant"]
   DJ -->|"confirmations + PDF"| MAIL["Email · WeasyPrint"]
 ```
+
+The current system runs the whole business, and the rewrite must preserve it without breaking anything:
 
 - **Vehicle-compatibility search**: every product is linked to the compatible vehicle models (make → model), which drives navigation and recommendations.
 - **A catalog the store can run itself**: bulk import from Excel and image ZIPs, category and product aliases for better search, inventory pricing and physical warehouse location.
@@ -115,7 +115,6 @@ sequenceDiagram
 
 ## Quality
 
-- **464 tests** in the production system.
 - In the new stack: async pytest tests; 52 unit and 15 e2e tests in the storefront; 46 unit and 12 e2e tests in the admin.
 - **GitHub Actions** with lint, types, tests, `pip-audit`, `npm audit` and `knip`, with actions pinned by SHA. Deployments are intentionally kept out of CI until the cut-over.
 - A workspace set up for **AI-assisted development**, with `AGENTS.md` and `CLAUDE.md` describing each repository's contracts and rules.
