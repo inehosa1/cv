@@ -5,6 +5,7 @@ import { duration, formatDate } from '../lib/format.ts';
 import { routes, ui } from '../lib/i18n.ts';
 import type { Lang } from '../lib/schema.ts';
 import { prettyUrl, withBase } from '../lib/url.ts';
+import Contact from './Contact.astro';
 import Icon, { type IconName } from './Icon.astro';
 import Principles from './Principles.astro';
 import Rich from './Rich.astro';
@@ -36,7 +37,7 @@ const card =
   'print-flat rounded-2xl border border-rule bg-surface p-6 shadow-sm sm:p-8 dark:shadow-none';
 ---
 
-<Base cv={cv}>
+<Base cv={cv} paths={routes.cv}>
   <SiteNav lang={lang} current="cv" altPath={routes.cv[otherLang]} name={basics.name} />
 
   <div class="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-10 lg:py-14">
@@ -344,6 +345,10 @@ const card =
           </Section>
         </div>
       </aside>
+    </div>
+
+    <div class="mt-16">
+      <Contact cv={cv} lang={lang} />
     </div>
 
     <footer class="no-print mt-10 text-center text-xs text-muted">

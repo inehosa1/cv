@@ -154,6 +154,86 @@
   }
 }
 
+/* Chips del filtro de proyectos. */
+.filter-chip {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-rule bg-surface px-3 py-1.5 text-sm font-medium text-muted transition hover:border-accent hover:text-accent-ink;
+}
+
+.filter-chip[aria-pressed="true"] {
+  @apply border-accent bg-chip text-accent-ink;
+}
+
+/*
+ * Movimiento, solo si el usuario no pide reducirlo. Todo es CSS nativo (0 KB de JS):
+ * - transiciones entre páginas (View Transitions cross-document);
+ * - entrada suave del hero;
+ * - aparición de secciones al hacer scroll (scroll-driven animations; sin soporte, se ven normal).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.25s;
+  }
+
+  @keyframes rise-in {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* El hero nunca empieza invisible (opacidad siempre 1): si la animación se retrasa o no
+     corre, el contenido principal sigue visible y el LCP no se penaliza. */
+  @keyframes slide-in {
+    from {
+      transform: translateY(10px);
+    }
+    to {
+      transform: none;
+    }
+  }
+
+  .hero-in {
+    animation: slide-in 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+
+  .hero-in:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+
+  .hero-in:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+
+  .hero-in:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+
+  .hero-in:nth-child(5) {
+    animation-delay: 0.2s;
+  }
+
+  .hero-in:nth-child(n + 6) {
+    animation-delay: 0.25s;
+  }
+
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: rise-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,0 +1,190 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { loadCV } from '../lib/cv.ts';
+import { routes, ui } from '../lib/i18n.ts';
+import { sortProjects } from '../lib/projects.ts';
+import type { Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Contact from './Contact.astro';
+import Icon from './Icon.astro';
+import Principles from './Principles.astro';
+import ProjectCard from './ProjectCard.astro';
+import SiteNav from './SiteNav.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const cv = loadCV(lang);
+const t = ui[lang];
+const L = cv.meta.labels;
+const b = cv.basics;
+const other: Lang = lang === 'es' ? 'en' : 'es';
+
+const projects = sortProjects(await getCollection('projects', (e) => e.id.startsWith(`${lang}/`)));
+const featured = projects.filter((p) => p.data.featured).slice(0, 3);
+
+const current = cv.work.find((w) => !w.endDate && w.groups.length > 0);
+const yearOf = (d: string) => d.slice(0, 4);
+const career = cv.work.map((w) => ({
+  name: w.name,
+  position: w.position,
+  years: `${yearOf(w.startDate)} – ${w.endDate ? yearOf(w.endDate) : L.present}`,
+  current: !w.endDate,
+}));
+---
+
+<Base cv={cv} paths={routes.home}>
+  <SiteNav lang={lang} current="home" altPath={routes.home[other]} name={b.name} />
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="relative overflow-hidden border-b border-rule">
+      <div
+        class="pointer-events-none absolute -top-40 right-[-10%] h-[28rem] w-[28rem] rounded-full bg-accent/10 blur-3xl"
+        aria-hidden="true"
+      >
+      </div>
+      <div class="relative mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 sm:py-24 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:py-28">
+        <div>
+        <p class="hero-in inline-flex items-center gap-2 rounded-full border border-rule bg-surface px-3 py-1 text-xs font-medium text-muted">
+          <span class="size-2 rounded-full bg-emerald-500" aria-hidden="true"></span>
+          {b.name} · {b.availability ?? b.location.remote}
+        </p>
+        <p class="hero-in mt-6 text-sm font-semibold tracking-[0.12em] text-accent-ink uppercase">{t.homeKicker}</p>
+        <h1 class="hero-in mt-3 max-w-4xl text-4xl font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+          {cv.home.headline}
+        </h1>
+        <p class="hero-in mt-6 max-w-2xl text-lg leading-relaxed text-pretty text-muted">{cv.home.intro}</p>
+
+        <div class="hero-in mt-10 flex flex-wrap gap-3">
+          <a
+            href={withBase(routes.projects[lang])}
+            class="inline-flex items-center gap-2 rounded-xl bg-accent-ink px-5 py-3 font-semibold text-white shadow-sm transition hover:brightness-110 dark:text-[#0b1120]"
+          >
+            <Icon name="layers" />
+            {t.ctaProjects}
+          </a>
+          <a
+            href={withBase(routes.cv[lang])}
+            class="inline-flex items-center gap-2 rounded-xl border border-rule bg-surface px-5 py-3 font-semibold transition hover:border-accent hover:text-accent-ink"
+          >
+            {t.ctaCv}
+            <Icon name="arrowRight" />
+          </a>
+          <a
+            href="#contacto"
+            class="inline-flex items-center gap-2 rounded-xl px-5 py-3 font-semibold text-muted transition hover:text-accent-ink"
+          >
+            <Icon name="mail" />
+            {t.navContact}
+          </a>
+        </div>
+
+        <dl class="hero-in mt-14 grid max-w-2xl grid-cols-2 gap-4">
+          {
+            cv.home.stats.map((s) => (
+              <div class="rounded-2xl border border-rule bg-surface/80 p-5 backdrop-blur">
+                <dt class="sr-only">{s.label}</dt>
+                <dd class="text-3xl font-bold tracking-tight text-accent-ink tabular-nums sm:text-4xl">{s.value}</dd>
+                <dd class="mt-1 text-sm leading-snug text-muted">{s.label}</dd>
+              </div>
+            ))
+          }
+        </dl>
+        </div>
+
+        {
+          current && (
+            <aside class="hero-in hidden rounded-2xl border border-rule bg-surface/90 p-6 shadow-sm backdrop-blur lg:block dark:shadow-none">
+              <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.12em] text-accent-ink uppercase">
+                <span class="size-2 animate-pulse rounded-full bg-emerald-500" aria-hidden="true" />
+                {t.nowTitle}
+              </p>
+              <p class="mt-3 text-lg leading-snug font-semibold">{current.position}</p>
+              <p class="mt-1 text-sm text-muted">
+                {current.name} · Thinkia
+              </p>
+              <p class="mt-5 text-xs font-semibold text-muted">{t.nowClients}</p>
+              <ul class="mt-2 space-y-2">
+                {current.groups.map((g) => (
+                  <li class="flex items-center justify-between gap-3 rounded-lg border border-rule bg-bg px-3 py-2 text-sm">
+                    <span class="font-medium">{g.name}</span>
+                    {g.note && <span class="text-xs text-muted italic">{g.note}</span>}
+                  </li>
+                ))}
+              </ul>
+              <ul class="mt-5 flex flex-wrap gap-1.5">
+                {current.technologies.slice(0, 8).map((tech) => (
+                  <li class="rounded bg-bg px-2 py-0.5 text-xs text-muted ring-1 ring-rule">{tech}</li>
+                ))}
+              </ul>
+            </aside>
+          )
+        }
+      </div>
+    </section>
+
+    <div class="mx-auto max-w-6xl space-y-24 px-4 py-20 sm:px-6">
+      <!-- Proyectos destacados -->
+      <section aria-labelledby="featured-title">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <h2 id="featured-title" class="text-2xl font-bold tracking-tight sm:text-3xl">{t.featuredTitle}</h2>
+          <a
+            href={withBase(routes.projects[lang])}
+            class="inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink hover:underline"
+          >
+            {t.allCases} ({projects.length})
+            <Icon name="arrowRight" class="size-4" />
+          </a>
+        </div>
+        <ul class="mt-8 space-y-6">
+          {
+            featured.map((p) => (
+              <li>
+                <ProjectCard entry={p} lang={lang} labels={L} featured />
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <!-- Trayectoria -->
+      <section aria-labelledby="career-title" class="reveal">
+        <h2 id="career-title" class="text-2xl font-bold tracking-tight sm:text-3xl">{t.careerTitle}</h2>
+        <ol class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {
+            career.map((c) => (
+              <li class="rounded-xl border border-rule bg-surface p-4">
+                <p class="flex items-center gap-2 text-xs font-medium text-muted tabular-nums">
+                  <span
+                    class:list={['size-2 rounded-full', c.current ? 'bg-accent' : 'bg-muted/50']}
+                    aria-hidden="true"
+                  />
+                  {c.years}
+                </p>
+                <p class="mt-2 font-semibold">{c.name}</p>
+                <p class="mt-0.5 text-sm leading-snug text-muted">{c.position}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <a
+          href={withBase(routes.cv[lang])}
+          class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-ink hover:underline"
+        >
+          {t.ctaCv}
+          <Icon name="arrowRight" class="size-4" />
+        </a>
+      </section>
+
+      <div class="reveal">
+        <Principles principles={cv.principles} title={t.principlesTitle} variant="wide" />
+      </div>
+
+      <Contact cv={cv} lang={lang} />
+    </div>
+  </main>
+</Base>

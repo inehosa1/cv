@@ -52,6 +52,21 @@ basics:
       username: inehosa1
       url: https://github.com/inehosa1
 
+home:
+  headline: Construyo plataformas de e-commerce, pagos e integraciones que funcionan en producción.
+  intro: >-
+    Desarrollador Fullstack Senior con Python y React. Diseño sistemas completos, desde la API hasta la
+    interfaz y la infraestructura, con la seguridad, los tests y el detalle como punto de partida.
+  stats:
+    - value: "8+"
+      label: años construyendo software
+    - value: "88–99 %"
+      label: cobertura de tests en proyectos recientes
+    - value: "OWASP"
+      label: Top 10 como estándar de seguridad
+    - value: "100 %"
+      label: remoto desde Medellín
+
 principles:
   - title: Me adapto al reto
     description: De un monolito .NET con SQL Server a microservicios serverless o una migración de nube. Elijo la solución por la necesidad del negocio, no por moda.

@@ -31,6 +31,13 @@ const projects = defineCollection({
     stack: z.array(z.strictObject({ group: z.string(), items: z.array(z.string()).min(1) })),
     /** Etiquetas cortas para filtrar/escanear. */
     tags: z.array(z.string()).max(6),
+    /** Enlaces públicos (sitio en producción, repositorio). */
+    links: z
+      .array(z.strictObject({ label: z.string(), url: z.url() }))
+      .max(4)
+      .default([]),
+    /** Destacado en la home y en grande en la landing (máx. 3). */
+    featured: z.boolean().default(false),
     /** `development` muestra una etiqueta "En desarrollo". */
     status: z.enum(['production', 'development']).default('production'),
     /** Confidencialidad: si true, no se enlaza código ni se nombran datos internos. */

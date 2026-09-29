@@ -6,7 +6,7 @@ import Icon from './Icon.astro';
 
 interface Props {
   lang: Lang;
-  current: 'cv' | 'projects';
+  current: 'home' | 'cv' | 'projects';
   /** Ruta equivalente en el otro idioma. */
   altPath: string;
   name: string;
@@ -16,8 +16,9 @@ const { lang, current, altPath, name } = Astro.props;
 const t = ui[lang];
 const other: Lang = lang === 'es' ? 'en' : 'es';
 const links = [
-  { key: 'cv', label: t.navCv, href: withBase(routes.cv[lang]) },
   { key: 'projects', label: t.navProjects, href: withBase(routes.projects[lang]) },
+  { key: 'cv', label: t.navCv, href: withBase(routes.cv[lang]) },
+  { key: 'contact', label: t.navContact, href: '#contacto' },
 ] as const;
 ---
 
@@ -29,7 +30,7 @@ const links = [
 </a>
 <header class="no-print sticky top-0 z-40 border-b border-rule bg-bg/85 backdrop-blur supports-[backdrop-filter]:bg-bg/70">
   <nav class="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4 sm:px-6" aria-label="Principal">
-    <a href={withBase(routes.cv[lang])} class="mr-auto flex items-center gap-2 font-semibold tracking-tight">
+    <a href={withBase(routes.home[lang])} class="mr-auto flex items-center gap-2 font-semibold tracking-tight">
       <span class="grid size-7 place-items-center rounded-md bg-accent text-xs font-bold text-white" aria-hidden="true">RA</span>
       <span class="hidden sm:inline">{name}</span>
     </a>
@@ -41,7 +42,8 @@ const links = [
               href={l.href}
               aria-current={current === l.key ? 'page' : undefined}
               class:list={[
-                'rounded-md px-3 py-1.5 transition hover:text-accent-ink',
+                'rounded-md px-2.5 py-1.5 transition hover:text-accent-ink sm:px-3',
+                l.key === 'contact' && 'hidden sm:inline-block',
                 current === l.key ? 'bg-chip text-accent-ink' : 'text-muted',
               ]}
             >

@@ -45,6 +45,9 @@ importers:
       '@types/node':
         specifier: ^26.6.3
         version: 26.6.3
+      mermaid-isomorphic:
+        specifier: 3.1.0
+        version: 3.1.0(playwright@1.63.0)
       playwright:
         specifier: ^1.63.0
         version: 1.63.0

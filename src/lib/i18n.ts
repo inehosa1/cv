@@ -2,7 +2,8 @@ import type { Lang } from './schema.ts';
 
 /** Rutas de cada sección por idioma. */
 export const routes = {
-  cv: { es: '/', en: '/en/' },
+  home: { es: '/', en: '/en/' },
+  cv: { es: '/curriculum/', en: '/en/resume/' },
   projects: { es: '/proyectos/', en: '/en/projects/' },
   project: (slug: string) => ({ es: `/proyectos/${slug}/`, en: `/en/projects/${slug}/` }),
 } as const;
@@ -12,6 +13,23 @@ export const ui = {
   es: {
     navCv: 'CV',
     navProjects: 'Proyectos',
+    navContact: 'Contacto',
+    homeKicker: 'Desarrollador Fullstack Senior',
+    ctaProjects: 'Ver proyectos',
+    ctaCv: 'Ver CV',
+    featuredTitle: 'Proyectos destacados',
+    allCases: 'Ver los casos de estudio',
+    careerTitle: 'Trayectoria',
+    nowTitle: 'Actualmente',
+    liveLinks: 'Ver en producción',
+    nowClients: 'Clientes',
+    contactTitle: '¿Hablamos?',
+    contactText:
+      'Busco nuevos retos donde construir software de calidad. Escríbeme y te respondo lo antes posible.',
+    contactEmail: 'Escribir un email',
+    filterLabel: 'Filtrar por tecnología',
+    filterAll: 'Todos',
+    filterCount: 'proyectos',
     switchLang: 'English',
     skip: 'Saltar al contenido',
     projectsTitle: 'Proyectos',
@@ -37,6 +55,23 @@ export const ui = {
   en: {
     navCv: 'Resume',
     navProjects: 'Projects',
+    navContact: 'Contact',
+    homeKicker: 'Senior Fullstack Developer',
+    ctaProjects: 'View projects',
+    ctaCv: 'View resume',
+    featuredTitle: 'Featured projects',
+    allCases: 'See all case studies',
+    careerTitle: 'Career',
+    nowTitle: 'Currently',
+    liveLinks: 'See it live',
+    nowClients: 'Clients',
+    contactTitle: "Let's talk",
+    contactText:
+      "I'm looking for new challenges where I can build quality software. Drop me a line and I'll get back to you soon.",
+    contactEmail: 'Send an email',
+    filterLabel: 'Filter by technology',
+    filterAll: 'All',
+    filterCount: 'projects',
     switchLang: 'Español',
     skip: 'Skip to content',
     projectsTitle: 'Projects',

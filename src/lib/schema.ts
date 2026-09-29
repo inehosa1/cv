@@ -71,6 +71,16 @@ export const cvSchema = z.strictObject({
     ),
   }),
 
+  /** Portada del sitio (home): propuesta de valor y cifras. No aparece en el PDF. */
+  home: z.strictObject({
+    headline: z.string(),
+    intro: z.string(),
+    stats: z
+      .array(z.strictObject({ value: z.string(), label: z.string() }))
+      .min(2)
+      .max(4),
+  }),
+
   /** Principios de trabajo (sección "Cómo trabajo" de la web; el PDF los resume en el perfil). */
   principles: z
     .array(z.strictObject({ title: z.string(), description: z.string() }))

@@ -46,7 +46,8 @@ cv/
 │   ├── content.config.ts     # Esquema del frontmatter de los casos
 │   ├── components/           # Resume, ProjectsIndex, ProjectDetail, SiteNav, Section, Rich, Icon
 │   ├── layouts/Base.astro    # <head>: SEO, Open Graph, hreflang, JSON-LD Person
-│   ├── pages/index.astro     # /      → CV ES          · pages/en/index.astro → /en/
+│   ├── pages/index.astro     # /      → Home ES        · pages/en/index.astro → /en/
+│   ├── pages/curriculum/     # /curriculum/ → CV ES    · pages/en/resume/    → /en/resume/
 │   ├── pages/proyectos/      # /proyectos/[slug]/     · pages/en/projects/  → /en/projects/[slug]/
 │   ├── lib/i18n.ts           # Rutas y textos de interfaz del sitio (no del CV)
 │   ├── lib/mermaid-theme.mjs # Temas Mermaid claro/oscuro (sincronizar con global.css)
@@ -100,6 +101,8 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 - Métricas solo verificables (historial de git, informes de cobertura, documentación del proyecto). En YAML van **siempre entre comillas** (`"1.500"` sin comillas es el número 1,5).
 - Diagramas en bloques ```` ```mermaid ````. Priorizar `flowchart TB`, agrupar nodos similares en uno y mensajes cortos en `sequenceDiagram`: el SVG debe medir ≤ ~1100 px de ancho para leerse sin escalar (comprobar el atributo `width` del `<img>` en `dist/`).
 - Tras cambiar un caso, revisar la página renderizada (escritorio, móvil y modo oscuro).
+- Frontmatter opcional: `featured: true` (máx. 3; tarjeta grande con miniatura del primer diagrama en la home y la landing), `status: development`, `links` (solo URLs públicas).
+- Animaciones: solo CSS nativo y bajo `prefers-reduced-motion: no-preference`. Nunca animar la opacidad del contenido principal desde 0 (si la animación no corre, queda invisible y penaliza el LCP).
 
 ## Reglas técnicas
 
@@ -131,7 +134,7 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 ## Despliegue
 
 - Push a `main` → GitHub Actions ejecuta `pnpm build` (incluye Typst) → publica `dist/` en GitHub Pages.
-- URLs: `https://inehosa1.github.io/cv/` (ES), `/cv/en/` (EN), `/cv/proyectos/`, `/cv/en/projects/`, `/cv/cv-es.pdf`, `/cv/cv-en.pdf`.
+- URLs: home `https://inehosa1.github.io/cv/` (ES) y `/cv/en/`; CV `/cv/curriculum/` y `/cv/en/resume/`; proyectos `/cv/proyectos/` y `/cv/en/projects/`; PDFs `/cv/cv-es.pdf` y `/cv/cv-en.pdf`.
 - El build necesita Chromium de Playwright (`pnpm exec playwright install chromium`) para los diagramas.
 - En pull requests no se publica: los PDFs quedan como artefacto `cv-pdf` del workflow.
 - Rebuild mensual programado (actualiza la duración del empleo actual).

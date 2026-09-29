@@ -1,0 +1,29 @@
+---
+import { diagramThumb } from '../lib/diagram-thumb.ts';
+
+interface Props {
+  body: string | undefined;
+  id: string;
+  class?: string;
+}
+
+const { body, id, class: className } = Astro.props;
+const thumb = await diagramThumb(body, `thumb-${id.replaceAll('/', '-')}`);
+---
+
+{
+  thumb && (
+    <picture class:list={['diagram-thumb block', className]}>
+      <source media="(prefers-color-scheme: dark)" srcset={thumb.dark} />
+      <img
+        src={thumb.light}
+        alt=""
+        width={thumb.width}
+        height={thumb.height}
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-contain"
+      />
+    </picture>
+  )
+}

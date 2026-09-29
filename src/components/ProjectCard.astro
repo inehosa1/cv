@@ -1,0 +1,88 @@
+---
+import { formatDate } from '../lib/format.ts';
+import { routes, ui } from '../lib/i18n.ts';
+import { type Project, projectSlug } from '../lib/projects.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import DiagramThumb from './DiagramThumb.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  entry: Project;
+  lang: Lang;
+  labels: CV['meta']['labels'];
+  /** Tarjeta grande con miniatura del diagrama de arquitectura. */
+  featured?: boolean;
+}
+
+const { entry, lang, labels: L, featured = false } = Astro.props;
+const t = ui[lang];
+const d = entry.data;
+const href = withBase(routes.project(projectSlug(entry))[lang]);
+---
+
+<article
+  class:list={[
+    'reveal group relative flex h-full overflow-hidden rounded-2xl border border-rule bg-surface shadow-sm transition hover:-translate-y-0.5 hover:border-accent/60 hover:shadow-md dark:shadow-none',
+    featured ? 'flex-col lg:flex-row' : 'flex-col',
+  ]}
+>
+  <div class="absolute inset-x-0 top-0 z-10 h-1 bg-accent opacity-0 transition group-hover:opacity-100" aria-hidden="true"></div>
+
+  {
+    featured && (
+      <div class="relative h-56 shrink-0 border-b border-rule bg-bg p-4 sm:h-64 lg:h-auto lg:w-[45%] lg:border-r lg:border-b-0">
+        <DiagramThumb body={entry.body} id={entry.id} class="h-full" />
+      </div>
+    )
+  }
+
+  <div class:list={['flex flex-1 flex-col', featured ? 'p-6 sm:p-8 lg:p-10' : 'p-6 sm:p-8']}>
+    <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-muted">
+      {
+        d.status === 'development' && (
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 font-semibold text-amber-800 dark:text-amber-300">
+            <span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true" />
+            {t.inDevelopment}
+          </span>
+        )
+      }
+      <p>
+        {d.client} · <time datetime={d.start}>{formatDate(d.start, L)}</time> –{' '}
+        {d.end ? <time datetime={d.end}>{formatDate(d.end, L)}</time> : L.present}
+      </p>
+    </div>
+
+    <h3 class:list={['mt-2 font-semibold tracking-tight text-balance', featured ? 'text-2xl' : 'text-xl']}>
+      <a href={href} class="after:absolute after:inset-0">{d.title}</a>
+    </h3>
+    <p class="mt-2 leading-relaxed text-pretty text-muted">{d.tagline}</p>
+
+    {
+      d.metrics.length > 0 && (
+        <dl class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {d.metrics.slice(0, 3).map((m) => (
+            <div>
+              <dt class="sr-only">{m.label}</dt>
+              <dd class="text-lg font-bold text-accent-ink tabular-nums">{m.value}</dd>
+              <dd class="text-xs leading-snug text-muted">{m.label}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    <ul class="mt-6 flex flex-wrap gap-1.5" aria-label={t.stack}>
+      {
+        d.tags.map((tag) => (
+          <li class="rounded-md border border-chip-border bg-chip px-2 py-0.5 text-xs font-medium text-accent-ink">{tag}</li>
+        ))
+      }
+    </ul>
+
+    <p class="mt-auto flex items-center gap-1.5 pt-6 text-sm font-semibold text-accent-ink" aria-hidden="true">
+      {t.readCase}
+      <Icon name="arrowRight" class="size-4 transition group-hover:translate-x-1" />
+    </p>
+  </div>
+</article>

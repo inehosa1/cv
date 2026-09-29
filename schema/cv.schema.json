@@ -195,6 +195,44 @@
       ],
       "additionalProperties": false
     },
+    "home": {
+      "type": "object",
+      "properties": {
+        "headline": {
+          "type": "string"
+        },
+        "intro": {
+          "type": "string"
+        },
+        "stats": {
+          "minItems": 2,
+          "maxItems": 4,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "label"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "headline",
+        "intro",
+        "stats"
+      ],
+      "additionalProperties": false
+    },
     "principles": {
       "default": [],
       "maxItems": 8,
@@ -463,6 +501,7 @@
   "required": [
     "meta",
     "basics",
+    "home",
     "competencies",
     "work",
     "skills",
