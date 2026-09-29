@@ -107,7 +107,7 @@ work:
     position: Fullstack Developer (freelance)
     location: Colombia (remote)
     url: https://zonarepuestera.com.co
-    startDate: "2026"
+    startDate: 2026-09
     summary: A live auto-parts e-commerce I modernize independently, alongside my main role.
     highlights:
       - Leading the e-commerce rewrite to **FastAPI + Next.js + React** using the **strangler fig** pattern on the same database, verified by **1,445 contract tests** against the current system.
@@ -137,8 +137,8 @@ work:
   - name: Emtelco
     position: Applications Analyst (started as intern)
     location: Medellín, Colombia
-    startDate: "2017"
-    endDate: "2019"
+    startDate: 2018-01
+    endDate: 2020-01
     highlights:
       - Built internal applications with **Django** and **Vue.js** across several projects, starting as an **intern** and moving up to **Applications Analyst**.
       - Automated HR processes end to end, from **candidate hiring** to absences, manager changes, rotation, requests and vacations.

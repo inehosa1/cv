@@ -108,8 +108,7 @@ work:
     position: Desarrollador Fullstack (freelance)
     location: Colombia (remoto)
     url: https://zonarepuestera.com.co
-    # TODO: confirmar el mes de inicio de la reescritura.
-    startDate: "2026"
+    startDate: 2026-09
     summary: E-commerce de autopartes en producción que modernizo de forma independiente, en paralelo a mi puesto principal.
     highlights:
       - Lidero la reescritura del e-commerce a **FastAPI + Next.js + React** con el patrón **strangler fig** sobre la misma base de datos, verificada con **1.445 tests de contrato** contra el sistema actual.
@@ -136,12 +135,11 @@ work:
       - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
     technologies: [Python, Django, HTML5, JavaScript, PostgreSQL]
 
-  # TODO: confirmar meses de inicio y fin en Emtelco.
   - name: Emtelco
     position: Analista de Aplicaciones (inicio como practicante)
     location: Medellín, Colombia
-    startDate: "2017"
-    endDate: "2019"
+    startDate: 2018-01
+    endDate: 2020-01
     highlights:
       - Desarrollé aplicaciones internas con **Django** y **Vue.js** para distintos proyectos, empezando como **practicante** y pasando a **Analista de Aplicaciones**.
       - Automaticé de punta a punta procesos de gestión humana, desde la **contratación de candidatos** hasta ausencias, cambios de jefe, rotación, solicitudes y vacaciones.
