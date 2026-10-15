@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import type { GetStaticPaths } from 'astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { type Project, projectSlug, sortProjects } from '../../../lib/projects.ts';
+
+export const getStaticPaths = (async () => {
+  const list = sortProjects(await getCollection('projects', (e) => e.id.startsWith('en/')));
+  return list.map((entry, i) => ({
+    params: { slug: projectSlug(entry) },
+    props: { entry, prev: list[i - 1], next: list[i + 1] },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  entry: Project;
+  prev?: Project | undefined;
+  next?: Project | undefined;
+}
+
+const { entry, prev, next } = Astro.props;
+---
+
+<ProjectDetail lang="en" entry={entry} prev={prev} next={next} />

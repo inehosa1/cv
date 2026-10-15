@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+public/cv-*.pdf
+*:Zone.Identifier
+.DS_Store
+.env*
+public/og-*.png
+
+# CV original de partida: solo consulta local
+reference/

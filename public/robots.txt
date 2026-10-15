@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://inehosa1.github.io/cv/sitemap-index.xml

@@ -1,0 +1,150 @@
+---
+title: Multi-country payments, invoicing and reconciliation back office
+tagline: "A multi-tenant platform the client uses to run orders, payments, settlements, invoices, refunds and disputes for e-commerce brands in 7 countries."
+client: European e-commerce & payments group
+company: Thinkia · previously via Rawson BPO
+role: Lead backend developer · Fullstack
+start: 2025-01
+order: 7
+featured: true
+metrics:
+  - value: "67%"
+    label: of 1,450 backend commits (top contributor)
+  - value: "1,500"
+    label: backend tests · 88% coverage
+  - value: "~600k"
+    label: invoice lines loaded via ETL across 7 countries
+  - value: "9+"
+    label: payment providers with settlement parsers
+stack:
+  - group: Backend
+    items: [Python 3.12, Django 5.2, Django REST Framework, SimpleJWT, drf-spectacular, Django Channels]
+  - group: Processing
+    items: [Celery 5, Celery Beat, Redis 7, pandas, PyArrow / Parquet, openpyxl]
+  - group: Data
+    items: [PostgreSQL, B-tree & BRIN indexes, Monthly partitioning, Firestore]
+  - group: Frontend
+    items: [React 18, TypeScript, Vite, MUI 5, MUI X DataGrid, Redux Toolkit, Redux-Saga, TanStack Query, Vitest]
+  - group: Cloud & CI/CD
+    items: [Docker, Jenkins, GCP Cloud Run, Artifact Registry, Huawei Cloud ECS / RDS / OBS / SWR]
+  - group: Quality
+    items: [Pytest, factory_boy, freezegun, pytest-cov, pre-commit, Sentry]
+tags: [Django, Payments, ETL, Multi-tenant, Celery, Cloud migration]
+---
+
+It is the back office the client uses to run e-commerce for brands in **7 countries across Europe and Latin America**. It reconciles orders from several stores with charges from many payment providers, issues invoices and credit notes, calculates commissions, and handles refunds and disputes.
+
+I worked on it for about 20 months as the **top backend contributor** (974 of ~1,450 commits). I also built parts of both front ends (staff and clients), the deployment tooling and the cloud migration.
+
+## Architecture
+
+```mermaid
+flowchart TB
+  FE["React + TypeScript front ends<br/>staff portal (35+ modules) · client portal"]
+  SRC["External sources<br/>stores · payment providers · Excel"]
+
+  API["Django REST API<br/>16 apps · JWT + RBAC · multi-tenant"]
+
+  subgraph ASYNC["Async processing"]
+    direction LR
+    BEAT["Celery Beat<br/>FX rates, alerts"] --> RED[("Redis")] --> CEL["Celery workers<br/>imports · exports · ETL"]
+  end
+
+  PG[("PostgreSQL · 105 models")]
+  OBJ[("Object storage<br/>GCS → Huawei OBS")]
+
+  FE --> API
+  SRC -->|"orders, credit notes"| API
+  SRC -->|"transactions, settlements, files"| CEL
+  API --> PG
+  API -->|"heavy jobs"| RED
+  CEL --> PG
+  CEL --> OBJ
+```
+
+- **Per-request multi-tenancy with RBAC.** Every request is resolved in the context of a tenant, and the permission layer (roles and per-module permissions) scopes every query to it.
+- **Everything heavy is asynchronous.** Bulk imports and exports, recalculations and document sending run on **Celery** with Redis. Users get the result as a notification, without blocking the API.
+- **Documented API** with drf-spectacular (OpenAPI): 89 registered viewsets, 89 custom actions and 66 management commands for operations and data.
+
+## Financial domain
+
+I implemented a large part of the core business logic:
+
+- **Invoicing**: full and partial invoices and credit notes, with discounts and tax breakdown. It includes reconciliation of unmatched credit notes, import of received invoices and sending documents by email with their attachments.
+- **Commission engine**, configurable by gateway, country, payment method, card type, number of installments and validity period.
+- **Refunds and disputes**: approve, reject, issue and notify actions; cancellation reasons; IBAN/SWIFT validation for bank-transfer refunds; bulk import from the client's real Excel template, with a preview.
+- **Statistics and dashboards** with caching, a change **audit log**, and daily FX conversion to EUR via Celery Beat.
+
+## ETL: from Excel to a queryable data warehouse
+
+Historical data arrived as heterogeneous Excel files per country. I designed a staged pipeline that can be reproduced in any environment with a single command:
+
+```mermaid
+flowchart LR
+  RAW["Raw Excel<br/>per country and source"] --> NORM["Normalization<br/>canonical schema"]
+  NORM --> VAL{"Validation"}
+  VAL -- "errors" --> REP["Validation report"]
+  VAL -- "ok" --> PQ[("Parquet<br/>partitioned by country")]
+  PQ --> LOAD["Incremental load<br/>idempotent · dry-run"]
+  LOAD --> PG[("PostgreSQL")]
+```
+
+- **Parquet as the canonical intermediate format**: it is typed, columnar and partitioned by country, so each stage can be re-run in isolation.
+- **Incremental, idempotent loads** with a *dry-run* mode and validation reports before the database is touched.
+- Result: **hundreds of thousands of received-invoice lines** from 7 countries, tens of thousands of credit notes and hundreds of thousands of orders, loaded and queryable.
+
+## Settlement engine for payment providers
+
+Every provider delivers settlements in its own format. I built a **spec-driven** engine: one parser per provider produces a common normalized model, and a single loader persists it.
+
+```mermaid
+flowchart TB
+  P["Per-provider parsers<br/>9+ European and Latin American<br/>payment providers"]
+  P --> N["Normalizer<br/>common settlement model"]
+  N --> L["Single loader<br/>de-duplication"]
+  L --> DB[("PostgreSQL")]
+  DB --> R["Reconciliation<br/>order ↔ charge ↔ settlement"]
+```
+
+Adding a new provider only takes its parser and spec: normalization, loading and reconciliation are reused.
+
+## Database performance
+
+The order, payment and transaction tables grow quickly. I designed **composite B-tree indexes** for the most frequent filters, **BRIN** indexes for time columns on large tables, and a documented **monthly partitioning plan**.
+
+## Migration from GCP to Huawei Cloud
+
+In 2026 I led the technical side of a cloud-to-cloud migration (**GCP → Huawei Cloud**):
+
+```mermaid
+flowchart LR
+  subgraph G["Before · Google Cloud"]
+    direction TB
+    G1["Jenkins → Artifact Registry"]
+    G2["Cloud Run"]
+    G3[("Cloud Storage")]
+    G4["Pub/Sub"]
+  end
+  subgraph H["After · Huawei Cloud"]
+    direction TB
+    H1["Unified deploy.sh → SWR"]
+    H2["ECS + RDS PostgreSQL"]
+    H3[("OBS")]
+    H4["Direct HTTP"]
+  end
+  G1 ==> H1
+  G2 ==> H2
+  G3 ==>|"byte-for-byte sync"| H3
+  G4 ==> H4
+```
+
+- A **switchable storage layer** (GCS ↔ OBS) with signed URLs, so the migration did not require rewriting data. Objects were migrated with byte-for-byte parity checks.
+- **A single `deploy.sh`** to build, publish and deploy the 4 applications (backend, two front ends and the transaction-recovery service) to staging or production, with commit-versioned images and a preflight check.
+- The transaction-recovery service was decoupled from Pub/Sub and the Google SDK so it could run on ECS and RDS.
+
+## Quality and ways of working
+
+- **~1,500 backend tests** with pytest, factory_boy and freezegun, **88% coverage** and a mandatory floor in pre-commit. *Given/When/Then* test catalogs are generated automatically as documentation.
+- **Jenkins** pipelines to Cloud Run, with manual approval for staging and a `/health` smoke test.
+- **AI-assisted development** with agents (**Claude Code**, **Codex**), used to expand test coverage and build the statistics module.
+- On the front end I built the refund and dispute UIs, a drag-and-drop export field picker, the credit-note timeline, global search by provider reference and the English localization. I also removed every explicit `any` and all ESLint errors.

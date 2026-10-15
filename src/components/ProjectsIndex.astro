@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { loadCV } from '../lib/cv.ts';
+import { filtersFor, techFilters } from '../lib/filters.ts';
+import { routes, ui } from '../lib/i18n.ts';
+import { projectSlug, sortProjects } from '../lib/projects.ts';
+import type { Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Contact from './Contact.astro';
+import ProjectCard from './ProjectCard.astro';
+import SiteNav from './SiteNav.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const cv = loadCV(lang);
+const t = ui[lang];
+const L = cv.meta.labels;
+const other: Lang = lang === 'es' ? 'en' : 'es';
+const projects = sortProjects(await getCollection('projects', (e) => e.id.startsWith(`${lang}/`)));
+
+// Filtros que aplican a cada proyecto; solo se muestran los que agrupan 2 o más.
+const projectFilters = new Map(
+  projects.map((p) => [
+    p.id,
+    filtersFor([p.data.title, ...p.data.tags, ...p.data.stack.flatMap((s) => s.items)]),
+  ]),
+);
+const filters = techFilters
+  .map((f) => ({
+    ...f,
+    count: projects.filter((p) => projectFilters.get(p.id)?.includes(f.id)).length,
+  }))
+  .filter((f) => f.count >= 2);
+
+// Clientes reales (sin proyectos personales), agrupando variantes del mismo cliente por su primera palabra.
+const clients = new Set(projects.filter((p) => p.data.nda).map((p) => p.data.client.split(' ')[0]));
+const title = `${t.projectsTitle} — ${cv.basics.name}`;
+const description = t.projectsIntro;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description,
+  author: { '@type': 'Person', name: cv.basics.name },
+  hasPart: projects.map((p) => ({
+    '@type': 'CreativeWork',
+    name: p.data.title,
+    description: p.data.tagline,
+    url: withBase(routes.project(projectSlug(p))[lang]),
+  })),
+};
+---
+
+<Base cv={cv} title={title} description={description} paths={routes.projects} jsonLd={jsonLd}>
+  <SiteNav lang={lang} current="projects" altPath={routes.projects[other]} name={cv.basics.name} />
+
+  <main id="main" class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:py-16">
+    <header class="max-w-3xl">
+      <p class="text-sm font-semibold tracking-[0.12em] text-accent-ink uppercase">{t.projectsKicker}</p>
+      <h1 class="mt-3 text-4xl font-bold tracking-tight text-balance sm:text-5xl">{t.projectsTitle}</h1>
+      <p class="mt-4 text-lg leading-relaxed text-pretty text-muted">{t.projectsIntro}</p>
+    </header>
+
+    <dl class="mt-10 grid max-w-2xl grid-cols-3 gap-4">
+      {
+        [
+          { value: projects.length, label: lang === 'es' ? 'casos de estudio' : 'case studies' },
+          { value: clients.size, label: lang === 'es' ? 'clientes' : 'clients' },
+          { value: cv.home.stats[0]?.value, label: cv.home.stats[0]?.label },
+        ].map((s) => (
+          <div class="rounded-xl border border-rule bg-surface p-4">
+            <dt class="text-xs text-muted">{s.label}</dt>
+            <dd class="mt-1 text-3xl font-bold tabular-nums">{s.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    <!-- Filtro por tecnología: oculto hasta que el script lo activa (sin JS se ven todos los proyectos). -->
+    <div data-filters hidden class="mt-12">
+      <p id="filter-label" class="text-sm font-semibold">{t.filterLabel}</p>
+      <div class="mt-3 flex flex-wrap gap-2" role="group" aria-labelledby="filter-label">
+        <button type="button" data-filter="all" aria-pressed="true" class="filter-chip">
+          {t.filterAll} <span class="tabular-nums opacity-70">{projects.length}</span>
+        </button>
+        {
+          filters.map((f) => (
+            <button type="button" data-filter={f.id} aria-pressed="false" class="filter-chip">
+              {f.label[lang]} <span class="tabular-nums opacity-70">{f.count}</span>
+            </button>
+          ))
+        }
+      </div>
+      <p data-filter-status class="sr-only" aria-live="polite"></p>
+    </div>
+
+    <ol class="mt-8 grid gap-6 md:grid-cols-2">
+      {
+        projects.map((p) => (
+          <li data-project data-filters-list={projectFilters.get(p.id)?.join(' ')} class:list={[p.data.featured && 'md:col-span-2']}>
+            <ProjectCard entry={p} lang={lang} labels={L} featured={p.data.featured} />
+          </li>
+        ))
+      }
+    </ol>
+
+    <div class="mt-24">
+      <Contact cv={cv} lang={lang} />
+    </div>
+  </main>
+</Base>
+
+<script is:inline data-count-label={t.filterCount}>
+  (() => {
+    const root = document.querySelector('[data-filters]');
+    if (!root) return;
+    const items = [...document.querySelectorAll('[data-project]')];
+    const buttons = [...root.querySelectorAll('[data-filter]')];
+    const status = root.querySelector('[data-filter-status]');
+    const label = document.currentScript?.dataset.countLabel ?? '';
+    root.hidden = false;
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        const id = button.dataset.filter;
+        for (const b of buttons) b.setAttribute('aria-pressed', String(b === button));
+        let shown = 0;
+        for (const item of items) {
+          const match = id === 'all' || (item.dataset.filtersList ?? '').split(' ').includes(id);
+          item.hidden = !match;
+          if (match) shown++;
+        }
+        if (status) status.textContent = `${shown} ${label}`;
+      });
+    }
+  })();
+</script>

@@ -1,0 +1,45 @@
+---
+import type { CV } from '../lib/schema.ts';
+
+interface Props {
+  principles: CV['principles'];
+  title: string;
+  /** `compact` para la columna del CV; `wide` para la landing. */
+  variant?: 'compact' | 'wide';
+}
+
+const { principles, title, variant = 'compact' } = Astro.props;
+---
+
+{
+  principles.length > 0 && (
+    <section aria-labelledby="principles-title">
+      <h2
+        id="principles-title"
+        class:list={[
+          variant === 'wide'
+            ? 'text-2xl font-bold tracking-tight sm:text-3xl'
+            : 'mb-4 flex items-center gap-3 text-xs font-bold tracking-[0.12em] text-accent-ink uppercase after:h-px after:flex-1 after:bg-rule',
+        ]}
+      >
+        {title}
+      </h2>
+      <ol
+        class:list={[
+          'grid gap-3',
+          variant === 'wide' ? 'mt-6 sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2',
+        ]}
+      >
+        {principles.map((p, i) => (
+          <li class="rounded-xl border border-rule bg-surface p-4">
+            <p class="flex items-baseline gap-2 font-semibold">
+              <span class="text-xs font-bold text-accent-ink tabular-nums">{String(i + 1).padStart(2, '0')}</span>
+              {p.title}
+            </p>
+            <p class="mt-1.5 text-sm leading-relaxed text-pretty text-muted">{p.description}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

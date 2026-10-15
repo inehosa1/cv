@@ -1,0 +1,66 @@
+---
+import { ui } from '../lib/i18n.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+import { prettyUrl, withBase } from '../lib/url.ts';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  cv: CV;
+  lang: Lang;
+}
+
+const { cv, lang } = Astro.props;
+const t = ui[lang];
+const b = cv.basics;
+const linkedin = b.profiles.find((p) => p.network.toLowerCase() === 'linkedin');
+const pdfName = `${b.name.replaceAll(' ', '_')}_CV_${lang.toUpperCase()}.pdf`;
+const secondary: { icon: IconName; label: string; href: string; download?: string }[] = [
+  ...(linkedin
+    ? [{ icon: 'linkedin' as const, label: prettyUrl(linkedin.url), href: linkedin.url }]
+    : []),
+  ...(b.phone
+    ? [{ icon: 'phone' as const, label: b.phone, href: `tel:${b.phone.replaceAll(' ', '')}` }]
+    : []),
+  {
+    icon: 'download',
+    label: cv.meta.labels.downloadPdf,
+    href: withBase(`/cv-${lang}.pdf`),
+    download: pdfName,
+  },
+];
+---
+
+<section id="contacto" aria-labelledby="contact-title" class="no-print reveal scroll-mt-20">
+  <div class="relative overflow-hidden rounded-3xl border border-rule bg-surface px-6 py-12 text-center shadow-sm sm:px-12 sm:py-16 dark:shadow-none">
+    <div
+      class="pointer-events-none absolute inset-x-0 -top-24 mx-auto h-48 w-2/3 rounded-full bg-accent/15 blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+    <h2 id="contact-title" class="relative text-3xl font-bold tracking-tight sm:text-4xl">{t.contactTitle}</h2>
+    <p class="relative mx-auto mt-4 max-w-xl text-pretty text-muted">{t.contactText}</p>
+    <a
+      href={`mailto:${b.email}`}
+      class="relative mt-8 inline-flex items-center gap-2 rounded-xl bg-accent-ink px-6 py-3 font-semibold text-white shadow-sm transition hover:brightness-110 dark:text-[#0b1120]"
+    >
+      <Icon name="mail" />
+      {b.email}
+    </a>
+    <ul class="relative mt-6 flex flex-wrap justify-center gap-3 text-sm">
+      {
+        secondary.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              download={l.download}
+              class="inline-flex items-center gap-2 rounded-lg border border-rule px-4 py-2 font-medium text-muted transition hover:border-accent hover:text-accent-ink"
+            >
+              <Icon name={l.icon} class="size-4" />
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

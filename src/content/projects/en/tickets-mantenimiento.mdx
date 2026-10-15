@@ -1,0 +1,120 @@
+---
+title: Maintenance tracking with SLAs and an hours bank
+tagline: "A FastAPI service that replaced a spreadsheet-based low-code workflow: a state machine, transactional IDs, SLAs, an hours bank, monthly reports and its own back office."
+client: Water treatment multinational (Spain)
+company: Thinkia · previously via Rawson BPO
+role: Sole developer · Backend
+start: 2026-09
+order: 4
+metrics:
+  - value: "98%"
+    label: branch coverage (95% gate)
+  - value: "180"
+    label: offline tests with a transactional Firestore double
+  - value: "8"
+    label: states with domain-validated transitions
+  - value: "0"
+    label: changes needed in the client dashboard
+stack:
+  - group: Backend
+    items: [Python 3.12, FastAPI, Pydantic Settings, Jinja2, Uvicorn]
+  - group: Data
+    items: [Firestore (transactions), Cloud Storage (private attachments)]
+  - group: Integrations
+    items: [Corporate email, Cloud Scheduler, Sentry]
+  - group: Security
+    items: [argon2, Signed session, CSRF, Login lockout, Separate secrets per permission]
+  - group: Quality & CI/CD
+    items: [pytest, Ruff, Black, isort, Bitbucket Pipelines, Cloud Run]
+tags: [FastAPI, State machine, Firestore, SLA, Back office]
+---
+
+Maintenance tickets between the client and the development team were managed with a **low-code workflow, a spreadsheet and chat notifications**. I rewrote the system as a **dedicated FastAPI service**, with transactional IDs and an auditable history, and two faces: the dashboard's *Maintenance* section for the client, and a back office for the team.
+
+## Architecture
+
+```mermaid
+flowchart TB
+  CL["Client · dashboard"] -->|"actions · per-permission secrets"| API
+  DEV["Development team"] -->|"27 routes"| WEB
+  SCH["Cloud Scheduler"] -->|"daily job"| API
+  API["Dashboard contract"] --> S
+  WEB["Backoffice<br/>Jinja2 · session · CSRF"] --> S
+  S["Use cases"] --> D["Pure domain<br/>states · SLA · hours"]
+  S --> FS[("Firestore")]
+  S --> GCS[("Cloud Storage")]
+  S --> MG["Corporate email"]
+```
+
+- **Inward-pointing layers**: the domain is pure logic (states, transitions, SLA, hours bank), and repositories, storage and the notifier are injected from a container.
+- **I kept the dashboard contract unchanged**, so the rewrite required no client changes.
+- **Separate secrets per permission** and a client view filtered server-side: internal notes, storage paths and field history never leave the service.
+
+## Ticket lifecycle
+
+```mermaid
+stateDiagram-v2
+  state "Estimating" as Estimating
+  state "In progress" as InProgress
+  [*] --> New
+  New --> Estimating: estimate
+  Estimating --> Approved: approve
+  Estimating --> Rejected: reject
+  Approved --> InProgress: start
+  InProgress --> Finished: finish
+  Finished --> Validated: accept or auto-validation
+  Finished --> InProgress: reopen (within window)
+  New --> Cancelled: cancel
+  Estimating --> Cancelled: cancel
+  Approved --> Cancelled: cancel
+  Rejected --> New: reopen
+  Cancelled --> New: reopen
+  Validated --> [*]
+```
+
+- Any undeclared transition returns **409**. Cancelling and reopening require a reason.
+- If the client changes the scope after the estimate, the ticket goes back to *New*. Once approved, only the priority can change.
+- **Per-priority SLAs in calendar hours** while the ticket waits on the team. An unanswered client message puts the ball back in the team's court.
+
+## IDs that never repeat
+
+ID allocation and ticket creation happen in **a single Firestore transaction**:
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant S as Service
+  participant T as Firestore transaction
+
+  S->>T: read the counter
+  loop bounded probe
+    S->>T: does candidate ID exist?
+  end
+  S->>T: create ticket (fails if it exists)
+  S->>T: update counter
+  S->>T: "create" event in history
+  T-->>S: atomic commit
+```
+
+- `create` **refuses to overwrite** an existing document, as an extra guarantee on top of the counter.
+- Every status change goes through a single method that, in the same transaction, checks the current status, applies the change and writes an event with before and after values. The history is **append-only**.
+- An **idempotent migration**, *dry-run* by default, imported the history, normalized the numbering and left audit events for the import. A regression test guarantees IDs never repeat.
+
+## Hours bank, reports and daily job
+
+- **Hours bank per category**. Top-ups are append-only (a correction is a negative top-up) and the balance is top-ups minus logged hours. Time entries are per person, category and day, and are voided instead of deleted.
+- **Monthly report** as JSON, CSV or a printable page, with opening balance, top-ups, consumption and closing balance.
+- **Idempotent daily job on Cloud Scheduler**: it applies automatic validation to finished tickets and sends the team a digest of tickets out of SLA.
+- **Attachments** in a private bucket: filtered by extension and *magic bytes*, with size and count limits per message, and served only through the service.
+- **Email through the corporate mail system** with modern authentication instead of basic SMTP. An email failure never makes the action fail.
+
+## Hard bugs I fixed
+
+- **Vanishing sessions.** When the system clock stepped back after an NTP adjustment, signed cookies were considered invalid and Starlette silently dropped the session. I fixed it with a signer based on a monotonic clock.
+- **Fields preserved on sync.** A *merge* write carrying empty fields could erase ticket data. Now incoming empty values never overwrite a stored value.
+
+## Quality and deployment
+
+- **180 offline tests** with an in-memory Firestore double that reproduces transactions and `create` semantics. Branch coverage is **98%**, with a 95% floor on every run.
+- **Bitbucket Pipelines** with isort, Black, Ruff and pytest.
+- A `deploy.sh` that refuses to deploy a dirty tree or failing tests, boots the container and checks `/healthz`, warns about missing required variables and **never overwrites environment variables**, so a deploy cannot blank a secret.

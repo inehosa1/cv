@@ -1,0 +1,215 @@
+# yaml-language-server: $schema=../schema/cv.schema.json
+# English translation. Must keep the same structure as cv.es.yaml (checked by `pnpm validate`).
+
+meta:
+  lang: en
+  title: Ricardo Andrés Arango Ruiz — Senior Fullstack Engineer (Python, React, AI)
+  description: >-
+    Ricardo Arango, Senior Fullstack developer with Python (Django, FastAPI) and React:
+    software tailored to each need. Remote from Medellín, Colombia.
+  lastModified: 2026-10
+  labels:
+    summary: Summary
+    competencies: Core competencies
+    work: Experience
+    projects: Projects
+    skills: Technical skills
+    education: Education
+    certificates: Certifications
+    languages: Languages
+    technologies: Tech stack
+    present: Present
+    downloadPdf: Download PDF
+    switchLang: Español
+    contact: Contact
+    degreeIn: in
+    months: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+
+basics:
+  name: Ricardo Andrés Arango Ruiz
+  label: Senior Fullstack Engineer · Python (Django / FastAPI) · React · AI
+  email: chanix1998@gmail.com
+  phone: +57 319 449 5717
+  url: https://inehosa1.github.io/cv/en/
+  summary: >-
+    Software developer with **8+ years of experience** building end-to-end Fullstack products with
+    **Python (Django, FastAPI)**, **React and TypeScript**, tailored to each need: e-commerce and
+    payments, invoicing, school management, analytics and process automation, with **webhooks**,
+    integrations, cloud migrations and **AI-native** development. I deliver at the highest quality:
+    **OWASP Top 10**, test coverage of **88–99%**, and hands-on support for clients and end users.
+  availability: Remote · UTC−5
+  location:
+    city: Medellín
+    country: Colombia
+    countryCode: CO
+    remote: fully remote
+  profiles:
+    - network: LinkedIn
+      username: ricardo-andres-arango-ruiz
+      url: https://www.linkedin.com/in/ricardo-andres-arango-ruiz
+    - network: GitHub
+      username: inehosa1
+      url: https://github.com/inehosa1
+
+home:
+  headline: I turn business needs into solid, secure, production-ready software.
+  intro: >-
+    From e-commerce and payments to school management, analytics or process automation: I adapt to
+    each challenge and design the whole system, from the API to the interface and the infrastructure,
+    with security, tests and detail as the starting point.
+  stats:
+    - value: "8+"
+      label: years building software
+    - value: "88–99%"
+      label: test coverage on recent projects
+    - value: "2 weeks"
+      label: from first commit to production on an insurance platform
+    - value: "4,200+"
+      label: tests written on a multi-marketplace platform
+
+principles:
+  - title: I adapt to the challenge
+    description: From a .NET monolith on SQL Server to serverless microservices or a cloud migration. I pick the solution for the business need, not for the hype.
+  - title: Quality without shortcuts
+    description: Layered architecture, strict typing and CI that lets no regression through. My recent projects sit between 88% and 99% coverage, with mandatory floors.
+  - title: OWASP Top 10 security
+    description: Security is part of the design. Fail-closed authentication, secrets out of the code, audited dependencies and an OWASP Top 10 review on every project.
+  - title: Attention to detail
+    description: A thousands separator, a clock stepping back or an in-app browser can break a system. I find these issues, explain them and fix them.
+  - title: Judgment and improvement ideas
+    description: I give my technical opinion and proactively suggest improvements, from the product to how the team works.
+  - title: Hands-on support
+    description: I support clients and end users in adopting the tools, with documentation, training and close follow-up.
+
+competencies:
+  - Python backend (Django / FastAPI)
+  - Frontend with React, TypeScript & Next.js
+  - Webhooks & payment integrations
+  - Serverless microservices on GCP
+  - Multi-country e-commerce (Shopify, marketplaces)
+  - Testing (90%+ coverage) & CI/CD
+  - OWASP Top 10 security
+  - AI-native development (Claude Code)
+
+work:
+  - name: Thinkia
+    position: Software Engineer
+    location: Spain (fully remote)
+    startDate: 2026-10
+    summary: Joined as a full-time employee after 3 years as an external consultant through Rawson BPO, continuing with the same clients.
+    groups:
+      - name: Leading Spanish insurer
+        highlights:
+          - Single-handedly built and shipped to production in 2 weeks a pet insurance sales platform with a **FastAPI** API (122 endpoints), two **React 19** front ends, signed webhooks with a transactional outbox and a visual CMS with no deployments.
+          - Ensured quality with **440+ tests** (185 backend, 227 front end and 36 e2e) and **97% coverage** on the API.
+          - Implemented technical SEO and AI-search optimization with **Playwright** pre-rendering, 50 province landing pages, **JSON-LD** and llms.txt, plus an API-generated sitemap.
+      - name: Water treatment multinational (Spain & Portugal)
+        highlights:
+          - Designed and built almost single-handedly (~98% of 770+ commits across 15 repos) the online subscription sales platform with a **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard, with 1,100+ tests.
+          - Built the Shopify → CRM order **webhook** with HMAC verification, atomic de-duplication in **Firestore** and idempotent reprocessing; contracts are created only after payment.
+          - Launched the **Portugal** store on the same codebase, with pt-PT translation, NIF, postcode and phone validation, and per-country analytics (GA4, Meta pixel and CAPI) and consent on a dedicated **Cloud Run** cluster.
+          - Closed an **OWASP Top 10** audit with 10 findings fixed (authentication, fail-closed HMAC, CORS, XSS) and automated the reprocessing of failed orders and leads to the CRM.
+      - name: European e-commerce & payments group
+        highlights:
+          - "**Payments & invoicing back office** (7 countries): main developer of the **Django/DRF** backend (~67% of 1,450 commits), with ~1,500 tests and 88% coverage."
+          - Built an Excel → **Parquet** → PostgreSQL ETL (~600k invoice lines) and settlement parsers for 9+ payment providers; migrated services and storage from **GCP to Huawei Cloud**.
+          - "**Multi-marketplace platform** (Amazon, Fnac and 3 other marketplaces): hardened the public **FastAPI** gateway and the Amazon and Fnac connectors against the **OWASP Top 10** (JWT, encrypted credentials, SSRF; dependency vulnerabilities 28 → 0) and wrote **4,200+ tests** across 3 backends."
+          - Designed automatic marketplace order sync (every 2 min, with alerting) and set up 8 **Jenkins** deployment pipelines on **Huawei Cloud**.
+    technologies: [Python, Django REST Framework, FastAPI, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Playwright, Sentry, Claude Code]
+
+  - name: Rawson BPO
+    position: Fullstack Software Consultant & Python Backend
+    location: Spain (fully remote)
+    startDate: 2023-10
+    endDate: 2026-10
+    summary: External consultant for **Thinkia** (end client), where I started the projects I now continue in-house.
+    groups:
+      - name: K-12 international school
+        highlights:
+          - Rewrote a .NET school management system in **Django** on its live shared **SQL Server**, with ASP.NET Identity-compatible login and PDF/Excel report cards and grade records; the student page went from 193 s to 1.6 s.
+    technologies: [Python, Django, SQL Server, AWS EC2, Docker]
+
+  - name: Zona Repuestera
+    position: Fullstack Developer (freelance)
+    location: Colombia (remote)
+    url: https://zonarepuestera.com.co
+    startDate: 2026-09
+    endDate: 2026-10
+    summary: A live auto-parts e-commerce for which I developed, as independent work, the rewrite of its platform.
+    highlights:
+      - Developed the e-commerce rewrite to **FastAPI + Next.js + React** using the **strangler fig** pattern on the same database, verified by **1,445 contract tests** against the current system.
+      - New async backend (~128 endpoints, **SQLAlchemy 2**) with **Wompi** payments, **Google Merchant** sync, an API for a WhatsApp bot and an admin panel typed from **OpenAPI**.
+    technologies: [FastAPI, SQLAlchemy, Next.js, React, TypeScript, PostgreSQL, Wompi, Google Merchant API, Playwright, GitHub Actions]
+
+  - name: Mercado Libre
+    position: Software Engineer (Backend)
+    location: Medellín, Colombia
+    startDate: 2022-11
+    endDate: 2023-11
+    highlights:
+      - Built a **Python library** that helps data analysts and data scientists **compare and pick the best model** for each use case, integrated into their workflows.
+    technologies: [Python]
+
+  - name: Talenta
+    position: Software Developer (Fullstack / Backend)
+    location: Medellín, Colombia
+    startDate: 2020-01
+    endDate: 2022-11
+    highlights:
+      - Lead developer of a **performance-assessment system for psychologists**, built end to end in **Django** (backend, HTML templates and JavaScript) on **PostgreSQL**.
+      - Designed relational schemas, ran controlled migrations and tuned indexes to handle high demand.
+      - Drove a quality culture through cross code reviews, automated tests and API security standards.
+    technologies: [Python, Django, HTML5, JavaScript, PostgreSQL]
+
+  - name: Emtelco
+    position: Applications Analyst (started as intern)
+    location: Medellín, Colombia
+    startDate: 2018-01
+    endDate: 2020-01
+    highlights:
+      - Built internal applications with **Django** and **Vue.js** across several projects, starting as an **intern** and moving up to **Applications Analyst**.
+      - Automated HR processes end to end, from **candidate hiring** to absences, manager changes, rotation, requests and vacations.
+    technologies: [Python, Django, Vue.js, JavaScript]
+
+projects:
+  - name: Technical case studies
+    url: https://inehosa1.github.io/cv/en/projects/
+    description: Architecture, diagrams and technical decisions behind insurance platforms, multi-country e-commerce, payments, marketplaces and more, detailing webhooks, integrations and CI/CD.
+
+skills:
+  - name: Languages
+    featured: [Python, TypeScript, JavaScript (ES6+), SQL]
+    keywords: [Liquid, Rust, Bash, HTML5, CSS3]
+  - name: Backend
+    featured: [Django, Django REST Framework, FastAPI, Flask]
+    keywords: [REST APIs, Webhooks, Microservices, Celery, Pydantic, SQLAlchemy, Hexagonal architecture]
+  - name: Frontend
+    featured: [React, TypeScript, Next.js]
+    keywords: [Vue.js, Redux Toolkit, TanStack Query, MUI, Tailwind CSS, Shopify (Liquid), Vitest]
+  - name: Integrations
+    featured: [Shopify, Stripe, Adyen]
+    keywords: [PayPal, Klarna, GA4 Measurement Protocol, Meta Conversions API, Amazon, eBay, Mirakl, CRMs]
+  - name: Artificial intelligence
+    featured: [Claude Code, Claude API, OpenAI API]
+    keywords: [Agents & subagents, Skills & hooks, Codex, Structured prompting]
+  - name: Data
+    featured: [PostgreSQL, SQL Server, Firestore]
+    keywords: [MongoDB, Redis, pandas, Parquet, ETL, Indexing & partitioning]
+  - name: Quality & security
+    featured: [Pytest, OWASP Top 10]
+    keywords: [≥ 90% coverage, Selenium, HMAC, JWT, Sentry, Clean Code, SOLID]
+  - name: Cloud & DevOps
+    featured: [GCP, Docker, AWS]
+    keywords: [Cloud Run, Artifact Registry, Workload Identity, Huawei Cloud, Jenkins, Bitbucket Pipelines, GitHub Actions]
+
+education:
+  - institution: SENA
+    studyType: Technologist degree
+    area: Information Systems Analysis and Development
+    endDate: "2018"
+
+languages:
+  - language: Spanish
+    fluency: Native
+  - language: English
+    fluency: Technical reading (documentation and code)
