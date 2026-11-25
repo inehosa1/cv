@@ -8,7 +8,7 @@ meta:
   description: >-
     Ricardo Arango, Software Engineer con Python (Django, FastAPI) y React:
     software a la medida de cada necesidad. Remoto desde Medellín, Colombia.
-  lastModified: 2026-10
+  lastModified: 2026-11
   labels:
     summary: Perfil profesional
     competencies: Competencias clave
@@ -107,16 +107,19 @@ work:
           - Implementé SEO técnico y para buscadores con IA con pre-render en **Playwright**, 50 páginas por provincia, **JSON-LD** y llms.txt, con un sitemap generado desde la API.
       - name: Multinacional de tratamiento de agua (España y Portugal)
         highlights:
-          - Diseñé y construí casi en solitario (~98 % de 770+ commits en 15 repos) la venta online de suscripciones con funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y un dashboard de analítica en **Next.js**, con más de 1.100 tests.
+          - Diseñé y construí casi en solitario (~98 % de 770+ commits en 15 repos) la venta online de suscripciones con funnel en **Shopify**, **8 microservicios Python en GCP Cloud Run** y un dashboard en **Next.js**, con 1.100+ tests.
           - Implementé el **webhook** de pedidos Shopify → CRM con verificación HMAC, deduplicación atómica en **Firestore** y reproceso idempotente; el contrato solo se crea tras el pago.
-          - Lancé la tienda de **Portugal** sobre el mismo código, con traducción pt-PT, validación de NIF, código postal y teléfono, y analítica (GA4, píxel de Meta y CAPI) y consentimiento separados por país en un clúster dedicado de **Cloud Run**.
+          - Lancé la tienda de **Portugal** sobre el mismo código, con traducción pt-PT, validación de NIF, código postal y teléfono, y analítica (GA4, píxel de Meta y CAPI) y consentimiento por país en **Cloud Run**.
           - Cerré una auditoría **OWASP Top 10** con 10 hallazgos corregidos (autenticación, HMAC fail-closed, CORS, XSS) y automaticé el reproceso de pedidos y leads fallidos hacia el CRM.
       - name: Grupo europeo de e-commerce y pagos
         highlights:
           - "**Back-office de pagos y facturación** (7 países): principal desarrollador del backend **Django/DRF** (~67 % de 1.450 commits), con ~1.500 tests y 88 % de cobertura."
-          - Construí un ETL Excel → **Parquet** → PostgreSQL (~600k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago; migré servicios y almacenamiento de **GCP a Huawei Cloud**.
+          - Construí un ETL Excel → **Parquet** → PostgreSQL (~600k líneas de factura) y parsers de liquidaciones para 9+ pasarelas de pago; migré de **GCP a Huawei Cloud** con 8 pipelines **Jenkins**.
           - "**Plataforma multi-marketplace** (Amazon, Fnac y otros 3 marketplaces): endurecí según **OWASP Top 10** la API pública **FastAPI** y los conectores de Amazon y Fnac (JWT, cifrado de credenciales, SSRF; vulnerabilidades 28 → 0) y escribí más de **4.200 tests** en 3 backends."
-          - Diseñé la sincronización automática de pedidos de los marketplaces (cada 2 min, con alertas) y monté 8 pipelines **Jenkins** de despliegue en **Huawei Cloud**.
+          - "**Facturas recibidas**: unifiqué dos sistemas Django heredados en un pipeline **Celery** que lleva las facturas del correo a contabilidad (16 formatos de PDF), con **97 % de cobertura**."
+      - name: Herramientas internas
+        highlights:
+          - Construí un **asistente de IA** (**FastAPI** + **React**) con **RAG híbrido**, servidor **MCP** y una guardia de 6 capas que evita el modelo de pago si no hace falta.
     technologies: [Python, Django REST Framework, FastAPI, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Playwright, Sentry, Claude Code]
 
   - name: Rawson BPO
@@ -136,7 +139,7 @@ work:
     location: Colombia (remoto)
     url: https://zonarepuestera.com.co
     startDate: 2026-09
-    endDate: 2026-10
+    endDate: 2026-11
     summary: E-commerce de autopartes en producción para el que desarrollé, como trabajo independiente, la reescritura de su plataforma.
     highlights:
       - Desarrollé la reescritura del e-commerce a **FastAPI + Next.js + React** con el patrón **strangler fig** sobre la misma base de datos, verificada con **1.445 tests de contrato** contra el sistema actual.
@@ -160,7 +163,6 @@ work:
     highlights:
       - Fui el **desarrollador principal** de un **sistema de medición de desempeño para psicólogos**, construido de punta a punta en **Django** (backend, plantillas HTML y JavaScript) sobre **PostgreSQL**.
       - Diseñé esquemas relacionales, ejecuté migraciones controladas y optimicé índices para responder a alta demanda.
-      - Impulsé la cultura de calidad con code reviews cruzados, pruebas automatizadas y estándares de seguridad para APIs.
     technologies: [Python, Django, HTML5, JavaScript, PostgreSQL]
 
   - name: Emtelco

@@ -12,6 +12,7 @@ export const techFilters: { id: string; label: Record<Lang, string>; match: stri
     match: ['stripe', 'adyen', 'wompi', 'hyperswitch', 'pagos', 'payments'],
   },
   { id: 'gcp', label: { es: 'GCP', en: 'GCP' }, match: ['gcp', 'cloud run', 'firestore'] },
+  { id: 'ai', label: { es: 'IA', en: 'AI' }, match: ['llm', 'openai', 'vertex ai', 'pgvector'] },
   { id: 'aws', label: { es: 'AWS', en: 'AWS' }, match: ['aws'] },
   { id: 'shopify', label: { es: 'Shopify', en: 'Shopify' }, match: ['shopify'] },
   {

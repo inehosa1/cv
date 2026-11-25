@@ -7,7 +7,7 @@ meta:
   description: >-
     Ricardo Arango, Software Engineer with Python (Django, FastAPI) and React:
     software tailored to each need. Remote from Medellín, Colombia.
-  lastModified: 2026-10
+  lastModified: 2026-11
   labels:
     summary: Summary
     competencies: Core competencies
@@ -112,9 +112,12 @@ work:
       - name: European e-commerce & payments group
         highlights:
           - "**Payments & invoicing back office** (7 countries): main developer of the **Django/DRF** backend (~67% of 1,450 commits), with ~1,500 tests and 88% coverage."
-          - Built an Excel → **Parquet** → PostgreSQL ETL (~600k invoice lines) and settlement parsers for 9+ payment providers; migrated services and storage from **GCP to Huawei Cloud**.
+          - Built an Excel → **Parquet** → PostgreSQL ETL (~600k invoice lines) and settlement parsers for 9+ payment providers; migrated services and storage from **GCP to Huawei Cloud** with 8 **Jenkins** deployment pipelines.
           - "**Multi-marketplace platform** (Amazon, Fnac and 3 other marketplaces): hardened the public **FastAPI** gateway and the Amazon and Fnac connectors against the **OWASP Top 10** (JWT, encrypted credentials, SSRF; dependency vulnerabilities 28 → 0) and wrote **4,200+ tests** across 3 backends."
-          - Designed automatic marketplace order sync (every 2 min, with alerting) and set up 8 **Jenkins** deployment pipelines on **Huawei Cloud**.
+          - "**Received invoices**: unified two legacy Django systems into a **Celery** pipeline (email → 16 PDF formats → back office and accounting), with 900+ tests and **97% coverage**."
+      - name: Internal tools
+        highlights:
+          - Built an **AI assistant** over documents (**FastAPI** + **React**) with **hybrid RAG**, an **MCP** server and a 6-layer guard that skips the paid model when it is not needed.
     technologies: [Python, Django REST Framework, FastAPI, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Playwright, Sentry, Claude Code]
 
   - name: Rawson BPO
@@ -134,7 +137,7 @@ work:
     location: Colombia (remote)
     url: https://zonarepuestera.com.co
     startDate: 2026-09
-    endDate: 2026-10
+    endDate: 2026-11
     summary: A live auto-parts e-commerce for which I developed, as independent work, the rewrite of its platform.
     highlights:
       - Developed the e-commerce rewrite to **FastAPI + Next.js + React** using the **strangler fig** pattern on the same database, verified by **1,445 contract tests** against the current system.
@@ -158,7 +161,6 @@ work:
     highlights:
       - Lead developer of a **performance-assessment system for psychologists**, built end to end in **Django** (backend, HTML templates and JavaScript) on **PostgreSQL**.
       - Designed relational schemas, ran controlled migrations and tuned indexes to handle high demand.
-      - Drove a quality culture through cross code reviews, automated tests and API security standards.
     technologies: [Python, Django, HTML5, JavaScript, PostgreSQL]
 
   - name: Emtelco

@@ -1,0 +1,86 @@
+---
+title: Internal AI assistant with RAG and a cost guard
+tagline: "A company chat over each project's documents: a layered guard answers for free whatever doesn't need a paid model, and the rest goes through hybrid RAG, tool calling and personal-data masking."
+client: Internal use · real-estate appraisal teams
+company: Thinkia
+role: Lead developer · Fullstack & AI
+start: 2026-10
+order: 3
+status: development
+metrics:
+  - value: "6"
+    label: guard layers before any paid model is called
+  - value: "155"
+    label: endpoints in the async FastAPI API
+  - value: "250+"
+    label: tests (196 backend on real Postgres, 63 frontend)
+  - value: "93%"
+    label: backend coverage (80% gate)
+stack:
+  - group: Backend
+    items: [Python 3.12, FastAPI (async), SQLAlchemy 2, Alembic, structlog]
+  - group: AI
+    items: [Vertex AI (Gemini), OpenAI API, Hybrid RAG, pgvector, fastembed, Tool calling, MCP]
+  - group: Frontend
+    items: [React 18, TypeScript, Vite, TanStack Query, Tailwind CSS 4, PWA]
+  - group: Integrations
+    items: [Microsoft 365 (OIDC SSO + PKCE), SharePoint, Microsoft Graph, Tesseract OCR, ClamAV]
+  - group: Operations
+    items: [Docker Compose, Caddy, Redis, Prometheus, Sentry, Bitbucket Pipelines]
+  - group: Quality
+    items: [pytest, Vitest, Testing Library, Playwright]
+tags: [FastAPI, React, Generative AI, RAG, MCP, Security]
+---
+
+An internal assistant where each team uploads a project's documents and asks questions about them. The challenge was not just answering well but **not spending tokens on what doesn't need them**: small talk, off-topic or already-answered questions. I built it almost single-handedly (30 of 31 commits) in FastAPI and React, with models configurable from the web app itself.
+
+## Architecture
+
+```mermaid
+flowchart TB
+  WEB["React + Vite · PWA"] --> API
+  AG["External agents (MCP)<br/>personal tokens"] --> API
+  API["Async FastAPI<br/>JWT · 2FA · Microsoft SSO"] --> S
+  S["Services<br/>guard · RAG · budgets · audit"] --> PG[("PostgreSQL 16<br/>+ pgvector")]
+  S --> LLM["Model connections<br/>Vertex AI · OpenAI · compatible"]
+  W["Worker<br/>OCR · SharePoint · alerts · retention"] --> PG
+  W --> SP["SharePoint"]
+```
+
+- **Model providers as plugins**: admins add connections (Vertex AI, OpenAI or any compatible server), test them with a button and pick a model per role and per project. Keys are stored encrypted and the API only returns a masked version.
+- **Keyless local mode**: without paid models, an embeddings-and-heuristics classifier and extractive answers that quote the documents make it possible to build and test everything at zero cost.
+- **MCP server** (JSON-RPC over Streamable HTTP) so Claude, Copilot or other agents can query projects with the same permissions, budgets and metering as the web app.
+
+## The layered guard
+
+```mermaid
+flowchart TB
+  Q["Question · web or MCP"] --> G0["0 · Prompt injection"]
+  G0 --> G1["1 · Project rules<br/>keyword · regex · canned answer"]
+  G1 --> G2["2 · Obvious small talk"]
+  G2 --> G3["3 · Cheap classifier<br/>topic · complexity · format"]
+  G3 --> G4["4 · Semantic cache"]
+  G4 --> G5["5 · Hybrid RAG + LLM<br/>streaming · tool calling"]
+  G0 & G1 & G2 & G3 & G4 -.->|"instant answer · zero cost"| R["Answer"]
+  G5 --> R
+```
+
+- Every answer records **which route it came from** (rule, cache, off-topic, model…), with its tokens, cost and per-stage timings. That is the basis of the savings metrics.
+- The classifier asks **four typed questions in a single call** (topic, complexity, format and whether the question stands on its own). Complexity picks a simple or a complex model, and the last one decides whether the cache can be used.
+- If the classifier fails or is slow, the question falls back to the local classifier. An "off-topic" verdict is overridden when the question's words appear in the documents.
+- **Hybrid RAG** (vectors + Postgres full-text search) with a trimmed history and a token cap that adapts to what the user prefers.
+
+## Security and privacy
+
+- **Personal data masked** (ID numbers, phones, IBANs, cards, emails) before leaving for any model, and restored in the streamed answer.
+- **Prompt-injection defences**: manipulation attempts are blocked for free, and document passages reach the model inside tags it is told never to obey.
+- **Tool calling with exact calculators**: the model calls server functions with validated arguments instead of doing the arithmetic.
+- Revocable per-device sessions, **mandatory 2FA for admins**, antivirus on every upload, per-document permissions and a backend that refuses to start in production with weak secrets.
+- **Monthly budgets** per company, team or project, with alerts and optional pausing of paid answers.
+
+## Operations and quality
+
+- Low-cardinality **Prometheus metrics** and a performance panel with percentiles computed in SQL from the stored answers.
+- **Nightly backups** and a restore drill that checks the Alembic revision, extensions and key tables, and returns OK or FAIL.
+- A custom **load test** that measures p50/p95/p99 per endpoint. Locally, with 10 concurrent users, the streamed question answers with a 1.5 s p95 and no errors.
+- **250+ tests**: backend tests run on real Postgres with deterministic fake embeddings and **93% coverage**, frontend tests with Vitest and Testing Library, plus Playwright e2e smoke tests.
