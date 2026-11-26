@@ -24,11 +24,17 @@ const projects = defineCollection({
         .optional(),
       /** Orden en la landing (menor = primero). */
       order: z.number().int(),
-      /** Cifras destacadas, siempre entre comillas en YAML ("1.500" sería el número 1,5). Solo datos verificables. */
+      /**
+       * Cifras destacadas, siempre entre comillas en YAML ("1.500" sería el número 1,5).
+       * Solo datos verificables y, primero, resultados (no recuentos de endpoints o commits):
+       * las tarjetas muestran las dos primeras.
+       */
       metrics: z
         .array(z.strictObject({ value: z.string(), label: z.string() }))
-        .max(4)
+        .max(3)
         .default([]),
+      /** `main`: caso completo en la landing; `other`: lista compacta "Otros proyectos". */
+      tier: z.enum(['main', 'other']).default('main'),
       stack: z.array(z.strictObject({ group: z.string(), items: z.array(z.string()).min(1) })),
       /** Etiquetas cortas para filtrar/escanear. */
       tags: z.array(z.string()).max(6),
@@ -39,7 +45,7 @@ const projects = defineCollection({
         .default([]),
       /** Destacado en la home y en grande en la landing (máx. 3). */
       featured: z.boolean().default(false),
-      /** `development` muestra una etiqueta "En desarrollo". */
+      /** `development` muestra una etiqueta "Pendiente de despliegue". */
       status: z.enum(['production', 'development']).default('production'),
       /** Confidencialidad: si true, no se enlaza código ni se nombran datos internos. */
       nda: z.boolean().default(true),

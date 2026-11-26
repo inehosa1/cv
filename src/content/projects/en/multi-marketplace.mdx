@@ -1,20 +1,20 @@
 ---
 title: Multi-marketplace integration
-tagline: "A B2B platform connecting retailers' catalog, stock, prices and orders with Amazon, eBay, Miravia, Mirakl and Fnac. I wrote over 4,200 tests across 3 backends, hardened the public API and the Amazon and Fnac connectors, automated order synchronization and supported the migration to Huawei Cloud."
+tagline: "A B2B platform that syncs retailers' catalog, stock, prices and orders with Amazon, eBay, Miravia, Mirakl and Fnac. I focused on testing, public API security and order synchronization."
 client: European e-commerce & payments group
 company: Thinkia · previously via Rawson BPO
 role: Backend developer · Testing & integration
 start: 2024-04
+end: 2026-10
 order: 10
+tier: other
 metrics:
-  - value: "4,200+"
-    label: tests written across 3 backends (API, Django and stock service)
   - value: "28 → 0"
     label: dependency vulnerabilities in the public API
-  - value: "1,800+"
-    label: tests in the Django backend
+  - value: "4,200+"
+    label: tests written across 3 backends
   - value: "2 min"
-    label: automatic Amazon and Fnac order sync
+    label: automatic order sync
 stack:
   - group: Public API
     items: [Python 3.12, FastAPI, Starlette, Pydantic 2, Motor (MongoDB), httpx, PyJWT]
@@ -28,7 +28,7 @@ stack:
     items: [Docker, nginx, Jenkins, GCP Cloud Run, Huawei Cloud ECS / SWR / OBS, Private VPC]
   - group: Quality & security
     items: [pytest, pytest-asyncio, respx, mongomock-motor, pip-audit, bandit, defusedxml, Fernet, OWASP Top 10]
-tags: [FastAPI, Security, Marketplaces, Resilience, Cloud migration, Claude Code]
+tags: [FastAPI, Django, Security, Marketplaces, pytest, Cloud migration]
 ---
 
 The platform lets retailers manage products, stock, prices, offers and orders across several marketplaces from one place. It is multi-tenant (client → stores → marketplace and country), has one portal for staff and another for clients, and exposes a **public API** so clients' systems can integrate directly.

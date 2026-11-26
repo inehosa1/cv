@@ -6,19 +6,18 @@ company: Freelance
 role: Desarrollador de la reescritura · Fullstack
 start: 2026-09
 end: 2026-11
-order: 7
+order: 6
+tier: main
 links:
   - label: zonarepuestera.com.co
     url: https://zonarepuestera.com.co/
 metrics:
-  - value: "~128"
-    label: endpoints en el nuevo backend FastAPI
   - value: "1.445"
-    label: tests de contrato entre Django y FastAPI
-  - value: "125"
-    label: tests unitarios y e2e en los dos nuevos frontends
+    label: tests de contrato contra el sistema actual
   - value: "39"
     label: tablas con paridad de esquema verificada
+  - value: "125"
+    label: tests unitarios y e2e en los dos frontends
 stack:
   - group: Nuevo backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
@@ -30,7 +29,7 @@ stack:
     items: [Django, Django REST Framework, PostgreSQL]
   - group: Calidad
     items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
-tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
+tags: [Django, FastAPI, Next.js, SQLAlchemy, Strangler fig, E-commerce]
 ---
 
 [Zona Repuestera](https://zonarepuestera.com.co) es una tienda online de autopartes en Colombia que funciona sobre un monolito Django. Como **trabajo independiente**, desarrollé su reescritura a una arquitectura moderna diseñada para migrar **sin detener la venta**: un backend en FastAPI, un storefront en Next.js y un panel de administración en React. La reescritura quedó pendiente de puesta en producción al terminar mi participación en octubre de 2026.

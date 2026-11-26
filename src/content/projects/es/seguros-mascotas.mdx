@@ -1,21 +1,21 @@
 ---
 title: Plataforma de venta de seguros para mascotas
-tagline: "Landing de contratación con tarificador, backoffice tipo CRM, CMS visual, emails automáticos y webhooks firmados para un seguro de perros y gatos. De punta a punta, del primer commit a producción en 2 semanas."
+tagline: "Landing de contratación con tarificador, backoffice tipo CRM, CMS visual, emails automáticos y webhooks firmados con HMAC para un seguro de perros y gatos."
 client: Aseguradora líder en España
 company: Thinkia · antes vía Rawson BPO
 role: Desarrollador único · Fullstack & DevOps
 start: 2026-09
+end: 2026-10
 order: 1
+tier: main
 featured: true
 metrics:
-  - value: "122"
-    label: endpoints en una API FastAPI compartida
+  - value: "2 semanas"
+    label: del primer commit a producción
   - value: "97 %"
     label: cobertura del backend (mínimo 90 % en CI)
   - value: "440+"
-    label: tests (185 de backend, 227 de frontend y 36 e2e)
-  - value: "17"
-    label: tipos de evento en webhooks firmados con HMAC
+    label: tests de backend, frontend y e2e
 stack:
   - group: Backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Alembic, Typer, uv]
@@ -31,7 +31,7 @@ stack:
     items: [pytest-asyncio, mypy strict, Ruff, Vitest, Testing Library, MSW, Playwright, pip-audit, detect-secrets]
   - group: Infra y CI/CD
     items: [GCP, Cloud SQL, Secret Manager, Docker, nginx, Bitbucket Pipelines]
-tags: [FastAPI, React, Webhooks, Outbox, CMS, Seguros]
+tags: [FastAPI, React, Webhooks, Outbox, HMAC, CMS]
 ---
 
 Plataforma con la que una **aseguradora líder en España** vende online su seguro para perros y gatos. La construí de principio a fin —la API, las dos aplicaciones web, la infraestructura y los pipelines— y está **en producción desde octubre de 2026**, dos semanas después del primer commit: 88 commits en 3 repositorios y 16 migraciones de base de datos, con desarrollo asistido por IA (Claude Code).

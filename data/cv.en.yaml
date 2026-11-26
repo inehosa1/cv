@@ -5,8 +5,7 @@ meta:
   lang: en
   title: Ricardo Andrés Arango Ruiz — Software Engineer (Python, React, AI)
   description: >-
-    Ricardo Arango, Software Engineer with Python (Django, FastAPI) and React:
-    software tailored to each need. Remote from Medellín, Colombia.
+    Ricardo Arango, software engineer (Python, Django, FastAPI, React). Case studies on payments, multi-country e-commerce, integrations and legacy-system migrations.
   lastModified: 2026-11
   labels:
     summary: Summary
@@ -32,11 +31,11 @@ basics:
   phone: +57 319 449 5717
   url: https://inehosa1.github.io/cv/en/
   summary: >-
-    Software developer with **8+ years of experience** building end-to-end Fullstack products with
-    **Python (Django, FastAPI)**, **React and TypeScript**, tailored to each need: e-commerce and
-    payments, invoicing, school management, analytics and process automation, with **webhooks**,
-    integrations, cloud migrations and **AI-native** development. I deliver at the highest quality:
-    **OWASP Top 10**, test coverage of **88–99%**, and hands-on support for clients and end users.
+    Software engineer with **8+ years of experience** in backend development with **Python
+    (Django, FastAPI)** and front end with **React and TypeScript**. I mostly work on payments and
+    invoicing, multi-country e-commerce, integrations (**webhooks**, CRMs, marketplaces) and on
+    migrating legacy systems without stopping operations. I care about tests (**88–99% coverage**
+    on recent projects) and security (**OWASP Top 10**), and I use Claude Code in my daily work.
   availability: Remote · UTC−5
   location:
     city: Medellín
@@ -52,34 +51,22 @@ basics:
       url: https://github.com/inehosa1
 
 home:
-  headline: I turn business needs into solid, secure, production-ready software.
+  headline: I'm Ricardo, a software engineer. I build Python backends and the React interfaces that use them.
   intro: >-
-    From e-commerce and payments to school management, analytics or process automation: I adapt to
-    each challenge and design the whole system, from the API to the interface and the infrastructure,
-    with security, tests and detail as the starting point.
-  stats:
-    - value: "8+"
-      label: years building software
-    - value: "88–99%"
-      label: test coverage on recent projects
-    - value: "2 weeks"
-      label: from first commit to production on an insurance platform
-    - value: "4,200+"
-      label: tests written on a multi-marketplace platform
+    For 8 years I've worked on product: payments and invoicing, multi-country e-commerce, integrations
+    and migrations of systems that can't be switched off. I currently work at Thinkia, remotely from
+    Medellín. Here I explain how some of those systems are built and why I made each decision.
 
 principles:
-  - title: I adapt to the challenge
-    description: From a .NET monolith on SQL Server to serverless microservices or a cloud migration. I pick the solution for the business need, not for the hype.
-  - title: Quality without shortcuts
-    description: Layered architecture, strict typing and CI that lets no regression through. My recent projects sit between 88% and 99% coverage, with mandatory floors.
-  - title: OWASP Top 10 security
-    description: Security is part of the design. Fail-closed authentication, secrets out of the code, audited dependencies and an OWASP Top 10 review on every project.
-  - title: Attention to detail
-    description: A thousands separator, a clock stepping back or an in-app browser can break a system. I find these issues, explain them and fix them.
-  - title: Judgment and improvement ideas
-    description: I give my technical opinion and proactively suggest improvements, from the product to how the team works.
-  - title: Hands-on support
-    description: I support clients and end users in adopting the tools, with documentation, training and close follow-up.
+  - title: Migrate without stopping operations
+    description: I'd rather replace a system piece by piece, with tests that compare it against the original (contract tests, golden tests or a shared database), than rewrite it all at once.
+    project: facturas-recibidas
+  - title: Measure before claiming
+    description: Before optimizing or quoting a number, I measure it. That's how a student page went from 193 s to 1.6 s; the problem was an N+1 query, not the server.
+    project: gestion-escolar
+  - title: Security and tests are part of the design
+    description: Signed webhooks that fail closed, secrets kept out of the code and a coverage floor enforced by CI from the first commit, not at the end of the project.
+    project: seguros-mascotas
 
 competencies:
   - Python backend (Django / FastAPI)
@@ -105,13 +92,13 @@ work:
           - Implemented technical SEO and AI-search optimization with **Playwright** pre-rendering, 50 province landing pages, **JSON-LD** and llms.txt, plus an API-generated sitemap.
       - name: Water treatment multinational (Spain & Portugal)
         highlights:
-          - Designed and built almost single-handedly (~98% of 770+ commits across 15 repos) the online subscription sales platform with a **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard, with 1,100+ tests.
+          - Designed and built the online subscription sales platform with a **Shopify** funnel, **8 Python microservices on GCP Cloud Run** and a **Next.js** analytics dashboard, with 1,100+ tests.
           - Built the Shopify → CRM order **webhook** with HMAC verification, atomic de-duplication in **Firestore** and idempotent reprocessing; contracts are created only after payment.
           - Launched the **Portugal** store on the same codebase, with pt-PT translation, NIF, postcode and phone validation, and per-country analytics (GA4, Meta pixel and CAPI) and consent on a dedicated **Cloud Run** cluster.
           - Closed an **OWASP Top 10** audit with 10 findings fixed (authentication, fail-closed HMAC, CORS, XSS) and automated the reprocessing of failed orders and leads to the CRM.
       - name: European e-commerce & payments group
         highlights:
-          - "**Payments & invoicing back office** (7 countries): main developer of the **Django/DRF** backend (~67% of 1,450 commits), with ~1,500 tests and 88% coverage."
+          - "**Payments & invoicing back office** (7 countries): main developer of the **Django/DRF** backend, with ~1,500 tests and 88% coverage."
           - Built an Excel → **Parquet** → PostgreSQL ETL (~600k invoice lines) and settlement parsers for 9+ payment providers; migrated services and storage from **GCP to Huawei Cloud** with 8 **Jenkins** deployment pipelines.
           - "**Multi-marketplace platform** (Amazon, Fnac and 3 other marketplaces): hardened the public **FastAPI** gateway and the Amazon and Fnac connectors against the **OWASP Top 10** (JWT, encrypted credentials, SSRF; dependency vulnerabilities 28 → 0) and wrote **4,200+ tests** across 3 backends."
           - "**Received invoices**: unified two legacy Django systems into a **Celery** pipeline (email → 16 PDF formats → back office and accounting), with 900+ tests and **97% coverage**."
@@ -119,18 +106,6 @@ work:
         highlights:
           - Built an **AI assistant** over documents (**FastAPI** + **React**) with **hybrid RAG**, an **MCP** server and a 6-layer guard that skips the paid model when it is not needed.
     technologies: [Python, Django REST Framework, FastAPI, React, TypeScript, Next.js, Shopify, PostgreSQL, Firestore, MongoDB, Celery, GCP Cloud Run, Huawei Cloud, Docker, Jenkins, Pytest, Playwright, Sentry, Claude Code]
-
-  - name: Rawson BPO
-    position: Fullstack Software Consultant & Python Backend
-    location: Spain (fully remote)
-    startDate: 2023-10
-    endDate: 2026-10
-    summary: External consultant for **Thinkia** (end client), where I started the projects I now continue in-house.
-    groups:
-      - name: K-12 international school
-        highlights:
-          - Rewrote a .NET school management system in **Django** on its live shared **SQL Server**, with ASP.NET Identity-compatible login and PDF/Excel report cards and grade records; the student page went from 193 s to 1.6 s.
-    technologies: [Python, Django, SQL Server, AWS EC2, Docker]
 
   - name: Zona Repuestera
     position: Fullstack Developer (freelance)
@@ -143,6 +118,18 @@ work:
       - Developed the e-commerce rewrite to **FastAPI + Next.js + React** using the **strangler fig** pattern on the same database, verified by **1,445 contract tests** against the current system.
       - New async backend (~128 endpoints, **SQLAlchemy 2**) with **Wompi** payments, **Google Merchant** sync, an API for a WhatsApp bot and an admin panel typed from **OpenAPI**.
     technologies: [FastAPI, SQLAlchemy, Next.js, React, TypeScript, PostgreSQL, Wompi, Google Merchant API, Playwright, GitHub Actions]
+
+  - name: Rawson BPO
+    position: Fullstack Software Consultant & Python Backend
+    location: Spain (fully remote)
+    startDate: 2023-10
+    endDate: 2026-10
+    summary: External consultant for **Thinkia** (end client), where I started the projects I now continue in-house.
+    groups:
+      - name: K-12 international school
+        highlights:
+          - Rewrote a .NET school management system in **Django** on its live shared **SQL Server**, with ASP.NET Identity-compatible login and PDF/Excel report cards and grade records; the student page went from 193 s to 1.6 s.
+    technologies: [Python, Django, SQL Server, AWS EC2, Docker]
 
   - name: Mercado Libre
     position: Software Engineer (Backend)

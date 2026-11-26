@@ -199,43 +199,23 @@
       "type": "object",
       "properties": {
         "headline": {
-          "type": "string"
+          "type": "string",
+          "maxLength": 110
         },
         "intro": {
-          "type": "string"
-        },
-        "stats": {
-          "minItems": 2,
-          "maxItems": 4,
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "value": {
-                "type": "string"
-              },
-              "label": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "value",
-              "label"
-            ],
-            "additionalProperties": false
-          }
+          "type": "string",
+          "maxLength": 420
         }
       },
       "required": [
         "headline",
-        "intro",
-        "stats"
+        "intro"
       ],
       "additionalProperties": false
     },
     "principles": {
       "default": [],
-      "maxItems": 8,
+      "maxItems": 4,
       "type": "array",
       "items": {
         "type": "object",
@@ -245,6 +225,10 @@
           },
           "description": {
             "type": "string"
+          },
+          "project": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
           }
         },
         "required": [

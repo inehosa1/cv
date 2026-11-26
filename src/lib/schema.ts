@@ -71,20 +71,28 @@ export const cvSchema = z.strictObject({
     ),
   }),
 
-  /** Portada del sitio (home): propuesta de valor y cifras. No aparece en el PDF. */
+  /** Portada del sitio (home): presentación en primera persona. No aparece en el PDF. */
   home: z.strictObject({
-    headline: z.string(),
-    intro: z.string(),
-    stats: z
-      .array(z.strictObject({ value: z.string(), label: z.string() }))
-      .min(2)
-      .max(4),
+    headline: z.string().max(110),
+    intro: z.string().max(420),
   }),
 
-  /** Principios de trabajo (sección "Cómo trabajo" de la web; el PDF los resume en el perfil). */
+  /**
+   * Principios de trabajo (sección "Cómo trabajo" de la web). Cada uno debe poder
+   * demostrarse: `project` es el slug del caso de estudio que lo respalda.
+   */
   principles: z
-    .array(z.strictObject({ title: z.string(), description: z.string() }))
-    .max(8)
+    .array(
+      z.strictObject({
+        title: z.string(),
+        description: z.string(),
+        project: z
+          .string()
+          .regex(/^[a-z0-9-]+$/)
+          .optional(),
+      }),
+    )
+    .max(4)
     .default([]),
 
   /** Competencias clave (chips bajo el resumen). */

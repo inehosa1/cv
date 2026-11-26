@@ -6,19 +6,18 @@ company: Freelance
 role: Rewrite developer · Fullstack
 start: 2026-09
 end: 2026-11
-order: 7
+order: 6
+tier: main
 links:
   - label: zonarepuestera.com.co
     url: https://zonarepuestera.com.co/
 metrics:
-  - value: "~128"
-    label: endpoints in the new FastAPI backend
   - value: "1,445"
-    label: contract tests between Django and FastAPI
-  - value: "125"
-    label: unit and e2e tests in the two new front ends
+    label: contract tests against the current system
   - value: "39"
     label: tables with verified schema parity
+  - value: "125"
+    label: unit and e2e tests in the two front ends
 stack:
   - group: New backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Typer]
@@ -30,7 +29,7 @@ stack:
     items: [Django, Django REST Framework, PostgreSQL]
   - group: Quality
     items: [pytest, Vitest, Playwright, Ruff, pip-audit, knip, GitHub Actions, Sentry]
-tags: [Django, FastAPI, Next.js, E-commerce, Strangler fig, Freelance]
+tags: [Django, FastAPI, Next.js, SQLAlchemy, Strangler fig, E-commerce]
 ---
 
 [Zona Repuestera](https://zonarepuestera.com.co) is an online auto-parts store in Colombia running on a Django monolith. As **independent work**, I developed its rewrite to a modern architecture designed to migrate **without stopping sales**: a FastAPI backend, a Next.js storefront and a React admin panel. The rewrite was pending production rollout when my engagement ended in October 2026.

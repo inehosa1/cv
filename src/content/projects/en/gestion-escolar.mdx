@@ -5,14 +5,13 @@ client: International school (Europe)
 company: Rawson BPO · for Thinkia
 role: Lead developer · Fullstack
 start: 2026-01
-order: 8
+order: 5
+tier: main
 metrics:
-  - value: "163"
-    label: of 164 commits in the new system
   - value: "193 s → 1.6 s"
-    label: student page load after removing N+1
-  - value: "57"
-    label: Django models, 16 on legacy tables
+    label: student page load after removing an N+1
+  - value: "16"
+    label: tables shared live with the .NET apps
   - value: "177"
     label: tests with a custom runner for unmanaged tables
 stack:
@@ -28,7 +27,7 @@ stack:
     items: [Docker, Nginx + TLS, Gunicorn, AWS EC2, Sentry]
   - group: Legacy ecosystem
     items: [.NET Framework (WinForms), Blazor WASM PWA, ASP.NET Identity, Entity Framework]
-tags: [Django, SQL Server, Legacy, PDF documents, EdTech]
+tags: [Django, SQL Server, Legacy, Performance, PDF documents]
 ---
 
 An international school with students from first to twelfth grade and an international curriculum ran its academic life on several **.NET** apps: a WinForms desktop app for administration and a Blazor PWA for teachers to take attendance. I was tasked with building a **new Django web system** to gradually replace them, with a hard constraint: **the old apps are still in use and share the same SQL Server database**.

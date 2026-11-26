@@ -5,17 +5,17 @@ client: Internal use · real-estate appraisal teams
 company: Thinkia
 role: Lead developer · Fullstack & AI
 start: 2026-10
-order: 3
+end: 2026-10
+order: 7
+tier: other
 status: development
 metrics:
   - value: "6"
     label: guard layers before any paid model is called
-  - value: "155"
-    label: endpoints in the async FastAPI API
-  - value: "250+"
-    label: tests (196 backend on real Postgres, 63 frontend)
   - value: "93%"
     label: backend coverage (80% gate)
+  - value: "250+"
+    label: backend tests on real Postgres plus front-end tests
 stack:
   - group: Backend
     items: [Python 3.12, FastAPI (async), SQLAlchemy 2, Alembic, structlog]
@@ -29,10 +29,10 @@ stack:
     items: [Docker Compose, Caddy, Redis, Prometheus, Sentry, Bitbucket Pipelines]
   - group: Quality
     items: [pytest, Vitest, Testing Library, Playwright]
-tags: [FastAPI, React, Generative AI, RAG, MCP, Security]
+tags: [FastAPI, React, LLM, RAG, MCP, pgvector]
 ---
 
-An internal assistant where each team uploads a project's documents and asks questions about them. The challenge was not just answering well but **not spending tokens on what doesn't need them**: small talk, off-topic or already-answered questions. I built it almost single-handedly (30 of 31 commits) in FastAPI and React, with models configurable from the web app itself.
+An internal assistant where each team uploads a project's documents and asks questions about them. The challenge was not just answering well but **not spending tokens on what doesn't need them**: small talk, off-topic or already-answered questions. I built it in FastAPI and React, with models configurable from the web app itself.
 
 ## Architecture
 

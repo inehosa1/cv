@@ -1,20 +1,20 @@
 ---
 title: Integración multi-marketplace
-tagline: "Plataforma B2B que conecta el catálogo, el stock, los precios y los pedidos de retailers con Amazon, eBay, Miravia, Mirakl y Fnac. Escribí más de 4.200 tests en 3 backends, blindé la API pública y los conectores de Amazon y Fnac, automaticé la sincronización de pedidos y apoyé la migración a Huawei Cloud."
+tagline: "Plataforma B2B que sincroniza catálogo, stock, precios y pedidos de retailers con Amazon, eBay, Miravia, Mirakl y Fnac. Me centré en los tests, la seguridad de la API pública y la sincronización de pedidos."
 client: Grupo europeo de e-commerce y pagos
 company: Thinkia · antes vía Rawson BPO
 role: Desarrollador backend · Pruebas e integración
 start: 2024-04
+end: 2026-10
 order: 10
+tier: other
 metrics:
-  - value: "+4.200"
-    label: tests escritos en 3 backends (API, Django y servicio de stock)
   - value: "28 → 0"
     label: vulnerabilidades en dependencias de la API pública
-  - value: "1.800+"
-    label: tests en el backend Django
+  - value: "4.200+"
+    label: tests escritos en 3 backends
   - value: "2 min"
-    label: sincronización automática de pedidos de Amazon y Fnac
+    label: sincronización automática de pedidos
 stack:
   - group: API pública
     items: [Python 3.12, FastAPI, Starlette, Pydantic 2, Motor (MongoDB), httpx, PyJWT]
@@ -28,7 +28,7 @@ stack:
     items: [Docker, nginx, Jenkins, GCP Cloud Run, Huawei Cloud ECS / SWR / OBS, VPC privada]
   - group: Calidad y seguridad
     items: [pytest, pytest-asyncio, respx, mongomock-motor, pip-audit, bandit, defusedxml, Fernet, OWASP Top 10]
-tags: [FastAPI, Seguridad, Marketplaces, Resiliencia, Migración cloud, Claude Code]
+tags: [FastAPI, Django, Seguridad, Marketplaces, pytest, Migración cloud]
 ---
 
 La plataforma permite a los retailers gestionar desde un solo lugar productos, stock, precios, ofertas y pedidos en varios marketplaces. Es multi-tenant (cliente → tiendas → marketplace y país), tiene un portal para el staff y otro para los clientes, y ofrece una **API pública** para que los sistemas de los clientes se integren directamente.

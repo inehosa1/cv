@@ -6,17 +6,18 @@ company: Open source
 role: Author
 start: 2026-09
 order: 12
+tier: other
 links:
   - label: github.com/inehosa1/cv
     url: https://github.com/inehosa1/cv
 nda: false
 metrics:
   - value: "1"
-    label: data source for web and PDF
-  - value: "0 KB"
-    label: of client-side JavaScript
+    label: data source for the website and the PDF
   - value: "2"
-    label: languages with validated parity
+    label: languages with parity checked in CI
+  - value: "0"
+    label: accessibility violations (axe) in CI
 stack:
   - group: Web
     items: [Astro 7, TypeScript, Tailwind CSS 4, MDX]
@@ -28,7 +29,7 @@ stack:
     items: [Mermaid, Playwright, rehype-mermaid]
   - group: CI/CD
     items: [GitHub Actions, GitHub Pages, Biome]
-tags: [Astro, Typst, CI/CD, Accessibility, Open source]
+tags: [Astro, Typst, Vitest, Playwright, Accessibility]
 ---
 
 My resume is not edited in a word processor: it is **compiled**. The data lives in a single YAML file per language, and everything else is generated from it: this website, the PDF for ATS systems, the social preview image and the search-engine metadata. The code is public at [github.com/inehosa1/cv](https://github.com/inehosa1/cv).
@@ -47,7 +48,16 @@ flowchart LR
 ## Decisions
 
 - **Typst for the PDF.** It reads the YAML directly, compiles in milliseconds and produces real text with embedded fonts in a single column, so ATS systems parse it without errors. The build fails if the resume exceeds two pages.
-- **Astro with no client-side JavaScript.** It generates static, semantic HTML with dark mode via `prefers-color-scheme`, WCAG AA contrast, `Person` JSON-LD and `hreflang`.
+- **Static HTML, with JavaScript only as progressive enhancement.** Astro generates semantic HTML with dark mode via `prefers-color-scheme`, WCAG AA contrast, JSON-LD and `hreflang`. There are two small inline scripts (the project filter and keeping the scroll position when switching language), and everything still works without them.
 - **Diagrams as code.** The diagrams in these case studies are written in Mermaid and rendered at build time with Playwright into SVG, in a light and a dark variant. No library is loaded in the browser.
 - **Strict validation.** The schema rejects unknown fields and checks that the Spanish and English versions have exactly the same structure.
-- **Privacy.** The phone number is never included in the structured data for search engines.
+- **Privacy.** The phone number only appears in the PDF; never on the website or in the structured data for search engines.
+
+## How it is checked
+
+Every push goes through the same pipeline before it is published:
+
+- **Vitest unit tests** for the shared logic: dates and durations, filters, routes and the structure comparison between languages.
+- **`astro check` and Biome**, with TypeScript in `strictest` mode.
+- **A Playwright crawl of the built site**: every page in the sitemap is scanned with axe (WCAG 2.2 AA), and every internal link and asset must answer 200. Any failure blocks the deploy.
+- **The PDF has a two-page limit** that also fails the build.

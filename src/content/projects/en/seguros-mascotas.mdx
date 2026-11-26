@@ -1,21 +1,21 @@
 ---
 title: Pet insurance sales platform
-tagline: "Sign-up landing with a quote engine, CRM-style back office, visual CMS, automated emails and HMAC-signed webhooks for a dog and cat insurance product. End to end, from first commit to production in 2 weeks."
+tagline: "Sign-up landing with a quote engine, CRM-style back office, visual CMS, automated emails and HMAC-signed webhooks for a dog and cat insurance product."
 client: Leading Spanish insurer
 company: Thinkia · previously via Rawson BPO
 role: Sole developer · Fullstack & DevOps
 start: 2026-09
+end: 2026-10
 order: 1
+tier: main
 featured: true
 metrics:
-  - value: "122"
-    label: endpoints in one shared FastAPI API
+  - value: "2 weeks"
+    label: from first commit to production
   - value: "97%"
     label: backend coverage (90% CI gate)
   - value: "440+"
-    label: tests (185 backend, 227 front end and 36 e2e)
-  - value: "17"
-    label: event types in HMAC-signed webhooks
+    label: backend, front-end and e2e tests
 stack:
   - group: Backend
     items: [Python 3.12, FastAPI, Pydantic v2, SQLAlchemy 2 async, asyncpg, Alembic, Typer, uv]
@@ -31,7 +31,7 @@ stack:
     items: [pytest-asyncio, mypy strict, Ruff, Vitest, Testing Library, MSW, Playwright, pip-audit, detect-secrets]
   - group: Infra & CI/CD
     items: [GCP, Cloud SQL, Secret Manager, Docker, nginx, Bitbucket Pipelines]
-tags: [FastAPI, React, Webhooks, Outbox, CMS, Insurance]
+tags: [FastAPI, React, Webhooks, Outbox, HMAC, CMS]
 ---
 
 The platform a **leading Spanish insurer** uses to sell its dog and cat insurance online. I built it end to end —the API, both web apps, the infrastructure and the pipelines— and it has been **in production since October 2026**, two weeks after the first commit: 88 commits across 3 repositories and 16 database migrations, with AI-assisted development (Claude Code).
