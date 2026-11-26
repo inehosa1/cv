@@ -11,41 +11,43 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: true
 
+# Las Actions se fijan por SHA (con la versión en comentario); Dependabot las actualiza.
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read # configure-pages consulta la configuración de Pages
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
-      - uses: typst-community/setup-typst@v5
+      - uses: typst-community/setup-typst@00ad6338f0b34724ea002136bfb701a6c18585b0 # v5
         with:
           typst-version: '0.15.1'
 
-      - uses: pnpm/action-setup@v6
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
         with:
           node-version-file: .nvmrc
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
 
-      # rehype-mermaid renderiza los diagramas a SVG en build con Chromium.
-      - name: Install Chromium (diagramas Mermaid)
+      # Chromium renderiza los diagramas Mermaid en build y recorre el sitio en check:site.
+      - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
       - id: pages
         if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
-      - name: Check (datos, tipos, lint)
+      - name: Check (datos, tipos, lint, tests unitarios)
         run: pnpm check
 
       - name: Build (PDF + web)
@@ -54,14 +56,18 @@ jobs:
           SITE: ${{ steps.pages.outputs.origin }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
 
+      # Accesibilidad WCAG 2.2 AA (claro y oscuro) y enlaces internos del sitio construido.
+      - name: Check site (axe + enlaces)
+        run: pnpm check:site
+
       # En PRs, los PDFs quedan como artefacto descargable para revisarlos antes de publicar.
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         if: github.event_name == 'pull_request'
         with:
           name: cv-pdf
           path: dist/cv-*.pdf
 
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         if: github.event_name != 'pull_request'
         with:
           path: dist
@@ -70,9 +76,12 @@ jobs:
     if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
