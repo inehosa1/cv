@@ -84,9 +84,17 @@
   --tw-prose-td-borders: var(--rule);
 }
 
-/* Texto con ancho de lectura cómodo; los diagramas usan todo el ancho disponible. */
-.prose-cv > :not(picture) {
-  max-width: 50rem;
+/*
+ * Una sola columna para todo el caso: texto, títulos y diagramas comparten el mismo ancho
+ * (--case-column), así el texto nunca parece cortado junto a un diagrama más ancho. Los
+ * diagramas más anchos que la columna se escalan para caber (en móvil, ver más abajo).
+ */
+.prose-cv {
+  --case-column: 56rem;
+}
+
+.prose-cv > * {
+  max-width: var(--case-column);
 }
 
 .prose-cv :where(h2) {
@@ -97,16 +105,9 @@
   scroll-margin-top: 5rem;
 }
 
-/* Diagramas Mermaid (SVG generado en build): tarjeta con scroll horizontal en móvil. */
-/*
- * El recuadro mide como el texto (50rem) y solo se ensancha si el diagrama lo necesita:
- * así el texto y los diagramas comparten borde derecho y el texto no parece cortado.
- */
+/* Diagramas Mermaid (SVG generado en build): tarjeta del ancho de la columna, scroll en móvil. */
 .prose-cv :where(picture) {
   display: block;
-  width: fit-content;
-  min-width: min(100%, 50rem);
-  max-width: 100%;
   box-sizing: border-box;
   overflow-x: auto;
   margin-block: 1.75rem;
