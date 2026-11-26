@@ -43,6 +43,14 @@ jobs:
       - name: Install Chromium
         run: pnpm exec playwright install --with-deps chromium
 
+      # Los diagramas miden el texto con Verdana (la fuente que usarán Windows y macOS al
+      # mostrarlos). Sin ella se mediría con DejaVu, más estrecha, y el texto se cortaría.
+      - name: Install Verdana (medida de texto de los diagramas)
+        run: |
+          echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get install -y --no-install-recommends ttf-mscorefonts-installer
+          fc-match Verdana | grep -i verdana
+
       - id: pages
         if: github.event_name != 'pull_request'
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6

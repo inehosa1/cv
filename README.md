@@ -36,13 +36,13 @@ Every push and pull request runs, and a failure blocks the deploy:
 
 1. `pnpm check` — schema and language parity (`scripts/validate.ts`), `astro check`, Biome and the Vitest suite (`tests/`).
 2. `pnpm build` — fails if either PDF exceeds two pages.
-3. `pnpm check:site` — serves `dist/` and visits every page in the sitemap with Playwright: axe (WCAG 2.2 AA) in light and dark mode, and every internal link and asset must answer 200.
+3. `pnpm check:site` — serves `dist/` and visits every page in the sitemap with Playwright: axe (WCAG 2.2 AA) in light and dark mode, every internal link and asset must answer 200, and no diagram label may overflow its box.
 
 Pull requests also publish both PDFs as a workflow artifact for review. Actions are pinned by SHA and updated by Dependabot.
 
 ## Running it locally
 
-Requirements: Node 24 (`.nvmrc`), pnpm 10, [Typst](https://github.com/typst/typst/releases) on the `PATH`, and Playwright's Chromium (`pnpm exec playwright install chromium`).
+Requirements: Node 24 (`.nvmrc`), pnpm 10, [Typst](https://github.com/typst/typst/releases) on the `PATH`, Playwright's Chromium (`pnpm exec playwright install chromium`) and the Verdana font. Diagram labels are measured at build time with Verdana, the widest common system font on Windows and macOS, so they never overflow when shown as images; `pnpm check:site` fails if a label doesn't fit.
 
 ```bash
 pnpm install

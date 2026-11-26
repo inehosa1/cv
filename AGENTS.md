@@ -86,6 +86,7 @@ pnpm lint:fix             # Biome con autofix
 
 Los scripts `.ts` se ejecutan con Node directamente (type stripping), por eso los imports llevan extensión `.ts`.
 Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en CI se usa `typst-community/setup-typst`.
+**Verdana debe estar instalada** para compilar: Mermaid mide el texto de los diagramas con ella (es la fuente que usan Windows y macOS al mostrarlos). Sin ella se mide con DejaVu, más estrecha, y en Windows el texto se sale de las cajas. En WSL: `cp /mnt/c/Windows/Fonts/verdana*.ttf ~/.local/share/fonts/ && fc-cache -f`; en CI se instala `ttf-mscorefonts-installer`. `pnpm check:site` falla si alguna etiqueta no cabe.
 
 ## Buenas prácticas de contenido (obligatorias)
 

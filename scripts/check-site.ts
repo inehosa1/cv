@@ -1,7 +1,9 @@
 /**
  * Recorre el sitio construido (dist/) como lo haría un visitante y falla si encuentra:
  *  - violaciones de accesibilidad WCAG 2.2 A/AA (axe), en modo claro y oscuro;
- *  - enlaces o recursos internos que no respondan 200.
+ *  - enlaces o recursos internos que no respondan 200;
+ *  - etiquetas de diagramas cuyo texto no cabe en su caja (requiere Verdana instalada, la
+ *    fuente con la que se miden; ver src/lib/mermaid-theme.mjs).
  *
  * Uso: `pnpm build && pnpm check:site`. Levanta `astro preview` en un puerto libre.
  */
@@ -52,11 +54,44 @@ async function internalRefs(page: Page): Promise<string[]> {
     .map((u) => `${u.origin}${u.pathname}`);
 }
 
+/** SVG de los diagramas Mermaid de la página (variante clara en `img`, oscura en `source`). */
+async function diagramSvgs(page: Page): Promise<string[]> {
+  const prefix = 'data:image/svg+xml,';
+  const uris = await page.$$eval('.prose-cv picture img, .prose-cv picture source', (els) =>
+    els.map((el) => el.getAttribute('src') ?? el.getAttribute('srcset') ?? ''),
+  );
+  return uris
+    .filter((u) => u.startsWith(prefix))
+    .map((u) => decodeURIComponent(u.slice(prefix.length)));
+}
+
+/**
+ * Etiquetas de un diagrama cuyo texto no cabe en su caja. Mermaid mide el texto en build y
+ * fija el tamaño de cada `foreignObject`; si la fuente del visitante es más ancha, se corta.
+ */
+async function overflowingLabels(page: Page, svg: string): Promise<string[]> {
+  await page.setContent(`<!doctype html><body style="margin:0">${svg}</body>`);
+  return page.$$eval('foreignObject', (objects) =>
+    objects.flatMap((fo) => {
+      const inner = fo.firstElementChild as HTMLElement | null;
+      const width = Number(fo.getAttribute('width'));
+      const height = Number(fo.getAttribute('height'));
+      if (!inner || !width) return [];
+      const overflows = inner.scrollWidth > width + 1 || inner.scrollHeight > height + 1;
+      return overflows
+        ? [`"${inner.textContent?.trim()}" (${inner.scrollWidth}px > ${width}px)`]
+        : [];
+    }),
+  );
+}
+
 async function main() {
   const server = await startPreview();
   const browser = await chromium.launch();
   const problems: string[] = [];
   const refs = new Set<string>();
+  /** SVG de diagrama → primera página donde aparece. */
+  const svgs = new Map<string, string>();
   const paths = pagePaths();
 
   try {
@@ -75,10 +110,20 @@ async function main() {
             .join('\n');
           problems.push(`${path} [${scheme}] ${v.id}: ${v.help}\n${nodes}`);
         }
-        if (scheme === 'light') for (const r of await internalRefs(page)) refs.add(r);
+        if (scheme === 'light') {
+          for (const r of await internalRefs(page)) refs.add(r);
+          for (const svg of await diagramSvgs(page)) svgs.set(svg, path);
+        }
       }
       await context.close();
     }
+
+    const svgPage = await browser.newPage();
+    for (const [svg, path] of svgs) {
+      for (const label of await overflowingLabels(svgPage, svg))
+        problems.push(`${path}: texto cortado en un diagrama: ${label}`);
+    }
+    await svgPage.close();
 
     for (const ref of refs) {
       const res = await fetch(ref, { method: 'HEAD' });

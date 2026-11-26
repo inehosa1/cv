@@ -1,6 +1,8 @@
 // Temas de Mermaid alineados con los tokens de src/styles/global.css.
-// Los SVG se sirven como <img>, que no puede cargar webfonts: se usa una fuente de sistema
-// ancha (Verdana ≈ DejaVu Sans en Linux/CI) para que el texto medido en build nunca se recorte.
+// Los SVG se sirven como <img>, que no puede cargar webfonts: el texto se mide en build y se
+// pinta con la fuente del sistema del visitante. Verdana es de las más anchas y está en Windows
+// y macOS; por eso el build DEBE medir con Verdana instalada (CI la instala y lo comprueba). Si
+// se midiera con una fuente más estrecha (DejaVu), en Windows el texto se saldría de las cajas.
 const base = {
   theme: 'base',
   fontFamily: 'Verdana, "DejaVu Sans", sans-serif',
@@ -39,6 +41,7 @@ export const mermaidLight = {
     signalColor: '#475569',
     noteBkgColor: '#fef9c3',
     noteBorderColor: '#eab308',
+    noteTextColor: '#1e293b',
     sequenceNumberColor: '#ffffff',
     signalTextColor: '#1e293b',
     labelBoxBkgColor: '#fff1f1',
@@ -70,6 +73,7 @@ export const mermaidDark = {
     signalColor: '#cbd5e1',
     noteBkgColor: '#3f3a1a',
     noteBorderColor: '#ca8a04',
+    noteTextColor: '#fef3c7',
     sequenceNumberColor: '#0b1120',
     signalTextColor: '#e2e8f0',
     labelBoxBkgColor: '#2a1519',
