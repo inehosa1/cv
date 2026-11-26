@@ -98,8 +98,16 @@
 }
 
 /* Diagramas Mermaid (SVG generado en build): tarjeta con scroll horizontal en móvil. */
+/*
+ * El recuadro mide como el texto (50rem) y solo se ensancha si el diagrama lo necesita:
+ * así el texto y los diagramas comparten borde derecho y el texto no parece cortado.
+ */
 .prose-cv :where(picture) {
   display: block;
+  width: fit-content;
+  min-width: min(100%, 50rem);
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-x: auto;
   margin-block: 1.75rem;
   padding: 1.25rem;
