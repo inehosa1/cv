@@ -16,6 +16,7 @@
   --accent-ink: #c9302c; /* texto sobre fondo claro (5.3:1) */
   --chip: #fff1f1;
   --chip-border: #fbd5d6;
+  --on-accent: #ffffff; /* texto sobre --accent-ink */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,6 +30,7 @@
     --accent-ink: #ff7a7e;
     --chip: #2a1519;
     --chip-border: #4a1d22;
+    --on-accent: #0b1120;
   }
 }
 
@@ -43,6 +45,7 @@
   --color-accent-ink: var(--accent-ink);
   --color-chip: var(--chip);
   --color-chip-border: var(--chip-border);
+  --color-on-accent: var(--on-accent);
 }
 
 @layer base {
@@ -163,8 +166,13 @@
   @apply border-accent bg-chip text-accent-ink;
 }
 
+/* Etiqueta de estado de un proyecto (p. ej. "Pendiente de despliegue"). */
+.status-badge {
+  @apply inline-flex items-center rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-300;
+}
+
 /*
- * Movimiento, solo si el usuario no pide reducirlo, y en CSS nativo (0 KB de JS): las
+ * Movimiento, solo si el usuario no pide reducirlo, y en CSS nativo (sin JS): las
  * secciones aparecen al hacer scroll (scroll-driven animations; sin soporte, se ven normal).
  * Sin View Transitions ni animación del hero: al cambiar de idioma superponían los textos de
  * ambas páginas y la animación se repetía en cada navegación.

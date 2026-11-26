@@ -1,0 +1,32 @@
+---
+/** Enlace con aspecto de botón. Un solo sitio para los estilos de acción del sitio. */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary';
+  size?: 'md' | 'sm';
+  icon?: IconName;
+  /** Icono a la derecha del texto (p. ej. una flecha). */
+  iconAfter?: IconName;
+  download?: string;
+}
+
+const { href, variant = 'secondary', size = 'md', icon, iconAfter, download } = Astro.props;
+---
+
+<a
+  href={href}
+  download={download}
+  class:list={[
+    'inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap transition',
+    size === 'md' ? 'px-4 py-2.5' : 'px-3 py-2 text-sm',
+    variant === 'primary'
+      ? 'bg-accent-ink text-on-accent hover:brightness-110'
+      : 'border border-rule text-ink hover:border-accent hover:text-accent-ink',
+  ]}
+>
+  {icon && <Icon name={icon} class="size-4" />}
+  <slot />
+  {iconAfter && <Icon name={iconAfter} class="size-4" />}
+</a>

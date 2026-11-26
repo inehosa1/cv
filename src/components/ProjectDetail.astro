@@ -6,7 +6,7 @@ import { formatDate } from '../lib/format.ts';
 import { routes, ui } from '../lib/i18n.ts';
 import { type Project, projectSlug } from '../lib/projects.ts';
 import type { Lang } from '../lib/schema.ts';
-import { withBase } from '../lib/url.ts';
+import { absoluteUrl, withBase } from '../lib/url.ts';
 import Contact from './Contact.astro';
 import Icon from './Icon.astro';
 import SiteNav from './SiteNav.astro';
@@ -35,6 +35,7 @@ const jsonLd = {
   headline: d.title,
   description: d.tagline,
   inLanguage: lang,
+  url: absoluteUrl(routes.project(slug)[lang], Astro.site ?? 'http://localhost:4321'),
   author: { '@type': 'Person', name: cv.basics.name, url: cv.basics.url },
   about: d.tags,
 };
@@ -60,12 +61,7 @@ const jsonLd = {
 
     <header class="mt-6 max-w-4xl">
       <div class="flex flex-wrap items-center gap-1.5">
-      {d.status === 'development' && (
-        <span class="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-xs font-semibold text-amber-800 dark:text-amber-300">
-          <span class="size-1.5 animate-pulse rounded-full bg-amber-500" aria-hidden="true" />
-          {t.inDevelopment}
-        </span>
-      )}
+      {d.status === 'development' && <span class="status-badge">{t.inDevelopment}</span>}
       <ul class="flex flex-wrap gap-1.5" aria-label={t.stack}>
         {
           d.tags.map((tag) => (
@@ -118,7 +114,7 @@ const jsonLd = {
 
     {
       d.metrics.length > 0 && (
-        <dl class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <dl class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
           {d.metrics.map((m) => (
             <div class="rounded-xl border border-rule bg-surface p-4">
               <dt class="text-xs leading-snug text-muted">{m.label}</dt>

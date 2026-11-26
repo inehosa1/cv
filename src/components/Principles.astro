@@ -1,14 +1,19 @@
 ---
-import type { CV } from '../lib/schema.ts';
+import { routes, ui } from '../lib/i18n.ts';
+import type { CV, Lang } from '../lib/schema.ts';
+import { withBase } from '../lib/url.ts';
+import Icon from './Icon.astro';
 
 interface Props {
   principles: CV['principles'];
   title: string;
-  /** `compact` para la columna del CV; `wide` para la landing. */
+  lang: Lang;
+  /** `compact` para la columna del CV; `wide` para la portada. */
   variant?: 'compact' | 'wide';
 }
 
-const { principles, title, variant = 'compact' } = Astro.props;
+const { principles, title, lang, variant = 'compact' } = Astro.props;
+const t = ui[lang];
 ---
 
 {
@@ -24,19 +29,20 @@ const { principles, title, variant = 'compact' } = Astro.props;
       >
         {title}
       </h2>
-      <ol
-        class:list={[
-          'grid gap-3',
-          variant === 'wide' ? 'mt-6 sm:grid-cols-2 lg:grid-cols-3' : 'sm:grid-cols-2',
-        ]}
-      >
-        {principles.map((p, i) => (
-          <li class="rounded-xl border border-rule bg-surface p-4">
-            <p class="flex items-baseline gap-2 font-semibold">
-              <span class="text-xs font-bold text-accent-ink tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-              {p.title}
-            </p>
+      <ol class:list={['grid', variant === 'wide' ? 'mt-8 gap-8 md:grid-cols-3' : 'gap-5']}>
+        {principles.map((p) => (
+          <li class:list={[variant === 'wide' && 'border-t-2 border-accent pt-4']}>
+            <h3 class="font-semibold">{p.title}</h3>
             <p class="mt-1.5 text-sm leading-relaxed text-pretty text-muted">{p.description}</p>
+            {p.project && (
+              <a
+                href={withBase(routes.project(p.project)[lang])}
+                class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-accent-ink hover:underline"
+              >
+                {t.principleCase}
+                <Icon name="arrowRight" class="size-3.5" />
+              </a>
+            )}
           </li>
         ))}
       </ol>

@@ -3,7 +3,7 @@ import '@fontsource-variable/inter';
 import '../styles/global.css';
 import { plain } from '../lib/format.ts';
 import type { CV, Lang } from '../lib/schema.ts';
-import { withBase } from '../lib/url.ts';
+import { absoluteUrl, withBase } from '../lib/url.ts';
 
 interface Props {
   cv: CV;
@@ -21,7 +21,7 @@ const { meta, basics } = cv;
 const title = Astro.props.title ?? meta.title;
 const description = Astro.props.description ?? meta.description;
 const site = Astro.site ?? new URL('http://localhost:4321');
-const abs = (path: string) => new URL(withBase(path), site).href;
+const abs = (path: string) => absoluteUrl(path, site);
 
 const canonical = abs(paths[meta.lang]);
 const alternates = [

@@ -8,6 +8,14 @@ export function formatDate(date: string, labels: Labels): string {
   return month ? `${labels.months[Number(month) - 1]} ${year}` : (year ?? date);
 }
 
+/** Rango de años de un puesto: `2020 – 2022`, `2026` si empieza y acaba el mismo año, o `2023 – Actualidad`. */
+export function yearRange(start: string, end: string | undefined, present: string): string {
+  const from = start.slice(0, 4);
+  if (!end) return `${from} – ${present}`;
+  const to = end.slice(0, 4);
+  return from === to ? from : `${from} – ${to}`;
+}
+
 /** Duración legible entre dos fechas `YYYY-MM` (fin abierto = hoy). */
 export function duration(start: string, end: string | undefined, lang: CV['meta']['lang']): string {
   const toMonths = (d: string) => {
