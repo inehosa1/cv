@@ -18,7 +18,8 @@ Ambas salidas deben quedar siempre sincronizadas: nunca se edita contenido en la
 |------|-----------|--------|
 | Datos | YAML inspirado en [JSON Resume](https://jsonresume.org/schema) | Estándar abierto, portable, validable |
 | Validación | Zod 4 (`src/lib/schema.ts`) | Falla el build si falta/sobra un campo; genera `schema/cv.schema.json` para el editor |
-| Web | [Astro 7](https://astro.build) + TypeScript estricto | HTML estático, 0 JS de cliente |
+| Web | [Astro 7](https://astro.build) + TypeScript estricto | HTML estático; JS solo como mejora progresiva (2 scripts inline) |
+| Tests | Vitest (`tests/`) + Playwright/axe (`scripts/check-site.ts`) | Lógica compartida, y accesibilidad y enlaces del sitio construido |
 | Casos de estudio | MDX en content collection (`src/content.config.ts`) | Prosa técnica larga con frontmatter validado |
 | Diagramas | Mermaid → SVG en build (rehype-mermaid + Playwright) | Diagramas como código, variante clara/oscura, 0 JS |
 | Estilos | Tailwind CSS 4 + Inter Variable (self-hosted) | Tokens en `src/styles/global.css`, modo oscuro, CSS de impresión |
@@ -58,7 +59,10 @@ cv/
 │   └── fonts/                # Inter (OFL), embebida en el PDF
 ├── scripts/
 │   ├── validate.ts           # Esquema + paridad es/en (CV y casos de estudio) + genera schema/
-│   └── build-pdf.ts          # PDFs + OG, y verifica máx. 2 páginas
+│   ├── build-pdf.ts          # PDFs + OG, y verifica máx. 2 páginas
+│   └── check-site.ts         # Recorre dist/: axe WCAG 2.2 AA (claro/oscuro) + enlaces internos
+├── tests/                    # Vitest: src/lib (fechas, filtros, rutas, paridad) y datos reales
+├── docs/screenshot.png       # Captura del README
 ├── public/                   # favicon, robots; cv-*.pdf y og-*.png se generan (ignorados en git)
 ├── reference/                # CV original de partida (solo consulta)
 └── .github/workflows/deploy.yml
@@ -72,8 +76,10 @@ pnpm dev                  # Genera PDFs y levanta la web en http://localhost:432
 pnpm pdf                  # Solo PDFs + OG; falla si alguno supera 2 páginas
 pnpm pdf:watch            # Recompila el PDF en español al guardar
 pnpm validate             # Valida YAML (esquema + paridad es/en)
-pnpm check                # validate + astro check + biome
+pnpm check                # validate + astro check + biome + tests (Vitest)
+pnpm test                 # Solo los tests unitarios (test:watch en modo watch)
 pnpm build                # validate + pdf + astro build → dist/
+pnpm check:site           # Tras build: axe (claro/oscuro) y enlaces internos de cada página
 pnpm preview              # Sirve dist/ localmente
 pnpm lint:fix             # Biome con autofix
 ```
@@ -99,6 +105,10 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 - Un caso = `src/content/projects/es/<slug>.mdx` + `src/content/projects/en/<slug>.mdx`, con el mismo nº de diagramas y métricas (lo valida `pnpm validate`).
 - **Confidencialidad (proyectos de clientes, `nda: true`)**: nunca incluir secretos, hosts o IDs internos, datos personales, nombres de clientes finales del cliente, ni detalles explotables de vulnerabilidades (describir la mejora, no el agujero). Cifras de negocio siempre redondeadas.
 - Métricas solo verificables (historial de git, informes de cobertura, documentación del proyecto). En YAML van **siempre entre comillas** (`"1.500"` sin comillas es el número 1,5).
+- **Máximo 3 métricas, y primero resultados** (tiempos, vulnerabilidades, migraciones verificadas): las tarjetas solo muestran las dos primeras. No usar recuentos de endpoints ni porcentajes de commits como métrica.
+- **Tono:** primera persona, concreto y comprobable. Nada de eslóganes ni autoelogios ("sólido", "la mayor calidad", "me adapto a cada reto"); si algo es una virtud, se demuestra con un caso. "En solitario" se dice una vez donde importe, no en cada caso.
+- **Fechas reales:** `end` cuando el trabajo terminó (último commit propio); solo lo activo queda en "Actualidad".
+- `tier`: `main` (máx. ~6, rejilla de la landing) u `other` (lista compacta "Otros proyectos").
 - Diagramas en bloques ```` ```mermaid ````. Priorizar `flowchart TB`, agrupar nodos similares en uno y mensajes cortos en `sequenceDiagram`: el SVG debe medir ≤ ~1100 px de ancho para leerse sin escalar (comprobar el atributo `width` del `<img>` en `dist/`).
 - Tras cambiar un caso, revisar la página renderizada (escritorio, móvil y modo oscuro).
 - Frontmatter opcional: `featured: true` (máx. 3; tarjeta grande en la home y la landing), `cover` (captura de la web pública en `src/content/projects/covers/`, optimizada con sharp; sustituye a la miniatura del primer diagrama), `status: development`, `links` (solo URLs públicas). Las capturas no deben mostrar datos de terceros (p. ej. mediadores) ni banners de cookies.
@@ -116,9 +126,11 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
   - Modo claro/oscuro con `prefers-color-scheme`; hoja `@media print` limpia.
   - Metadatos: `<title>`, description, Open Graph, `hreflang` es/en y JSON-LD `schema.org/Person`.
   - Objetivo Lighthouse: 100 en Performance, Accessibility, Best Practices y SEO.
-  - Sin JavaScript de cliente salvo que sea imprescindible (p. ej. selector de idioma puede ser un enlace).
+  - Sin JavaScript de cliente salvo como mejora progresiva (hoy: filtro de proyectos y scroll al cambiar de idioma); sin él todo debe funcionar.
+  - Diseño sobrio: sin manchas difuminadas, puntos que parpadean ni tarjetas que se levantan. Acciones con `Button.astro`; colores siempre con tokens (`text-on-accent`, nunca hex en componentes).
+  - Los principios de "Cómo trabajo" (máx. 4) enlazan a un caso que los demuestre (`project`, lo valida `pnpm validate`).
 - Botón visible "Descargar PDF" que apunte al PDF del idioma actual.
-- **Privacidad:** el teléfono sale en el PDF y en la cabecera de la web (decisión del usuario), pero nunca en el JSON-LD.
+- **Privacidad:** el teléfono solo sale en el PDF; nunca en la web ni en el JSON-LD (evita scraping y spam).
 - Biome no entiende el uso de variables en las plantillas `.astro`: las reglas de "unused" están desactivadas para esos archivos en `biome.json`; no borrar imports "sin usar" en `.astro`.
 - Textos de interfaz (títulos de sección, meses, botones) viven en `meta.labels` del YAML, no en el código.
 - TypeScript en modo `strict`; sin `any`.
@@ -128,7 +140,7 @@ Typst debe estar en el PATH (binario de GitHub Releases en `~/.local/bin`); en C
 1. Leer `data/cv.es.yaml` antes de proponer cambios de contenido.
 2. Cambios de contenido → editar YAML (ambos idiomas) → `pnpm check` → `pnpm pdf` y revisar número de páginas.
 3. Cambios de diseño → verificar en `pnpm dev` a 375 px, 768 px y 1280 px, en modo oscuro y en vista de impresión. Si cambias colores, mantenerlos sincronizados entre `global.css` y `typst/cv.typ`.
-4. Antes de dar algo por terminado: `pnpm check && pnpm build` sin errores.
+4. Antes de dar algo por terminado: `pnpm check && pnpm build && pnpm check:site` sin errores (es lo mismo que ejecuta el CI).
 5. No hacer commit ni push salvo que el usuario lo pida. Mensajes de commit en formato Conventional Commits (`feat:`, `fix:`, `content:`, `style:`).
 
 ## Despliegue

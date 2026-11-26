@@ -1,0 +1,10 @@
+# Contenido (no código): fuera de las estadísticas de lenguajes de GitHub.
+data/** linguist-documentation
+src/content/** linguist-documentation
+schema/cv.schema.json linguist-generated
+pnpm-lock.yaml linguist-generated
+
+* text=auto eol=lf
+*.png binary
+*.ttf binary
+*.pdf binary
