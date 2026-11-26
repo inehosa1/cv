@@ -1,10 +1,12 @@
 /**
- * Valida data/cv.<lang>.yaml contra el esquema, comprueba que los idiomas tengan
- * la misma estructura y regenera schema/cv.schema.json (autocompletado en el editor).
+ * Valida data/cv.<lang>.yaml contra el esquema, comprueba que los idiomas tengan la misma
+ * estructura (también los casos de estudio) y regenera schema/cv.schema.json (autocompletado
+ * en el editor). La lógica de comparación vive en src/lib/parity.ts y tiene tests.
  */
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { z } from 'zod';
 import { loadCV } from '../src/lib/cv.ts';
+import { caseSignature, structuralDiff } from '../src/lib/parity.ts';
 import { cvSchema, LANGS } from '../src/lib/schema.ts';
 
 mkdirSync('schema', { recursive: true });
@@ -25,39 +27,22 @@ const cvs = LANGS.map((lang) => {
   }
 });
 
-/** Firma estructural: longitudes de listas y valores que no se traducen. */
-const shape = (v: unknown, path = ''): string[] => {
-  if (Array.isArray(v))
-    return [`${path}[${v.length}]`, ...v.flatMap((x, i) => shape(x, `${path}[${i}]`))];
-  if (v && typeof v === 'object')
-    return Object.entries(v).flatMap(([k, x]) => shape(x, path ? `${path}.${k}` : k));
-  return /(Date|url|email|phone|lastModified)$/.test(path) ? [`${path}=${String(v)}`] : [];
-};
-
 const [base, ...others] = cvs;
 if (base) {
-  const ref = new Set(shape({ ...base, meta: {} }));
+  const own = new URL(base.basics.url ?? 'https://invalid').origin;
   others.forEach((cv, i) => {
     if (!cv) return;
-    const lang = LANGS[i + 1];
-    const cur = new Set(shape({ ...cv, meta: {} }));
-    const diff = [...ref].filter((x) => !cur.has(x)).concat([...cur].filter((x) => !ref.has(x)));
-    // Las URLs del propio sitio pueden variar por idioma (p. ej. /en/).
-    const own = new URL(base.basics.url ?? 'https://invalid').origin;
-    const relevant = diff.filter((d) => !/url=/.test(d) || !d.split('=')[1]?.startsWith(own));
-    if (relevant.length)
+    const diff = structuralDiff({ ...base, meta: {} }, { ...cv, meta: {} }, own);
+    if (diff.length)
       errors.push(
-        `cv.${lang}.yaml difiere en estructura de cv.es.yaml:\n  ${relevant.join('\n  ')}`,
+        `cv.${LANGS[i + 1]}.yaml difiere en estructura de cv.es.yaml:\n  ${diff.join('\n  ')}`,
       );
   });
 }
 
 // Casos de estudio: mismo slug, nº de diagramas y de métricas en ambos idiomas.
 const projectsDir = 'src/content/projects';
-const signature = (lang: string, file: string) => {
-  const src = readFileSync(`${projectsDir}/${lang}/${file}`, 'utf8');
-  return `diagramas=${src.match(/```mermaid/g)?.length ?? 0} métricas=${src.match(/^ {2}- value:/gm)?.length ?? 0}`;
-};
+const read = (lang: string, file: string) => readFileSync(`${projectsDir}/${lang}/${file}`, 'utf8');
 const [refLang, ...restLangs] = LANGS;
 const refFiles = readdirSync(`${projectsDir}/${refLang}`).sort();
 for (const lang of restLangs) {
@@ -67,9 +52,20 @@ for (const lang of restLangs) {
   if (missing.length || extra.length)
     errors.push(`Casos de estudio ${lang}: faltan [${missing}] · sobran [${extra}]`);
   for (const f of refFiles.filter((f) => files.includes(f))) {
-    const a = signature(refLang, f);
-    const b = signature(lang, f);
+    const a = caseSignature(read(refLang, f));
+    const b = caseSignature(read(lang, f));
     if (a !== b) errors.push(`Caso ${f}: ${refLang} (${a}) ≠ ${lang} (${b})`);
+  }
+}
+
+// Cada principio debe enlazar a un caso de estudio que exista.
+const slugs = new Set(refFiles.map((f) => f.replace(/\.mdx$/, '')));
+for (const cv of cvs) {
+  for (const p of cv?.principles ?? []) {
+    if (p.project && !slugs.has(p.project))
+      errors.push(
+        `cv.${cv?.meta.lang}.yaml: el principio "${p.title}" enlaza a un caso inexistente (${p.project})`,
+      );
   }
 }
 
